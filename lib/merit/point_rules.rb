@@ -12,16 +12,71 @@ module Merit
   class PointRules
     include Merit::PointRulesMethods
 
+    AVAILABLE_RULES = {
+      :comment_author => {
+        :action => 'comment#create',
+        :undo_action => 'comment#destroy',
+        :to => :author,
+        :value => 1
+      },
+      :article_author => {
+        :action => 'article#create',
+        :undo_action => 'article#destroy',
+        :to => :author,
+        :value => 1
+      },
+      :vote_voteable_author => {
+        :action => 'vote#create',
+        :undo_action => 'vote#destroy',
+        :to => lambda {|vote| vote.voteable.author},
+        :profile => lambda {|vote| vote.voteable.profile},
+        :value => lambda {|vote| vote.vote}
+      },
+      :vote_voteable => {
+        :action => 'vote#create',
+        :undo_action => 'vote#destroy',
+        :to => lambda {|vote| vote.voteable},
+        :profile => lambda {|vote| vote.voteable.profile},
+        :value => lambda {|vote| vote.vote}
+      },
+    }
+
+    # FIXME get value from environment
+    def weight(action)
+      case action
+      when :comment_author
+        10
+      when :article_author
+        50
+      when :vote_voteable
+        5
+      when :vote_voteable_author
+        5
+      end
+    end
+
+    def calculate_score(target, action, value)
+      value = value.call(target) if value.respond_to?(:call)
+      weight(action) * value
+    end
+
     def initialize
-      score 10, :on => 'comment#create'
-      score -10, :on => 'comment#destroy'
+      AVAILABLE_RULES.each do |key, setting|
+        score lambda {|target| calculate_score(target, key, setting[:value])}, :on => setting[:action], :to => setting[:to]
+        if setting[:undo_action].present?
+          score lambda {|target| -calculate_score(target, key, setting[:value])}, :on => setting[:undo_action], :to => setting[:to]
+        end
+      end
 
-      score 50, :on => 'article#create'
-      score -50, :on => 'article#destroy'
+      #score lambda {|target| calculate_score(target, :comment_create, 1)},  :on => 'comment#create'
+      #score lambda {|target| calculate_score(target, :comment_create, -1)}, :on => 'comment#destroy'
 
-      score lambda {|vote| 5 * vote.vote}, :on => 'vote#create', :to => lambda {|vote| vote.voteable.author}
-      score lambda {|vote| 5 * vote.vote}, :on => 'vote#create', :to => lambda {|vote| vote.voteable}
-      score lambda {|vote| -5 * vote.vote}, :on => 'vote#destroy', :to => lambda {|vote| vote.voteable.author}
+      #score lambda {|target| calculate_score(target, :article_create, 1)},  :on => 'article#create'
+      #score lambda {|target| calculate_score(target, :article_create, -1)}, :on => 'article#destroy'
+
+      #score lambda {|target| calculate_score(target, :vote_create, target.vote)}, :on => 'vote#create', :to => lambda {|vote| vote.voteable.author}
+      #score lambda {|target| calculate_score(target, :vote_create, target.vote)}, :on => 'vote#create', :to => lambda {|vote| vote.voteable}
+      #score lambda {|target| calculate_score(target, :vote_create, -target.vote)}, :on => 'vote#destroy', :to => lambda {|vote| vote.voteable.author}
     end
   end
 end
