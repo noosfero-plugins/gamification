@@ -60,6 +60,7 @@ module Merit
       weight(category) * value
     end
 
+    # TODO receive environment parameter
     def initialize
       AVAILABLE_RULES.each do |category, setting|
         [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
