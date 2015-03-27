@@ -36,7 +36,7 @@ class ArticleTest < ActiveSupport::TestCase
   should 'add merit points to article owner when an user like it' do
     article = create(Article, :name => 'Test', :profile => person, :author => person)
 
-    assert_difference 'article.author.points', 5 do
+    assert_difference 'article.author.points(:category => :vote_voteable_author)', 5 do
       Vote.create!(:voter => person, :voteable => article, :vote => 1)
     end
   end
@@ -45,7 +45,7 @@ class ArticleTest < ActiveSupport::TestCase
     article = create(Article, :name => 'Test', :profile => person, :author => person)
     article = article.reload
 
-    assert_difference 'article.points', 5 do
+    assert_difference 'article.points(:category => :vote_voteable)', 5 do
       Vote.create!(:voter => person, :voteable => article, :vote => 1)
     end
   end

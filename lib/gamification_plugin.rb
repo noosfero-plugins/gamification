@@ -8,6 +8,12 @@ class GamificationPlugin < Noosfero::Plugin
     _("Gamification Plugin")
   end
 
+  def user_data_extras
+    proc do
+      {:points => current_person.points}
+    end
+  end
+
   Merit.setup do |config|
     config.checks_on_each_request = false
     config.user_model_name = 'Profile'

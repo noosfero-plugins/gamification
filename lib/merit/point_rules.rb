@@ -42,8 +42,8 @@ module Merit
     }
 
     # FIXME get value from environment
-    def weight(action)
-      case action
+    def weight(category)
+      case category
       when :comment_author
         10
       when :article_author
@@ -55,28 +55,18 @@ module Merit
       end
     end
 
-    def calculate_score(target, action, value)
+    def calculate_score(target, category, value)
       value = value.call(target) if value.respond_to?(:call)
-      weight(action) * value
+      weight(category) * value
     end
 
     def initialize
-      AVAILABLE_RULES.each do |key, setting|
-        score lambda {|target| calculate_score(target, key, setting[:value])}, :on => setting[:action], :to => setting[:to]
-        if setting[:undo_action].present?
-          score lambda {|target| -calculate_score(target, key, setting[:value])}, :on => setting[:undo_action], :to => setting[:to]
+      AVAILABLE_RULES.each do |category, setting|
+        [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
+          score lambda {|target| signal * calculate_score(target, category, setting[:value])}, :on => action, :to => setting[:to], :category => category
         end
       end
-
-      #score lambda {|target| calculate_score(target, :comment_create, 1)},  :on => 'comment#create'
-      #score lambda {|target| calculate_score(target, :comment_create, -1)}, :on => 'comment#destroy'
-
-      #score lambda {|target| calculate_score(target, :article_create, 1)},  :on => 'article#create'
-      #score lambda {|target| calculate_score(target, :article_create, -1)}, :on => 'article#destroy'
-
-      #score lambda {|target| calculate_score(target, :vote_create, target.vote)}, :on => 'vote#create', :to => lambda {|vote| vote.voteable.author}
-      #score lambda {|target| calculate_score(target, :vote_create, target.vote)}, :on => 'vote#create', :to => lambda {|vote| vote.voteable}
-      #score lambda {|target| calculate_score(target, :vote_create, -target.vote)}, :on => 'vote#destroy', :to => lambda {|vote| vote.voteable.author}
     end
+
   end
 end

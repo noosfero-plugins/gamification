@@ -23,20 +23,20 @@ module Merit
     def initialize
 
       grant_on 'comment#create', badge: 'commenter' do |comment|
-        comment.author.present? && comment.author.comments.count == 5
+        comment.author.present? && comment.author.comments.count >= 5
       end
 
       grant_on 'article#create', badge: 'article-creator', level: 1 do |article|
-        article.author.present? && article.author.articles.count == 5
+        article.author.present? && article.author.articles.count >= 5
       end
 
       grant_on 'article#create', badge: 'article-creator', level: 2 do |article|
-        article.author.present? && article.author.articles.count == 10
+        article.author.present? && article.author.articles.count >= 10
       end
 
       grant_on 'vote_plugin_profile#vote', badge: 'relevant-commenter', model_name: 'comment', to: 'author' do |voteable|
         return false if voteable.nil? || !voteable.kind_of?(Comment)
-        voteable.votes.count == 2
+        voteable.votes.count >= 2
       end
 
     end

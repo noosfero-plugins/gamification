@@ -1,0 +1,24 @@
+<div class="gamification">
+  <h1><%= _('Gamification Info for %s' % @target.identifier) %></h1>
+  <div class="score">
+    <span class="label"><%= _('Score: ') %></span>
+    <span class="value"><%= @target.points %></span>
+  </div>
+  <div class="level">
+    <span class="label"><%= _('Level: ') %></span>
+    <span class="value"><%= @target.level %></span>
+  </div>
+  <div class="badges">
+    <h3><%= _('Badges') %></h3>
+    <ul>
+      <% @target.badges.each do |badge| %>
+        <li class="badge <%= badge.name %>">
+      <span class="description"><%= badge.description %></span>
+      <% if badge.level.present? %>
+        <span class="label"><%= _('Level') %></span>&nbsp;<span class="level"><%= badge.level %></span>
+    <% end %>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+</div>
