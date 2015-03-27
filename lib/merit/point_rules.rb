@@ -17,42 +17,37 @@ module Merit
         :action => 'comment#create',
         :undo_action => 'comment#destroy',
         :to => :author,
-        :value => 1
+        :value => 1,
+        :default_weight => 10
       },
       :article_author => {
         :action => 'article#create',
         :undo_action => 'article#destroy',
         :to => :author,
-        :value => 1
+        :value => 1,
+        :default_weight => 50
       },
       :vote_voteable_author => {
         :action => 'vote#create',
         :undo_action => 'vote#destroy',
         :to => lambda {|vote| vote.voteable.author},
         :profile => lambda {|vote| vote.voteable.profile},
-        :value => lambda {|vote| vote.vote}
+        :value => lambda {|vote| vote.vote},
+        :default_weight => 5
       },
       :vote_voteable => {
         :action => 'vote#create',
         :undo_action => 'vote#destroy',
         :to => lambda {|vote| vote.voteable},
         :profile => lambda {|vote| vote.voteable.profile},
-        :value => lambda {|vote| vote.vote}
+        :value => lambda {|vote| vote.vote},
+        :default_weight => 5
       },
     }
 
     # FIXME get value from environment
     def weight(category)
-      case category
-      when :comment_author
-        10
-      when :article_author
-        50
-      when :vote_voteable
-        5
-      when :vote_voteable_author
-        5
-      end
+      AVAILABLE_RULES[category][:default_weight]
     end
 
     def calculate_score(target, category, value)
