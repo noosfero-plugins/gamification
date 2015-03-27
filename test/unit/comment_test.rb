@@ -5,6 +5,7 @@ class CommentTest < ActiveSupport::TestCase
   def setup
     @person = create_user('testuser').person
     @article = create(TextileArticle, :profile_id => person.id)
+    GamificationPlugin.gamification_set_rules(Environment.default)
   end
   attr_accessor :person, :article
 

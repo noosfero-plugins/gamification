@@ -1,13 +1,3 @@
-# Be sure to restart your server when you modify this file.
-#
-# Points are a simple integer value which are given to "meritable" resources
-# according to rules in +app/models/merit/point_rules.rb+. They are given on
-# actions-triggered, either to the action user or to the method (or array of
-# methods) defined in the +:to+ option.
-#
-# 'score' method may accept a block which evaluates to boolean
-# (recieves the object as parameter)
-
 module Merit
   class PointRules
     include Merit::PointRulesMethods
@@ -47,7 +37,8 @@ module Merit
 
     # FIXME get value from environment
     def weight(category)
-      AVAILABLE_RULES[category][:default_weight]
+      settings = Noosfero::Plugin::Settings.new(@environment, GamificationPlugin)
+      settings.settings.fetch(:point_rules, {}).fetch(category.to_s, {}).fetch('weight', AVAILABLE_RULES[category][:default_weight]).to_i
     end
 
     def calculate_score(target, category, value)
@@ -55,8 +46,10 @@ module Merit
       weight(category) * value
     end
 
-    # TODO receive environment parameter
-    def initialize
+    def initialize(environment=nil)
+      return if environment.nil?
+      @environment = environment
+
       AVAILABLE_RULES.each do |category, setting|
         [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
           score lambda {|target| signal * calculate_score(target, category, setting[:value])}, :on => action, :to => setting[:to], :category => category

@@ -14,6 +14,19 @@ class GamificationPlugin < Noosfero::Plugin
     end
   end
 
+  # Override initial rules with environment specific rules
+  def self.gamification_set_rules(environment)
+    Merit::AppPointRules.clear
+    Merit::AppPointRules.merge!(Merit::PointRules.new(environment).defined_rules)
+  end
+
+  def application_controller_filters
+    [{
+      :type => 'before_filter', :method_name => 'gamification_set_rules',
+      :options => {}, :block => proc { GamificationPlugin.gamification_set_rules(environment) }
+    }]
+  end
+
   Merit.setup do |config|
     config.checks_on_each_request = false
     config.user_model_name = 'Profile'

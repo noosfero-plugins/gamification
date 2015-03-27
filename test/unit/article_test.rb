@@ -4,6 +4,7 @@ class ArticleTest < ActiveSupport::TestCase
 
   def setup
     @person = create_user('testuser').person
+    GamificationPlugin.gamification_set_rules(Environment.default)
   end
 
   attr_accessor :person
