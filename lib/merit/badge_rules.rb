@@ -48,12 +48,7 @@ module Merit
           setting[:value].call(source) >= (badge.custom_fields || {}).fetch(:threshold, setting[:default_threshold])
         end
       end
-
-      grant_on 'vote_plugin_profile#vote', badge: 'relevant-commenter', model_name: 'comment', to: 'author' do |voteable|
-        return false if voteable.nil? || !voteable.kind_of?(Comment)
-        voteable.votes.count >= 2
-      end
-
     end
+
   end
 end
