@@ -5,9 +5,10 @@ class CommentTest < ActiveSupport::TestCase
   def setup
     @person = create_user('testuser').person
     @article = create(TextileArticle, :profile_id => person.id)
-    GamificationPlugin.gamification_set_rules(Environment.default)
+    @environment = Environment.default
+    GamificationPlugin.gamification_set_rules(@environment)
   end
-  attr_accessor :person, :article
+  attr_accessor :person, :article, :environment
 
   should 'add merit points to author when create a new comment' do
     create(Comment, :source => article, :author_id => person.id)
@@ -23,6 +24,9 @@ class CommentTest < ActiveSupport::TestCase
   end
 
   should 'add merit badge to author when create 5 new comments' do
+    GamificationPlugin::Badge.create!(:owner => environment, :name => 'comment_author')
+    GamificationPlugin.gamification_set_rules(environment)
+
     5.times { create(Comment, :source => article, :author_id => person.id) }
     assert_equal 'comment_author', person.badges.first.name
   end

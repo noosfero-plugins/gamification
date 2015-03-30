@@ -4,10 +4,11 @@ class ArticleTest < ActiveSupport::TestCase
 
   def setup
     @person = create_user('testuser').person
-    GamificationPlugin.gamification_set_rules(Environment.default)
+    @environment = Environment.default
+    GamificationPlugin.gamification_set_rules(@environment)
   end
 
-  attr_accessor :person
+  attr_accessor :person, :environment
 
   should 'add merit points to author when create a new article' do
     create(Article, :profile_id => person.id, :author => person)
@@ -23,12 +24,19 @@ class ArticleTest < ActiveSupport::TestCase
   end
 
   should 'add merit badge to author when create 5 new articles' do
+    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 1)
+    GamificationPlugin.gamification_set_rules(environment)
+
     5.times { create(Article, :profile_id => person.id, :author => person) }
     assert_equal 'article_author', person.badges.first.name
     assert_equal 1, person.badges.first.level
   end
 
   should 'add merit badge level 2 to author when create 10 new articles' do
+    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 1)
+    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 2, :custom_fields => {:threshold => 10})
+    GamificationPlugin.gamification_set_rules(environment)
+
     10.times { create(Article, :profile_id => person.id, :author => person) }
     assert_equal ['article_author'], person.badges.map(&:name).uniq
     assert_equal [1, 2], person.badges.map(&:level)

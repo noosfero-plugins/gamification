@@ -37,27 +37,4 @@ class GamificationPlugin < Noosfero::Plugin
 
   require 'merit_ext'
 
-  Merit::Badge.create!(
-    id: 1,
-    name: "comment_author",
-    description: "Commenter"
-  )
-  Merit::Badge.create!(
-    id: 2,
-    name: "relevant_commenter",
-    description: "Relevant Commenter"
-  )
-  Merit::Badge.create!(
-    id: 3,
-    name: "article_author",
-    description: "Article Creator",
-    level: 1
-  )
-  Merit::Badge.create!(
-    id: 4,
-    name: "article_author",
-    description: "Article Creator",
-    level: 2
-  )
-
 end

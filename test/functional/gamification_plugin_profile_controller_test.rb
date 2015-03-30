@@ -5,10 +5,11 @@ class GamificationPluginProfileControllerTest < ActionController::TestCase
   def setup
     @profile = fast_create(Profile)
     @person = create_user('person').person
+    @environment = Environment.default
     login_as(@person.identifier)
   end
 
-  attr_accessor :profile, :person
+  attr_accessor :profile, :person, :environment
 
   should 'display points in gamification info page' do
     person.add_points(20, :category => :comment_author)
@@ -26,8 +27,12 @@ class GamificationPluginProfileControllerTest < ActionController::TestCase
   end
 
   should 'display person badges' do
-    person.add_badge(1)
-    person.add_badge(2)
+    badge1 = GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 1)
+    badge2 = GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 2, :custom_fields => {:threshold => 10})
+    GamificationPlugin.gamification_set_rules(environment)
+
+    person.add_badge(badge1.id)
+    person.add_badge(badge2.id)
     get :info, :profile => profile.identifier
     assert_select '.badges .badge-list .badge', 2
   end
