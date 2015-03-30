@@ -24,7 +24,7 @@ class CommentTest < ActiveSupport::TestCase
 
   should 'add merit badge to author when create 5 new comments' do
     5.times { create(Comment, :source => article, :author_id => person.id) }
-    assert_equal 'commenter', person.badges.first.name
+    assert_equal 'comment_author', person.badges.first.name
   end
 
   should 'add merit points to comment owner when an user like his comment' do

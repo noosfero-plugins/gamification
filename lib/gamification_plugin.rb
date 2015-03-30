@@ -17,7 +17,9 @@ class GamificationPlugin < Noosfero::Plugin
   # Override initial rules with environment specific rules
   def self.gamification_set_rules(environment)
     Merit::AppPointRules.clear
+    Merit::AppBadgeRules.clear
     Merit::AppPointRules.merge!(Merit::PointRules.new(environment).defined_rules)
+    Merit::AppBadgeRules.merge!(Merit::BadgeRules.new(environment).defined_rules)
   end
 
   def application_controller_filters
@@ -37,23 +39,23 @@ class GamificationPlugin < Noosfero::Plugin
 
   Merit::Badge.create!(
     id: 1,
-    name: "commenter",
+    name: "comment_author",
     description: "Commenter"
   )
   Merit::Badge.create!(
     id: 2,
-    name: "relevant-commenter",
+    name: "relevant_commenter",
     description: "Relevant Commenter"
   )
   Merit::Badge.create!(
     id: 3,
-    name: "article-creator",
+    name: "article_author",
     description: "Article Creator",
     level: 1
   )
   Merit::Badge.create!(
     id: 4,
-    name: "article-creator",
+    name: "article_author",
     description: "Article Creator",
     level: 2
   )

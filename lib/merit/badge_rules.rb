@@ -20,17 +20,40 @@ module Merit
   class BadgeRules
     include Merit::BadgeRulesMethods
 
-    def initialize
+    AVAILABLE_RULES = {
+      :comment_author => {
+        :action => 'comment#create',
+        :default_threshold => 5,
+        :value => lambda { |comment| comment.author.present? ? comment.author.comments.count : 0 }
+      },
+      :article_author => {
+        :action => 'article#create',
+        :default_threshold => 5,
+        :value => lambda { |article| article.author.present? ? article.author.articles.count : 0 }
+      },
+      :relevant_commenter => {
+        :action => 'vote_plugin_profile#vote',
+        :default_threshold => 5,
+        :value => lambda { |voteable| voteable.kind_of?(Comment) ? voteable.votes.count : 0 }
+      }
+    }
 
-      grant_on 'comment#create', badge: 'commenter' do |comment|
-        comment.author.present? && comment.author.comments.count >= 5
+    def initialize(environment=nil)
+      return if environment.nil?
+      @environment = environment
+
+      Merit::Badge.all.each do |badge|
+        setting = AVAILABLE_RULES[badge.name.to_sym]
+        grant_on setting[:action], :badge => badge.name do |source|
+          setting[:value].call(source) >= setting[:default_threshold]
+        end
       end
 
-      grant_on 'article#create', badge: 'article-creator', level: 1 do |article|
+      grant_on 'article#create', badge: 'article_author', level: 1 do |article|
         article.author.present? && article.author.articles.count >= 5
       end
 
-      grant_on 'article#create', badge: 'article-creator', level: 2 do |article|
+      grant_on 'article#create', badge: 'article_author', level: 2 do |article|
         article.author.present? && article.author.articles.count >= 10
       end
 

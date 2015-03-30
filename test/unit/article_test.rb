@@ -24,13 +24,13 @@ class ArticleTest < ActiveSupport::TestCase
 
   should 'add merit badge to author when create 5 new articles' do
     5.times { create(Article, :profile_id => person.id, :author => person) }
-    assert_equal 'article-creator', person.badges.first.name
+    assert_equal 'article_author', person.badges.first.name
     assert_equal 1, person.badges.first.level
   end
 
   should 'add merit badge level 2 to author when create 10 new articles' do
     10.times { create(Article, :profile_id => person.id, :author => person) }
-    assert_equal ['article-creator'], person.badges.map(&:name).uniq
+    assert_equal ['article_author'], person.badges.map(&:name).uniq
     assert_equal [1, 2], person.badges.map(&:level)
   end
 

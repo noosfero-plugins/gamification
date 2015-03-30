@@ -33,9 +33,9 @@ module Merit
         :value => lambda {|vote| vote.vote},
         :default_weight => 5
       },
+      # TODO comment_voter and article_voter
     }
 
-    # FIXME get value from environment
     def weight(category)
       settings = Noosfero::Plugin::Settings.new(@environment, GamificationPlugin)
       settings.settings.fetch(:point_rules, {}).fetch(category.to_s, {}).fetch('weight', AVAILABLE_RULES[category][:default_weight]).to_i
