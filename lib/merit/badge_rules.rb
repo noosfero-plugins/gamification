@@ -41,13 +41,8 @@ module Merit
     def initialize(environment=nil)
       return if environment.nil?
       @environment = environment
-      # FIXME avoid this
-      Merit::Badge.all.each { |badge| badge.destroy }
 
-      GamificationPlugin::Badge.all.each do |badge|
-        # FIXME avoid this
-        Merit::Badge.create!(:name => badge.name, :id => badge.id, :level => badge.level) # FIXME conflict with multitenancy?
-
+      environment.gamification_plugin_badges.all.each do |badge|
         setting = AVAILABLE_RULES[badge.name.to_sym]
         grant_on setting[:action], :badge => badge.name, :level => badge.level do |source|
           setting[:value].call(source) >= (badge.custom_fields || {}).fetch(:threshold, setting[:default_threshold])

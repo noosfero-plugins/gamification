@@ -1,3 +1,5 @@
+require 'merit_badge'
+
 module Merit
   module ControllerExtensions
 
