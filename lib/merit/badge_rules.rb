@@ -36,7 +36,7 @@ module Merit
       environment.gamification_plugin_badges.all.each do |badge|
         setting = AVAILABLE_RULES[badge.name.to_sym]
         grant_on setting[:action], :badge => badge.name, :level => badge.level, :to => setting[:to] do |source|
-          setting[:value].call(source) >= (badge.custom_fields || {}).fetch(:threshold, setting[:default_threshold])
+          setting[:value].call(source) >= (badge.custom_fields || {}).fetch(:threshold, setting[:default_threshold]).to_i
         end
       end
     end
