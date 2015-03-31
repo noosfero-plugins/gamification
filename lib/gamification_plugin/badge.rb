@@ -6,4 +6,8 @@ class GamificationPlugin::Badge < Noosfero::Plugin::ActiveRecord
 
   serialize :custom_fields
 
+  def threshold
+    (custom_fields || {}).fetch(:threshold, '')
+  end
+
 end

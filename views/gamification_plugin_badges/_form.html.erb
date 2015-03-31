@@ -1,0 +1,35 @@
+<%= form_for(@gamification_plugin_badge, :url => {:action => @gamification_plugin_badge.new_record? ? :create : :update}) do |f| %>
+  <% if @gamification_plugin_badge.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@gamification_plugin_badge.errors.count, "error") %> prohibited this gamification_plugin_badge from being saved:</h2>
+
+      <ul>
+      <% @gamification_plugin_badge.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :level %><br />
+    <%= f.text_field :level %>
+  </div>
+  <%= f.fields_for :custom_fields do |c| %>
+  <div class="field">
+    <%= c.label :threshold %><br />
+    <%= c.text_field :threshold %>
+  </div>
+  <% end %>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

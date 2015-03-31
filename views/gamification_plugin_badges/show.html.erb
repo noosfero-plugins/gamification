@@ -1,0 +1,27 @@
+<h1><%= _('Gamification Plugin: Show Badge') %></h1>
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @gamification_plugin_badge.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @gamification_plugin_badge.description %>
+</p>
+
+<p>
+  <b>Level:</b>
+  <%= @gamification_plugin_badge.level %>
+</p>
+
+<p>
+  <b>Threshold:</b>
+  <%= @gamification_plugin_badge.threshold %>
+</p>
+
+
+<%= link_to 'Edit', :action => :edit, :id => @gamification_plugin_badge.id %> |
+<%= link_to 'Back', :action => :index %>

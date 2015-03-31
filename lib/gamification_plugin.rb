@@ -29,12 +29,14 @@ class GamificationPlugin < Noosfero::Plugin
     }]
   end
 
-  Merit.setup do |config|
-    config.checks_on_each_request = false
-    config.user_model_name = 'Profile'
-    config.current_user_method = 'current_person'
-  end
+  ActionDispatch::Reloader.to_prepare do
+    Merit.setup do |config|
+      config.checks_on_each_request = false
+      config.user_model_name = 'Profile'
+      config.current_user_method = 'current_person'
+    end
 
-  require 'merit_ext'
+    require_dependency 'merit_ext'
+  end
 
 end

@@ -1,0 +1,29 @@
+<h1><%= _('Gamification Plugin: Listing Badges') %></h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Level</th>
+    <th>Threshold</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @gamification_plugin_badges.each do |gamification_plugin_badge| %>
+  <tr>
+    <td><%= gamification_plugin_badge.name %></td>
+    <td><%= gamification_plugin_badge.description %></td>
+    <td><%= gamification_plugin_badge.level %></td>
+    <td><%= gamification_plugin_badge.threshold %></td>
+    <td><%= link_to 'Show', :action => :show, :id => gamification_plugin_badge.id %></td>
+    <td><%= link_to 'Edit', :action => :edit, :id => gamification_plugin_badge.id %></td>
+    <td><%= link_to 'Destroy', :action => :destroy, :id => gamification_plugin_badge.id, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Badge', :action => :new %>
