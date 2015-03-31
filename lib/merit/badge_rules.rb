@@ -22,9 +22,10 @@ module Merit
         :value => lambda { |article| article.author.present? ? article.author.articles.count : 0 }
       },
       :relevant_commenter => {
-        :action => 'vote_plugin_profile#vote',
+        :action => 'vote#create',
         :default_threshold => 5,
-        :value => lambda { |voteable| voteable.kind_of?(Comment) ? voteable.votes.count : 0 }
+        :to => lambda {|vote| vote.voteable.author},
+        :value => lambda { |vote| vote.voteable.kind_of?(Comment) ? Vote.for_voteable(vote.voteable).where('vote > 0').count : 0 }
       }
     }
 

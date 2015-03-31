@@ -31,6 +31,18 @@ class CommentTest < ActiveSupport::TestCase
     assert_equal 'comment_author', person.badges.first.name
   end
 
+  should 'add badge to author when users vote in his comment' do
+    GamificationPlugin::Badge.create!(:owner => environment, :name => 'relevant_commenter')
+    GamificationPlugin.gamification_set_rules(environment)
+
+    comment = create(Comment, :source => article, :author_id => person.id)
+    4.times { Vote.create!(:voter => fast_create(Person), :voteable => comment, :vote => 1) }
+    Vote.create!(:voter => fast_create(Person), :voteable => comment, :vote => -1)
+    assert_equal [], person.badges
+    Vote.create!(:voter => fast_create(Person), :voteable => comment, :vote => 1)
+    assert_equal 'relevant_commenter', person.reload.badges.first.name
+  end
+
   should 'add merit points to comment owner when an user like his comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
