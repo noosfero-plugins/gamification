@@ -29,6 +29,10 @@ class GamificationPlugin < Noosfero::Plugin
     }]
   end
 
+  def body_ending
+    proc { render :file => 'gamification/display_achievements' }
+  end
+
   ActionDispatch::Reloader.to_prepare do
     Merit.setup do |config|
       config.checks_on_each_request = false

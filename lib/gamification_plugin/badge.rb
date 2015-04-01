@@ -10,4 +10,10 @@ class GamificationPlugin::Badge < Noosfero::Plugin::ActiveRecord
     (custom_fields || {}).fetch(:threshold, '')
   end
 
+  before_destroy :remove_badges
+
+  def remove_badges
+    Merit::BadgesSash.where(:badge_id => self.id).destroy_all
+  end
+
 end

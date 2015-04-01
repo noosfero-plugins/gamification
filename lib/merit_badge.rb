@@ -5,8 +5,10 @@ module Merit
   # Delegate find methods to GamificationPlugin::Badge
   class Badge
     class << self
-      [:find_by_name_and_level, :find].each do |method|
-        delegate method, :to => 'GamificationPlugin::Badge'
+      delegate :find_by_name_and_level, :to => 'GamificationPlugin::Badge'
+
+      def find(id)
+        GamificationPlugin::Badge.find_by_id(id)
       end
     end
   end

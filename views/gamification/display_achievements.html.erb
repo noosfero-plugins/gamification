@@ -1,0 +1,7 @@
+<script>
+<% if current_person.present? %>
+  <% current_person.badges.each do |badge| %>
+    <%= "console.log(#{badge.name})" %>
+  <% end %>
+<% end %>
+</script>
