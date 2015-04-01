@@ -1,4 +1,4 @@
-<%= form_for(@gamification_plugin_badge, :url => {:action => @gamification_plugin_badge.new_record? ? :create : :update}) do |f| %>
+<%= form_for(@gamification_plugin_badge, :url => {:action => @gamification_plugin_badge.new_record? ? :create : :update, :id => @gamification_plugin_badge.id }) do |f| %>
   <% if @gamification_plugin_badge.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@gamification_plugin_badge.errors.count, "error") %> prohibited this gamification_plugin_badge from being saved:</h2>
@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= f.select :name, Merit::BadgeRules::AVAILABLE_RULES.map{ |key, rule| key } %>
   </div>
   <div class="field">
     <%= f.label :description %><br />
