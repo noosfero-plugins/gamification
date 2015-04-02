@@ -28,4 +28,13 @@ class BadgeTest < ActiveSupport::TestCase
     assert_equal [], person.reload.badges.compact
   end
 
+  should 'list pending badges from a person' do
+    badge1 = GamificationPlugin::Badge.create!(:owner => environment)
+    person.add_badge(badge1.id)
+    person.sash.notify_all_badges_from_user
+    badge2 = GamificationPlugin::Badge.create!(:owner => environment)
+    person.add_badge(badge2.id)
+    assert_equal [badge2], person.badges.notification_pending
+  end
+
 end

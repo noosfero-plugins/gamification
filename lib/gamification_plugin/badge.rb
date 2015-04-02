@@ -2,6 +2,8 @@ class GamificationPlugin::Badge < Noosfero::Plugin::ActiveRecord
 
   belongs_to :owner, :polymorphic => true
 
+  has_many :badges_sash, :class_name => 'Merit::BadgesSash'
+
   attr_accessible :owner, :name, :description, :level, :custom_fields
 
   serialize :custom_fields
@@ -15,5 +17,7 @@ class GamificationPlugin::Badge < Noosfero::Plugin::ActiveRecord
   def remove_badges
     Merit::BadgesSash.where(:badge_id => self.id).destroy_all
   end
+
+  scope :notification_pending, :joins => :badges_sash, :conditions => ['badges_sashes.notified_user = false']
 
 end

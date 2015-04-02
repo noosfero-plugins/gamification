@@ -1,6 +1,9 @@
-require 'merit_badge'
+require 'merit/badge_ext'
+require 'merit/sash'
+require 'merit/badges_sash'
 
 module Merit
+
   module ControllerExtensions
 
     private

@@ -1,0 +1,8 @@
+<%= stylesheet_link_tag '/plugins/gamification/animate.css' %>
+
+<script>
+<% badges.each do |badge| %>
+  <% html = render :file => 'gamification/notification_badge', :locals => {:badge => badge} %>
+  <%= "gamificationPlugin.display_notification('#{j html}');" %>
+<% end %>
+</script>

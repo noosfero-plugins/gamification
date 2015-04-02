@@ -1,7 +1,7 @@
 class GamificationPluginProfileController < ProfileController
 
   def info
-    @target = current_person
+    @target = profile
     render 'gamification/info'
   end
 

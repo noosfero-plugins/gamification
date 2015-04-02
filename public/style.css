@@ -1,0 +1,24 @@
+.gamification-notification .badge .image {
+  width: 110px;
+  height: 80px;
+  background: gray;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gamification-notification .badge {
+  margin-bottom: 7px;
+}
+
+.gamification-notification .badge .description {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.gamification-notification .badge .level {
+  font-size: 10px;
+}
+
+.gamification-notification .all-badges {
+  font-size: 10px;
+}

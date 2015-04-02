@@ -30,7 +30,23 @@ class GamificationPlugin < Noosfero::Plugin
   end
 
   def body_ending
-    proc { render :file => 'gamification/display_achievements' }
+    proc do
+      if current_person.present?
+        badges = current_person.badges.notification_pending.all
+        current_person.sash.notify_all_badges_from_user
+        render :file => 'gamification/display_notifications', :locals => {:badges => badges}
+      else
+        ''
+      end
+    end
+  end
+
+  def stylesheet?
+    true
+  end
+
+  def js_files
+    ['jquery.noty.packaged.min.js', 'main.js']
   end
 
   ActionDispatch::Reloader.to_prepare do

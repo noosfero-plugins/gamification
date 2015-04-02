@@ -1,0 +1,9 @@
+<div class="gamification-notification">
+  <h2 class="message"><%= _('You earn a new badge!') %></h2>
+  <div class="badge">
+    <div class="image <%= badge.name %>"></div>
+    <div class="description"><%= badge.description %></div>
+    <div class="level"><%= _('Level %s' % badge.level) %></div>
+  </div>
+  <div class="all-badges"><%= link_to _('My Badges'), {:controller => 'gamification_plugin_profile', :action => :info, :profile => current_person.identifier } %></div>
+</div>
