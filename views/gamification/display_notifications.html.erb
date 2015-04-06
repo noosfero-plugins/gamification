@@ -1,8 +1,14 @@
 <%= stylesheet_link_tag '/plugins/gamification/animate.css' %>
 
+<%= link_to({:controller => 'gamification_plugin_profile', :action => :info, :profile => current_person.identifier }, :class => 'gamification-plugin user-info-template', :style => 'display: none') do %>
+  <span class="level"><span class="icon">&nbsp;</span><span class="value"></span></span>
+  <span class="points"><span class="icon">&nbsp;</span><span class="value"></span></span>
+  <span class="badges"><span class="icon">&nbsp;</span><span class="value"></span></span>
+<% end %>
+
 <script>
 <% badges.each do |badge| %>
   <% html = render :file => 'gamification/notification_badge', :locals => {:badge => badge} %>
-  <%= "gamificationPlugin.display_notification('#{j html}');" %>
+  <%= "gamificationPlugin.displayNotification('#{j html}');" %>
 <% end %>
 </script>

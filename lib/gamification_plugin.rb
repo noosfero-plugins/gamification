@@ -10,7 +10,7 @@ class GamificationPlugin < Noosfero::Plugin
 
   def user_data_extras
     proc do
-      current_person.present? ? {:points => current_person.points} : {}
+      current_person.present? ? {:gamification_plugin => {:points => current_person.points, :badges => current_person.badges, :level => current_person.level}} : {}
     end
   end
 

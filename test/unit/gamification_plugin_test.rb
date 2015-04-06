@@ -9,8 +9,8 @@ class GamificationPluginTest < ActiveSupport::TestCase
 
   attr_accessor :plugin, :current_person
 
-  should 'return user points in user_data_extras' do
-    assert_equal({:points => 0}, instance_eval(&plugin.user_data_extras))
+  should 'return user points and badges in user_data_extras' do
+    assert_equal({:gamification_plugin => {:points => 0, :badges => [], :level => 0}}, instance_eval(&plugin.user_data_extras))
   end
 
 end
