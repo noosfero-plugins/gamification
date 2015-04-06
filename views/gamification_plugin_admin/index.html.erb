@@ -1,19 +1,15 @@
 <h1><%= _('Gamification Settings')%></h1>
 
-<%= form_for(:settings) do |f| %>
-  <%= f.fields_for :point_rules do |p| %>
-    <div class="point-rules">
-      <h3><%= _('Point Rules') %></h3>
-      <% Merit::PointRules::AVAILABLE_RULES.each do |category, setting| %>
-        <%= labelled_form_field(_(category), p.text_field("#{category}[weight]", :value => @settings.settings.fetch(:point_rules, {}).fetch(category.to_s, {}).fetch('weight', setting[:default_weight]))) %>
-      <% end %>
-    </div>
-  <% end %>
+<div>
+  <%= link_to _('Manage Point Rules'), :controller => 'gamification_plugin_admin', :action => :points %>
+</div>
 
-  <% button_bar do %>
-    <%= submit_button(:save, c_('Save'), :cancel => {:controller => 'plugins', :action => 'index'}) %>
-  <% end %>
+<div>
+  <%= link_to _('Manage Badges'), :controller => 'gamification_plugin_badges' %>
+</div>
 
-<% end %>
+<div>
+  <%#= link_to _('Manage Levels'), :controller => 'gamification_plugin_admin', :action => :levels %>
+</div>
 
-<%= link_to _('Badges'), :controller => 'gamification_plugin_badges' %>
+<%= button :cancel, _('Cancel'), :controller => :plugins, :action => :index %>

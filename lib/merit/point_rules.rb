@@ -8,6 +8,7 @@ module Merit
         :undo_action => 'comment#destroy',
         :to => :author,
         :value => 1,
+        :description => _('Point weight for comment author'),
         :default_weight => 10
       },
       :article_author => {
@@ -15,6 +16,7 @@ module Merit
         :undo_action => 'article#destroy',
         :to => :author,
         :value => 1,
+        :description => _('Point weight for article author'),
         :default_weight => 50
       },
       :vote_voteable_author => {
@@ -23,6 +25,7 @@ module Merit
         :to => lambda {|vote| vote.voteable.author},
         :profile => lambda {|vote| vote.voteable.profile},
         :value => lambda {|vote| vote.vote},
+        :description => _('Point weight for the author of a voted content'),
         :default_weight => 5
       },
       :vote_voteable => {
@@ -31,6 +34,7 @@ module Merit
         :to => lambda {|vote| vote.voteable},
         :profile => lambda {|vote| vote.voteable.profile},
         :value => lambda {|vote| vote.vote},
+        :description => _('Point weight for a voted content'),
         :default_weight => 5
       },
       # TODO comment_voter and article_voter

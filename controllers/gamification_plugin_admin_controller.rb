@@ -1,28 +1,28 @@
 
 class GamificationPluginAdminController < PluginAdminController
 
-  def index
-    settings = params[:settings]
-    settings ||= {}
+  before_filter :load_settings
 
-    @settings = Noosfero::Plugin::Settings.new(environment, GamificationPlugin, settings)
-    if request.post?
-      @settings.save!
-      session[:notice] = 'Settings succefully saved.'
-      redirect_to :action => 'index'
+  def points
+    if save_settings
+      render :file => 'gamification_plugin_admin/index'
+    else
+      render :file => 'gamification_plugin_admin/points'
     end
   end
 
-  def new_badge
-    if request.post?
-      badge = GamificationPlugin::Badge.new(params[:badge])
-      badge.owner = environment
-      badge.save!
-      session[:notice] = 'Settings succefully saved.'
-      redirect_to :action => 'index'
-    else
-      render :file => 'gamification_plugin_admin/new_badge'
-    end
+  protected
+
+  def save_settings
+    return false unless request.post?
+    @settings.save!
+    session[:notice] = 'Settings succefully saved.'
+    true
+  end
+
+  def load_settings
+    settings = params[:settings] || {}
+    @settings = Noosfero::Plugin::Settings.new(environment, GamificationPlugin, settings)
   end
 
 end

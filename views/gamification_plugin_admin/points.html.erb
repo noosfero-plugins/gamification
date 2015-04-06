@@ -1,0 +1,18 @@
+<h1><%= _('Gamification Settings: Point Rules')%></h1>
+
+<%= form_for(:settings) do |f| %>
+  <%= f.fields_for :point_rules do |p| %>
+    <div class="point-rules">
+      <h3><%= _('Point Rules') %></h3>
+      <% Merit::PointRules::AVAILABLE_RULES.each do |category, setting| %>
+        <%= labelled_form_field(_(setting[:description]), p.text_field("#{category}[weight]", :value => @settings.settings.fetch(:point_rules, {}).fetch(category.to_s, {}).fetch('weight', setting[:default_weight]))) %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% button_bar do %>
+    <%= submit_button(:save, c_('Save'), :cancel => {:action => 'index'}) %>
+  <% end %>
+
+<% end %>
+
