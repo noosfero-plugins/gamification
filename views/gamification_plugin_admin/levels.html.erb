@@ -1,0 +1,26 @@
+<%= javascript_include_tag 'plugins/gamification/admin.js' %>
+<%= stylesheet_link_tag 'plugins/gamification/admin.css' %>
+
+<div class="gamification-plugin-rank-rules">
+<h1><%= _('Gamification Settings: Rank Rules')%></h1>
+
+<%= form_for(:settings) do |f| %>
+  <div class="rank-rules">
+    <h3><%= _('Rank Rules') %></h3>
+    <div class="items">
+      <%= render :partial => 'gamification_plugin_admin/level', :collection => @settings.rank_rules %>
+    </div>
+  </div>
+
+  <% button_bar do %>
+    <%= link_to_function(_('New Level'), 'gamificationPluginAdmin.addNewLevelRule();', :class => 'button icon-add with-text') %>
+    <%= submit_button(:save, c_('Save'), :cancel => {:action => 'index'}) %>
+  <% end %>
+
+<% end %>
+
+<div class="template-level">
+  <%= render :partial => 'gamification_plugin_admin/level', :collection => [{}] %>
+</div>
+
+</div>

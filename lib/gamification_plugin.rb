@@ -8,6 +8,10 @@ class GamificationPlugin < Noosfero::Plugin
     _("Gamification Plugin")
   end
 
+  def self.settings(environment)
+    Noosfero::Plugin::Settings.new(environment, GamificationPlugin)
+  end
+
   def user_data_extras
     proc do
       current_person.present? ? {:gamification_plugin => {:points => current_person.points, :badges => current_person.badges, :level => current_person.level}} : {}
@@ -54,6 +58,7 @@ class GamificationPlugin < Noosfero::Plugin
       config.checks_on_each_request = false
       config.user_model_name = 'Profile'
       config.current_user_method = 'current_person'
+      config.add_observer 'Merit::RankObserver'
     end
 
     require_dependency 'merit_ext'

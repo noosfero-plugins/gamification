@@ -11,6 +11,14 @@ class GamificationPluginAdminController < PluginAdminController
     end
   end
 
+  def levels
+    if save_settings
+      render :file => 'gamification_plugin_admin/index'
+    else
+      render :file => 'gamification_plugin_admin/levels'
+    end
+  end
+
   protected
 
   def save_settings

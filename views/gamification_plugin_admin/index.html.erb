@@ -1,15 +1,19 @@
 <h1><%= _('Gamification Settings')%></h1>
 
-<div>
-  <%= link_to _('Manage Point Rules'), :controller => 'gamification_plugin_admin', :action => :points %>
-</div>
+<ul>
+  <li>
+    <%= link_to _('Manage Point Rules'), :controller => 'gamification_plugin_admin', :action => :points %>
+  </li>
 
-<div>
-  <%= link_to _('Manage Badges'), :controller => 'gamification_plugin_badges' %>
-</div>
+  <li>
+    <%= link_to _('Manage Badges'), :controller => 'gamification_plugin_badges' %>
+  </li>
 
-<div>
-  <%#= link_to _('Manage Levels'), :controller => 'gamification_plugin_admin', :action => :levels %>
-</div>
+  <li>
+    <%= link_to _('Manage Levels'), :controller => 'gamification_plugin_admin', :action => :levels %>
+  </li>
+</ul>
 
-<%= button :cancel, _('Cancel'), :controller => :plugins, :action => :index %>
+<div class="actions">
+  <%= button :cancel, _('Cancel'), :controller => :plugins, :action => :index %>
+</div>
