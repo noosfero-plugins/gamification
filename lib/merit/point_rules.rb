@@ -17,7 +17,16 @@ module Merit
         :to => :author,
         :value => 1,
         :description => _('Point weight for article author'),
-        :default_weight => 50
+        :default_weight => 500
+      },
+      :article_community => {
+        :action => 'article#create',
+        :undo_action => 'article#destroy',
+        :to => :profile,
+        :value => 1,
+        :description => _('Point weight for article community'),
+        :default_weight => 500,
+        :condition => lambda {|target| target.profile.community? }
       },
       :vote_voteable_author => {
         :action => 'vote#create',
@@ -50,13 +59,20 @@ module Merit
       weight(category) * value
     end
 
+    def condition(setting, target)
+      condition = setting[:condition]
+      condition.present? ? condition.call(target) : true
+    end
+
     def initialize(environment=nil)
       return if environment.nil?
       @environment = environment
 
       AVAILABLE_RULES.each do |category, setting|
         [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
-          score lambda {|target| signal * calculate_score(target, category, setting[:value])}, :on => action, :to => setting[:to], :category => category
+          score lambda {|target| signal * calculate_score(target, category, setting[:value])}, :on => action, :to => setting[:to], :category => category do |target|
+            condition(setting, target)
+          end
         end
       end
     end
