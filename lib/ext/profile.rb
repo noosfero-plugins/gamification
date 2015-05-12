@@ -6,10 +6,11 @@ class Profile
 
   def gamification_plugin_calculate_level
     settings = GamificationPlugin.settings(environment)
+    score = self.points
     last_level = 0
-    (settings.get_setting(:rank_rules) || []).sort_by {|r| r[:points] }.each do |rule|
-      return last_level if points < rule[:points]
-      last_level = rule[:level]
+    (settings.get_setting(:rank_rules) || []).sort_by {|r| r[:points] }.each_with_index do |rule, i|
+      return last_level if score < rule[:points].to_i
+      last_level = rule[:level] || i+1
     end
     last_level
   end
