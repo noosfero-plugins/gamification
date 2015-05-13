@@ -9,7 +9,7 @@ module Merit
         :to => :author,
         :value => 1,
         :description => _('Point weight for comment author'),
-        :default_weight => 10
+        :default_weight => 150
       },
       :comment_article_author => {
         :action => 'comment#create',
@@ -17,7 +17,7 @@ module Merit
         :to => lambda {|comment| comment.source.author},
         :value => 1,
         :description => _('Point weight for article author of a comment'),
-        :default_weight => 10
+        :default_weight => 50
       },
       :article_author => {
         :action => 'article#create',
@@ -33,7 +33,7 @@ module Merit
         :to => :profile,
         :value => 1,
         :description => _('Point weight for article community'),
-        :default_weight => 500,
+        :default_weight => 600,
         :condition => lambda {|target| target.profile.community? }
       },
       :vote_voteable_author => {
@@ -43,7 +43,7 @@ module Merit
         :profile => lambda {|vote| vote.voteable.profile},
         :value => lambda {|vote| vote.vote},
         :description => _('Point weight for the author of a voted content'),
-        :default_weight => 5
+        :default_weight => 50
       },
       :vote_voteable => {
         :action => 'vote#create',
@@ -52,7 +52,7 @@ module Merit
         :profile => lambda {|vote| vote.voteable.profile},
         :value => lambda {|vote| vote.vote},
         :description => _('Point weight for a voted content'),
-        :default_weight => 5
+        :default_weight => 50
       },
       # TODO comment_voter and article_voter
     }

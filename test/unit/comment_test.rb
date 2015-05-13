@@ -46,7 +46,7 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit points to comment owner when an user like his comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    assert_difference 'comment.author.points(:category => :vote_voteable_author)', 5 do
+    assert_difference 'comment.author.points(:category => :vote_voteable_author)', 50 do
       Vote.create!(:voter => person, :voteable => comment, :vote => 1)
     end
   end
@@ -55,7 +55,7 @@ class CommentTest < ActiveSupport::TestCase
     comment = create(Comment, :source => article, :author_id => person.id)
     Vote.create!(:voter => person, :voteable => comment, :vote => 1)
 
-    assert_difference 'comment.author.points', -5 do
+    assert_difference 'comment.author.points', -50 do
       Vote.where(:voteable_id => comment.id).destroy_all
     end
   end
@@ -63,7 +63,7 @@ class CommentTest < ActiveSupport::TestCase
   should 'subtract merit points from comment owner when an user dislike his comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    assert_difference 'comment.author.points(:category => :vote_voteable_author)', -5 do
+    assert_difference 'comment.author.points(:category => :vote_voteable_author)', -50 do
       Vote.create!(:voter => person, :voteable => comment, :vote => -1)
     end
   end
@@ -72,7 +72,7 @@ class CommentTest < ActiveSupport::TestCase
     comment = create(Comment, :source => article, :author_id => person.id)
     Vote.create!(:voter => person, :voteable => comment, :vote => -1)
 
-    assert_difference 'comment.author.points', 5 do
+    assert_difference 'comment.author.points', 50 do
       Vote.where(:voteable_id => comment.id).destroy_all
     end
   end
