@@ -1,8 +1,8 @@
 class GamificationPluginProfileController < ProfileController
 
-  def info
+  def dashboard
     @target = profile
-    render 'gamification/info'
+    render 'gamification/dashboard'
   end
 
 end

@@ -10,19 +10,19 @@ class GamificationPluginProfileControllerTest < ActionController::TestCase
 
   attr_accessor :person, :environment
 
-  should 'display points in gamification info page' do
+  should 'display points in gamification dashboard' do
     person.add_points(20, :category => :comment_author)
     person.add_points(30, :category => :article_author)
-    get :info, :profile => person.identifier
+    get :dashboard, :profile => person.identifier
     assert_tag :div, :attributes => {:class => 'score article_author'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '30'}
     assert_tag :div, :attributes => {:class => 'score comment_author'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '20'}
     assert_tag :div, :attributes => {:class => 'score total'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '50'}
   end
 
-  should 'display level in gamification info page' do
+  should 'display level in gamification dashboard' do
     person.update_attribute(:level, 12)
-    get :info, :profile => person.identifier
-    assert_tag :span, :attributes => {:class => 'level'}, :content => '12'
+    get :dashboard, :profile => person.identifier
+    assert_tag :div, :attributes => {:class => 'level pie-chart', 'data-percent' => '100'}, :child => {:tag => 'span', :content => '12'}
   end
 
   should 'display person badges' do
@@ -32,7 +32,7 @@ class GamificationPluginProfileControllerTest < ActionController::TestCase
 
     person.add_badge(badge1.id)
     person.add_badge(badge2.id)
-    get :info, :profile => person.identifier
+    get :dashboard, :profile => person.identifier
     assert_select '.badges .badge-list .badge', 2
   end
 

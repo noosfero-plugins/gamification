@@ -1,6 +1,6 @@
 <%= stylesheet_link_tag '/plugins/gamification/animate.css' %>
 
-<%= link_to({:controller => 'gamification_plugin_profile', :action => :info, :profile => current_person.identifier }, :class => 'gamification-plugin user-info-template', :style => 'display: none') do %>
+<%= link_to({:controller => 'gamification_plugin_profile', :action => :dashboard, :profile => current_person.identifier }, :class => 'gamification-plugin user-info-template', :style => 'display: none') do %>
   <span class="level"><span class="icon">&nbsp;</span><span class="value"></span></span>
   <span class="points"><span class="icon">&nbsp;</span><span class="value"></span></span>
   <span class="badges"><span class="icon">&nbsp;</span><span class="value"></span></span>

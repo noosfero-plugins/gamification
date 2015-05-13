@@ -1,6 +1,13 @@
+<% extend GamificationPlugin::DashboardHelper %>
+
 <div class="gamification">
-  <h1><%= _('Gamification Info for %s' % @target.identifier) %></h1>
-  <h3> <%= _('Level:') %>&nbsp;<span class="level"><%= @target.level %></span></h3>
+  <h1><%= _('Gamification Dashboard for %s' % @target.identifier) %></h1>
+
+  <div>
+    <h3> <%= _('Level') %></h3>
+    <%= level_chart(@target) %>
+  </div>
+
   <div class="scores">
     <h3><%= _('Score') %></h3>
     <% Merit::PointRules::AVAILABLE_RULES.each do |category, setting| %>

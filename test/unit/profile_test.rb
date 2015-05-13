@@ -39,4 +39,19 @@ class ProfileTest < ActiveSupport::TestCase
     assert_equal 3, person.reload.level
   end
 
+  should 'return percentage of points earned in current level with no points' do
+    profile.stubs(:points).returns(0)
+    assert_equal 0, profile.gamification_plugin_level_percent
+  end
+
+  should 'return percentage of points earned in current level with full points' do
+    profile.stubs(:points).returns(10)
+    assert_equal 100, profile.gamification_plugin_level_percent
+  end
+
+  should 'return percentage of points earned in current level' do
+    profile.stubs(:points).returns(4)
+    assert_equal 40, profile.gamification_plugin_level_percent
+  end
+
 end

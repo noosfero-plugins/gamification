@@ -5,5 +5,5 @@
     <div class="description"><%= badge.description %></div>
     <div class="level"><%= _('Level %s' % badge.level) %></div>
   </div>
-  <div class="all-badges"><%= link_to _('My Badges'), {:controller => 'gamification_plugin_profile', :action => :info, :profile => current_person.identifier } %></div>
+  <div class="all-badges"><%= link_to _('My Badges'), {:controller => 'gamification_plugin_profile', :action => :dashboard, :profile => current_person.identifier } %></div>
 </div>

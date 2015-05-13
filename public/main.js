@@ -22,9 +22,20 @@ var gamificationPlugin = {
     info.find('.level .value').text(gamificationPlugin.level);
     info.insertAfter('#user .logged-in #homepage-link');
     info.show();
+  },
+  displayLevelChart: function() {
+    var chart = $('.gamification .pie-chart');
+    var size = 60;
+    chart.easyPieChart({lineWidth: 10, scaleColor: false, size: size, barColor: '#1EA5C5', trackColor: '#C0EEFF'});
+    chart.width(size);
+    chart.find('span').css('line-height', size+'px');
   }
 }
 
 jQuery(window).bind("userDataLoaded", function(event, data) {
   gamificationPlugin.displayUserInfo(data.gamification_plugin);
+});
+
+jQuery(document).ready(function($) {
+  gamificationPlugin.displayLevelChart();
 });

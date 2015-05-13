@@ -15,4 +15,13 @@ class Profile
     last_level
   end
 
+  def gamification_plugin_level_percent
+    settings = GamificationPlugin.settings(environment)
+    rules = settings.get_setting(:rank_rules)
+    return 100 if rules.blank? || rules.length < level
+
+    next_level_points = rules[level][:points]
+    100*points/next_level_points.to_f
+  end
+
 end

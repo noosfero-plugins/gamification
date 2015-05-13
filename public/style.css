@@ -53,3 +53,12 @@
 .gamification-notification .all-badges {
   font-size: 10px;
 }
+
+.gamification .pie-chart {
+  position: relative;
+  text-align: center;
+}
+.gamification .pie-chart canvas {
+  position: absolute;
+  left: 0;
+}

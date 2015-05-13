@@ -50,7 +50,7 @@ class GamificationPlugin < Noosfero::Plugin
   end
 
   def js_files
-    ['jquery.noty.packaged.min.js', 'main.js']
+    ['jquery.noty.packaged.min.js', 'jquery.easypiechart.min.js', 'main.js']
   end
 
   ActionDispatch::Reloader.to_prepare do
