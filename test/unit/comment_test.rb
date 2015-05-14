@@ -4,11 +4,12 @@ class CommentTest < ActiveSupport::TestCase
 
   def setup
     @person = create_user('testuser').person
-    @article = create(TextileArticle, :profile_id => person.id)
+    @author = create_user('testauthoruser').person
+    @article = create(TextileArticle, :profile_id => person.id, :author_id => @author.id)
     @environment = Environment.default
     GamificationPlugin.gamification_set_rules(@environment)
   end
-  attr_accessor :person, :article, :environment
+  attr_accessor :person, :article, :environment, :author
 
   should 'add merit points to author when create a new comment' do
     create(Comment, :source => article, :author_id => person.id)
@@ -52,7 +53,7 @@ class CommentTest < ActiveSupport::TestCase
   end
 
   should 'subtract merit points to comment owner when an user unlike his comment' do
-    comment = create(Comment, :source => article, :author_id => person.id)
+    comment = create(Comment, :source => article, :author_id => author.id)
     Vote.create!(:voter => person, :voteable => comment, :vote => 1)
 
     assert_difference 'comment.author.points', -50 do
@@ -69,11 +70,33 @@ class CommentTest < ActiveSupport::TestCase
   end
 
   should 'add merit points from comment owner when an user remove a dislike in his comment' do
-    comment = create(Comment, :source => article, :author_id => person.id)
+    comment = create(Comment, :source => article, :author_id => author.id)
     Vote.create!(:voter => person, :voteable => comment, :vote => -1)
 
     assert_difference 'comment.author.points', 50 do
       Vote.where(:voteable_id => comment.id).destroy_all
+    end
+  end
+
+  should 'add merit points to article author when create a new comment' do
+    assert_difference 'author.score_points.count' do
+      create(Comment, :source => article, :author_id => person.id)
+    end
+  end
+
+  should 'add merit points to voter when he likes a comment' do
+    comment = create(Comment, :source => article, :author_id => person.id)
+
+    assert_difference 'comment.author.points(:category => :vote_voter)', 10 do
+      Vote.create!(:voter => person, :voteable => comment, :vote => 1)
+    end
+  end
+
+  should 'add merit points to voter when he dislikes a comment' do
+    comment = create(Comment, :source => article, :author_id => person.id)
+
+    assert_difference 'comment.author.points(:category => :vote_voter)', 10 do
+      Vote.create!(:voter => person, :voteable => comment, :vote => -1)
     end
   end
 

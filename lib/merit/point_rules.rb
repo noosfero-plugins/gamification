@@ -54,7 +54,15 @@ module Merit
         :description => _('Point weight for a voted content'),
         :default_weight => 50
       },
-      # TODO comment_voter and article_voter
+      :vote_voter => {
+        :action => 'vote#create',
+        :undo_action => 'vote#destroy',
+        :to => lambda {|vote| vote.voter},
+        :profile => lambda {|vote| vote.voter},
+        :value => lambda {|vote| 1},
+        :description => _('Point weight for a voter'),
+        :default_weight => 10
+      },
     }
 
     def weight(category)

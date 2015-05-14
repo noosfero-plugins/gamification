@@ -59,4 +59,27 @@ class ArticleTest < ActiveSupport::TestCase
     end
   end
 
+  should 'add merit points to community when create a new article' do
+    community = fast_create(Community)
+    assert_difference 'community.score_points.count' do
+      create(Article, :profile_id => community.id, :author => person)
+    end
+  end
+
+  should 'add merit points to voter when he likes an article' do
+    article = create(Article, :name => 'Test', :profile => person, :author => person)
+
+    assert_difference 'article.author.points(:category => :vote_voter)', 10 do
+      Vote.create!(:voter => person, :voteable => article, :vote => 1)
+    end
+  end
+
+  should 'add merit points to voter when he dislikes an article' do
+    article = create(Article, :name => 'Test', :profile => person, :author => person)
+
+    assert_difference 'article.author.points(:category => :vote_voter)', 10 do
+      Vote.create!(:voter => person, :voteable => article, :vote => -1)
+    end
+  end
+
 end
