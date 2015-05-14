@@ -100,4 +100,10 @@ class CommentTest < ActiveSupport::TestCase
     end
   end
 
+  should 'add merit points to source article when create a comment' do
+    assert_difference 'article.points(:category => :comment_article)', 50 do
+      create(Comment, :source => article, :author_id => person.id)
+    end
+  end
+
 end

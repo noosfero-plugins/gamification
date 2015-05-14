@@ -19,6 +19,14 @@ module Merit
         :description => _('Point weight for article author of a comment'),
         :default_weight => 50
       },
+      :comment_article => {
+        :action => 'comment#create',
+        :undo_action => 'comment#destroy',
+        :to => lambda {|comment| comment.source},
+        :value => 1,
+        :description => _('Point weight for source article of a comment'),
+        :default_weight => 50
+      },
       :article_author => {
         :action => 'article#create',
         :undo_action => 'article#destroy',
