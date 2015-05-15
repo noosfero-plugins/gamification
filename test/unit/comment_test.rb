@@ -106,4 +106,12 @@ class CommentTest < ActiveSupport::TestCase
     end
   end
 
+  should 'add merit points to source community when create a comment' do
+    community = fast_create(Community)
+    article = create(TextileArticle, :profile_id => community.id, :author_id => @author.id)
+    assert_difference 'community.points(:category => :comment_community)', 50 do
+      create(Comment, :source => article, :author_id => person.id)
+    end
+  end
+
 end
