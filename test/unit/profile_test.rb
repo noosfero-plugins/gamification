@@ -54,4 +54,16 @@ class ProfileTest < ActiveSupport::TestCase
     assert_equal 40, profile.gamification_plugin_level_percent
   end
 
+  should 'return percentage of points earned in last level' do
+    profile.stubs(:level).returns(3)
+    profile.stubs(:points).returns(35)
+    assert_equal 100, profile.gamification_plugin_level_percent
+  end
+
+  should 'return percentage of points earned in an intermediate level' do
+    profile.stubs(:level).returns(2)
+    profile.stubs(:points).returns(25)
+    assert_equal 50, profile.gamification_plugin_level_percent
+  end
+
 end
