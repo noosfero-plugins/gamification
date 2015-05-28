@@ -21,11 +21,29 @@ module Merit
         :to => :author,
         :value => lambda { |article| article.author.present? ? article.author.articles.count : 0 }
       },
-      :relevant_commenter => {
+      :positive_votes_received => {
         :action => 'vote#create',
         :default_threshold => 5,
         :to => lambda {|vote| vote.voteable.author},
-        :value => lambda { |vote| vote.voteable.kind_of?(Comment) ? Vote.for_voteable(vote.voteable).where('vote > 0').count : 0 }
+        :value => lambda { |vote| Vote.for_voteable(vote.voteable).where('vote > 0').count }
+      },
+      :negative_votes_received => {
+        :action => 'vote#create',
+        :default_threshold => 5,
+        :to => lambda {|vote| vote.voteable.author},
+        :value => lambda { |vote| Vote.for_voteable(vote.voteable).where('vote < 0').count }
+      },
+      :votes_performed => {
+        :action => 'vote#create',
+        :default_threshold => 5,
+        :to => lambda {|vote| vote.voter},
+        :value => lambda { |vote| Vote.for_voter(vote.voter).count }
+      },
+      :friendly => {
+        :action => 'friendship#create',
+        :default_threshold => 5,
+        :to => lambda {|friendship| friendship.person},
+        :value => lambda { |friendship| friendship.person.friends.count }
       }
     }
 

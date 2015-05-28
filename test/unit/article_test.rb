@@ -82,4 +82,28 @@ class ArticleTest < ActiveSupport::TestCase
     end
   end
 
+  should 'add badge to author when users like his article' do
+    GamificationPlugin::Badge.create!(:owner => environment, :name => 'positive_votes_received')
+    GamificationPlugin.gamification_set_rules(environment)
+
+    article = create(Article, :name => 'Test', :profile => person, :author => person)
+    4.times { Vote.create!(:voter => fast_create(Person), :voteable => article, :vote => 1) }
+    Vote.create!(:voter => fast_create(Person), :voteable => article, :vote => -1)
+    assert_equal [], person.badges
+    Vote.create!(:voter => fast_create(Person), :voteable => article, :vote => 1)
+    assert_equal 'positive_votes_received', person.reload.badges.first.name
+  end
+
+  should 'add badge to author when users dislike his article' do
+    GamificationPlugin::Badge.create!(:owner => environment, :name => 'negative_votes_received')
+    GamificationPlugin.gamification_set_rules(environment)
+
+    article = create(Article, :name => 'Test', :profile => person, :author => person)
+    4.times { Vote.create!(:voter => fast_create(Person), :voteable => article, :vote => -1) }
+    Vote.create!(:voter => fast_create(Person), :voteable => article, :vote => 1)
+    assert_equal [], person.badges
+    Vote.create!(:voter => fast_create(Person), :voteable => article, :vote => -1)
+    assert_equal 'negative_votes_received', person.reload.badges.first.name
+  end
+
 end
