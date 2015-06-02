@@ -1,3 +1,7 @@
+<%= javascript_include_tag '/plugins/gamification/slick.min.js' %>
+<%= stylesheet_link_tag '/plugins/gamification/slick.css' %>
+<%= stylesheet_link_tag '/plugins/gamification/slick-theme.css' %>
+
 <% extend GamificationPlugin::DashboardHelper %>
 
 <div class="gamification">
@@ -24,14 +28,25 @@
   <div class="badges">
     <h3><%= _('Badges') %></h3>
     <ul class="badge-list">
-      <% @target.badges.each do |badge| %>
-        <li class="badge <%= badge.name %>">
-          <span class="description"><%= badge.description %></span>
-          <% if badge.level.present? %>
-            <span class="label"><%= _('Level') %></span>&nbsp;<span class="level"><%= badge.level %></span>
-          <% end %>
+      <% environment.gamification_plugin_badges.each do |badge| %>
+        <li class="badge <%= badge.name %> <%= @target.badges.include?(badge) ? 'earned' : 'not-earned' %>">
+          <div class="badge">
+            <div class="image <%= badge.name %>"></div>
+            <div class="description"><%= badge.description %></div>
+            <div class="level"><%= _('Level %s' % badge.level) %></div>
+          </div>
         </li>
       <% end %>
     </ul>
   </div>
 </div>
+
+<script>
+$('.gamification .badge-list').slick({
+  dots: true,
+  infinite: false,
+  speed: 300,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+});
+</script>

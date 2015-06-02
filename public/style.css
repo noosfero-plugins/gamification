@@ -26,7 +26,8 @@
   background-image: url(/plugins/gamification/images/points-icon.png);
 }
 
-.gamification-notification .badge .image {
+.gamification-notification .badge .image,
+.gamification .badge .image {
   width: 110px;
   height: 80px;
   background-image: url(/plugins/gamification/images/badge-icon.png);
@@ -35,6 +36,14 @@
   background-color: rgba(128, 128, 128, 0.25);
   margin-left: auto;
   margin-right: auto;
+}
+
+.gamification .badge {
+  text-align: center;
+}
+
+.gamification .badge.not-earned {
+  opacity: 0.3;
 }
 
 .gamification-notification .badge {
