@@ -71,3 +71,12 @@
   position: absolute;
   left: 0;
 }
+
+.gamification .points .level {
+  display: inline-block;
+  margin: 0 30px;
+  vertical-align: top;
+}
+.gamification .points .scores {
+  display: inline-block;
+}

@@ -7,24 +7,27 @@
 <div class="gamification">
   <h1><%= _('Gamification Dashboard for %s' % @target.identifier) %></h1>
 
-  <div>
-    <h3> <%= _('Level') %></h3>
-    <%= level_chart(@target) %>
-  </div>
-
-  <div class="scores">
-    <h3><%= _('Score') %></h3>
-    <% Merit::PointRules::AVAILABLE_RULES.each do |category, setting| %>
-      <div class="score <%= category %>">
-        <span class="label"><%= _('%s: ' % category) %></span>
-        <span class="value"><%= @target.points(:category => category) %></span>
+  <div class="points">
+    <div class="level">
+      <h3> <%= _('Level') %></h3>
+      <%= level_chart(@target) %>
+      <div class="score total">
+        <span class="label"><%= _('Total: ') %></span>
+        <span class="value"><%= @target.points %></span>
       </div>
-    <% end %>
-    <div class="score total">
-      <span class="label"><%= _('Total: ') %></span>
-      <span class="value"><%= @target.points %></span>
+    </div>
+
+    <div class="scores">
+      <h3><%= _('Last Score Points') %></h3>
+      <% @target.score_points.order('created_at desc').limit(5).each do |point| %>
+        <div class="score <%= point.score.category %>">
+          <span class="label"><%= _('%s: ' % point.num_points ) %></span>
+          <span class="value"><%= point.created_at %></span>
+        </div>
+      <% end %>
     </div>
   </div>
+
   <div class="badges">
     <h3><%= _('Badges') %></h3>
     <ul class="badge-list">
