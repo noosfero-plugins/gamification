@@ -63,20 +63,44 @@
   font-size: 10px;
 }
 
-.gamification .pie-chart {
+.gamification-dashboard .pie-chart {
   position: relative;
   text-align: center;
 }
-.gamification .pie-chart canvas {
+.gamification-dashboard .pie-chart canvas {
   position: absolute;
   left: 0;
 }
-
-.gamification .points .level {
+.gamification-dashboard .pie-chart .level-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(64, 64, 65);
+}
+.gamification-dashboard .points, .gamification-dashboard .badges {
+  margin: 10px 10px 25px 10px;
+}
+.gamification-dashboard .points .level {
   display: inline-block;
-  margin: 0 30px;
   vertical-align: top;
 }
-.gamification .points .scores {
+.gamification-dashboard .points .scores {
   display: inline-block;
+  margin-left: 40px;
+}
+.gamification-dashboard .points .level .total {
+  text-align: center;
+  color: rgb(139, 139, 139);
+}
+.gamification-dashboard .scores .negative {
+  color: red;
+}
+.gamification-dashboard .scores .positive {
+  color: green;
+}
+.gamification-dashboard .scores .value {
+  font-weight: bold;
+  width: 30px;
+  display: inline-block;
+  text-align: right;
+  margin-right: 4px;
 }
