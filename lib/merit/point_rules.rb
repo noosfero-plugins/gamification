@@ -60,7 +60,8 @@ module Merit
         :profile => lambda {|vote| vote.voteable.profile},
         :value => lambda {|vote| vote.vote},
         :description => _('Point weight for the author of a voted content'),
-        :default_weight => 50
+        :default_weight => 50,
+        :condition => lambda {|vote| vote.voteable.profile.community? }
       },
       :vote_voteable => {
         :action => 'vote#create',
@@ -75,7 +76,6 @@ module Merit
         :action => 'vote#create',
         :undo_action => 'vote#destroy',
         :to => lambda {|vote| vote.voter},
-        :profile => lambda {|vote| vote.voter},
         :value => lambda {|vote| 1},
         :description => _('Point weight for a voter'),
         :default_weight => 10
