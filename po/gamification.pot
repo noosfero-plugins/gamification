@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.1-2267-gd7d222b\n"
+"POT-Creation-Date: 2015-06-05 09:01-0300\n"
+"PO-Revision-Date: 2015-06-05 08:42-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: plugins/gamification/lib/gamification_plugin.rb:8
+msgid "Gamification Plugin"
+msgstr ""
+
+#: plugins/gamification/views/gamification/info.html.erb:2
+msgid "Gamification Info for %s"
+msgstr ""
+
+#: plugins/gamification/views/gamification/info.html.erb:3
+msgid "Level:"
+msgstr ""
+
+#: plugins/gamification/views/gamification/info.html.erb:5
+msgid "Score"
+msgstr ""
+
+#: plugins/gamification/views/gamification/info.html.erb:8
+msgid "%s: "
+msgstr ""
+
+#: plugins/gamification/views/gamification/info.html.erb:13
+msgid "Total: "
+msgstr ""
+
+#: plugins/gamification/views/gamification/info.html.erb:18
+msgid "Badges"
+msgstr ""
+
+#: plugins/gamification/views/gamification/info.html.erb:24
+msgid "Level"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/index.html.erb:1
+msgid "Gamification Settings"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/index.html.erb:6
+msgid "Point Rules"
+msgstr ""
