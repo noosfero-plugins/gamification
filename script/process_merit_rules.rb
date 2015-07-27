@@ -42,4 +42,9 @@ Environment.all.each do |environment|
     end
   end
 
+  environment.people.each.with_index(1) do |person, person_index|
+    puts "Updating #{person.identifier} level"
+    person.update_attribute(:level, person.gamification_plugin_calculate_level)
+  end
+
 end
