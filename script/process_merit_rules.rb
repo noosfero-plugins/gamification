@@ -7,14 +7,14 @@ def create_action(obj, index, count)
   end
 end
 
-puts "Destroy all merit actions"
-Merit::Action.destroy_all
+#puts "Destroy all merit actions"
+#Merit::Action.destroy_all
 
-count = Person.count
-Person.all.each.with_index(1) do |person, i|
-  puts "#{i}/#{count} Remove sash from #{person.identifier}"
-  person.sash.destroy unless person.sash.nil?
-end
+#count = Person.count
+#Person.all.each.with_index(1) do |person, i|
+#  puts "#{i}/#{count} Remove sash from #{person.identifier}"
+#  person.sash.destroy unless person.sash.nil?
+#end
 
 Environment.all.each do |environment|
 
@@ -23,9 +23,9 @@ Environment.all.each do |environment|
   Merit::AppPointRules.merge!(Merit::PointRules.new(environment).defined_rules)
   Merit::AppBadgeRules.merge!(Merit::BadgeRules.new(environment).defined_rules)
 
-  article_count = environment.articles.count
+  article_count = environment.articles.text_articles.count
   article_index = 0
-  environment.articles.find_each do |article|
+  environment.articles.text_articles.find_each do |article|
     article_index += 1
     create_action(article, article_index, article_count)
 
