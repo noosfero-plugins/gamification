@@ -14,8 +14,8 @@ class GamificationPluginProfileControllerTest < ActionController::TestCase
     person.add_points(20, :category => :comment_author)
     person.add_points(30, :category => :article_author)
     get :dashboard, :profile => person.identifier
-    assert_tag :div, :attributes => {:class => 'score article_author'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '30'}
-    assert_tag :div, :attributes => {:class => 'score comment_author'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '20'}
+    assert_tag :div, :attributes => {:class => 'score article_author'}, :child => {:tag => 'span', :attributes => {:class => 'value positive'}, :content => '30'}
+    assert_tag :div, :attributes => {:class => 'score comment_author'}, :child => {:tag => 'span', :attributes => {:class => 'value positive'}, :content => '20'}
     assert_tag :div, :attributes => {:class => 'score total'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '50'}
   end
 
