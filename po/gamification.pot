@@ -3,11 +3,10 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.1-2267-gd7d222b\n"
-"POT-Creation-Date: 2015-06-05 09:01-0300\n"
+"Project-Id-Version: 1.2~rc1-2843-g999a037\n"
+"POT-Creation-Date: 2015-08-06 08:53-0300\n"
 "PO-Revision-Date: 2015-06-05 08:42-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,42 +16,140 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
+#: plugins/gamification/controllers/admin/gamification_plugin_badges_controller.rb:24
+msgid "Badge was successfully created."
+msgstr ""
+
+#: plugins/gamification/controllers/admin/gamification_plugin_badges_controller.rb:35
+msgid "Badge was successfully updated."
+msgstr ""
+
 #: plugins/gamification/lib/gamification_plugin.rb:8
 msgid "Gamification Plugin"
 msgstr ""
 
-#: plugins/gamification/views/gamification/info.html.erb:2
-msgid "Gamification Info for %s"
+#: plugins/gamification/lib/merit/point_rules.rb:11
+msgid "Point weight for comment author"
 msgstr ""
 
-#: plugins/gamification/views/gamification/info.html.erb:3
-msgid "Level:"
+#: plugins/gamification/lib/merit/point_rules.rb:19
+msgid "Point weight for article author of a comment"
 msgstr ""
 
-#: plugins/gamification/views/gamification/info.html.erb:5
-msgid "Score"
+#: plugins/gamification/lib/merit/point_rules.rb:27
+msgid "Point weight for source article of a comment"
 msgstr ""
 
-#: plugins/gamification/views/gamification/info.html.erb:8
-msgid "%s: "
+#: plugins/gamification/lib/merit/point_rules.rb:35
+msgid "Point weight for article community of a comment"
 msgstr ""
 
-#: plugins/gamification/views/gamification/info.html.erb:13
-msgid "Total: "
+#: plugins/gamification/lib/merit/point_rules.rb:44
+msgid "Point weight for article author"
 msgstr ""
 
-#: plugins/gamification/views/gamification/info.html.erb:18
-msgid "Badges"
+#: plugins/gamification/lib/merit/point_rules.rb:52
+msgid "Point weight for article community"
 msgstr ""
 
-#: plugins/gamification/views/gamification/info.html.erb:24
+#: plugins/gamification/lib/merit/point_rules.rb:62
+msgid "Point weight for the author of a voted content"
+msgstr ""
+
+#: plugins/gamification/lib/merit/point_rules.rb:71
+msgid "Point weight for a voted content"
+msgstr ""
+
+#: plugins/gamification/lib/merit/point_rules.rb:79
+msgid "Point weight for a voter"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:1
+msgid "Gamification Settings: Listing Badges"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_badges/edit.html.erb:1
+msgid "Gamification Settings: Editing Badge"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_badges/show.html.erb:1
+msgid "Gamification Settings: Show Badge"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_badges/new.html.erb:1
+msgid "Gamification Settings: New Badge"
+msgstr ""
+
+#: plugins/gamification/views/gamification/notification_badge.html.erb:2
+msgid "You earn a new badge!"
+msgstr ""
+
+#: plugins/gamification/views/gamification/notification_badge.html.erb:6
+#: plugins/gamification/views/gamification/dashboard.html.erb:43
+msgid "Level %s"
+msgstr ""
+
+#: plugins/gamification/views/gamification/notification_badge.html.erb:8
+msgid "My Badges"
+msgstr ""
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:9
+msgid "Gamification Dashboard for %s"
+msgstr ""
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:13
+#: plugins/gamification/views/gamification_plugin_admin/_level.html.erb:2
 msgid "Level"
+msgstr ""
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:16
+msgid "Score: "
+msgstr ""
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:23
+msgid "Last Score Points"
+msgstr ""
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:36
+msgid "Badges"
 msgstr ""
 
 #: plugins/gamification/views/gamification_plugin_admin/index.html.erb:1
 msgid "Gamification Settings"
 msgstr ""
 
-#: plugins/gamification/views/gamification_plugin_admin/index.html.erb:6
+#: plugins/gamification/views/gamification_plugin_admin/index.html.erb:5
+msgid "Manage Point Rules"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/index.html.erb:9
+msgid "Manage Badges"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/index.html.erb:13
+msgid "Manage Levels"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/index.html.erb:18
+msgid "Cancel"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/levels.html.erb:5
+msgid "Gamification Settings: Rank Rules"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/levels.html.erb:9
+msgid "Rank Rules"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/levels.html.erb:16
+msgid "New Level"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/points.html.erb:1
+msgid "Gamification Settings: Point Rules"
+msgstr ""
+
+#: plugins/gamification/views/gamification_plugin_admin/points.html.erb:6
 msgid "Point Rules"
 msgstr ""
