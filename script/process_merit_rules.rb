@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
 def create_action(obj)
   target_model = obj.class.base_class.name.downcase
   action = Merit::Action.find_by_target_id_and_target_model_and_action_method(obj.id, target_model, 'create')
