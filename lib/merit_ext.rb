@@ -54,6 +54,7 @@ module Merit
       :target_data => self.to_yaml
     })
     action.check_all_rules
+    action
   end
 
 end

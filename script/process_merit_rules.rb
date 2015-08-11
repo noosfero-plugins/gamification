@@ -1,13 +1,22 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-def create_action(obj)
+def create_action(obj, index, count)
   target_model = obj.class.base_class.name.downcase
   action = Merit::Action.find_by_target_id_and_target_model_and_action_method(obj.id, target_model, 'create')
   if action.nil?
-    puts "Create merit action for #{target_model} #{obj.id}"
+    puts "#{index}/#{count} Create merit action for #{target_model} #{obj.id}"
     obj.new_merit_action(:create)
   end
+end
+
+puts "Destroy all merit actions"
+Merit::Action.destroy_all
+
+count = Person.count
+Person.all.each.with_index(1) do |person, i|
+  puts "#{i}/#{count} Remove sash from #{person.identifier}"
+  person.sash.destroy unless person.sash.nil?
 end
 
 Environment.all.each do |environment|
@@ -17,11 +26,22 @@ Environment.all.each do |environment|
   Merit::AppPointRules.merge!(Merit::PointRules.new(environment).defined_rules)
   Merit::AppBadgeRules.merge!(Merit::BadgeRules.new(environment).defined_rules)
 
-  environment.articles.each do |article|
-    create_action(article)
+  article_count = environment.articles.count
+  article_index = 0
+  environment.articles.find_each do |article|
+    article_index += 1
+    create_action(article, article_index, article_count)
 
-    article.comments.each do |comment|
-      create_action(comment)
+    comment_count = article.comments.count
+    article.comments.each.with_index(1) do |comment, i|
+      create_action(comment, i, comment_count)
+    end
+  end
+
+  environment.people.each.with_index(1) do |person, person_index|
+    vote_count = person.votes.count
+    person.votes.each.with_index(1) do |vote, vote_index|
+      create_action(vote, vote_index, vote_count)
     end
   end
 
