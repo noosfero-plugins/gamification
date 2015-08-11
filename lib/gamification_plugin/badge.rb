@@ -18,6 +18,6 @@ class GamificationPlugin::Badge < Noosfero::Plugin::ActiveRecord
     Merit::BadgesSash.where(:badge_id => self.id).destroy_all
   end
 
-  scope :notification_pending, :joins => :badges_sash, :conditions => ['badges_sashes.notified_user = false']
+  scope :notification_pending, :include => :badges_sash, :conditions => ['badges_sashes.notified_user = false']
 
 end
