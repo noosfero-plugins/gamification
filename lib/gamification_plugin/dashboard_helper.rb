@@ -11,4 +11,8 @@ module GamificationPlugin::DashboardHelper
     point.num_points > 0 ? 'positive' : 'negative'
   end
 
+  def score_point_category(point)
+    HashWithIndifferentAccess.new(Merit::PointRules::AVAILABLE_RULES)[point.score.category][:description]
+  end
+
 end

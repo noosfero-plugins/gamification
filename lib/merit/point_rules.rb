@@ -8,7 +8,7 @@ module Merit
         :undo_action => 'comment#destroy',
         :to => :author,
         :value => 1,
-        :description => _('Point weight for comment author'),
+        :description => _('Comment author'),
         :default_weight => 150
       },
       :comment_article_author => {
@@ -16,7 +16,7 @@ module Merit
         :undo_action => 'comment#destroy',
         :to => lambda {|comment| comment.source.author},
         :value => 1,
-        :description => _('Point weight for article author of a comment'),
+        :description => _('Article author of a comment'),
         :default_weight => 50
       },
       :comment_article => {
@@ -24,7 +24,7 @@ module Merit
         :undo_action => 'comment#destroy',
         :to => lambda {|comment| comment.source},
         :value => 1,
-        :description => _('Point weight for source article of a comment'),
+        :description => _('Source article of a comment'),
         :default_weight => 50
       },
       :comment_community => {
@@ -32,7 +32,7 @@ module Merit
         :undo_action => 'comment#destroy',
         :to => lambda {|comment| comment.profile},
         :value => 1,
-        :description => _('Point weight for article community of a comment'),
+        :description => _('Article community of a comment'),
         :default_weight => 50,
         :condition => lambda {|target| target.profile.community? }
       },
@@ -41,7 +41,7 @@ module Merit
         :undo_action => 'article#destroy',
         :to => :author,
         :value => 1,
-        :description => _('Point weight for article author'),
+        :description => _('Article author'),
         :default_weight => 500
       },
       :article_community => {
@@ -49,7 +49,7 @@ module Merit
         :undo_action => 'article#destroy',
         :to => :profile,
         :value => 1,
-        :description => _('Point weight for article community'),
+        :description => _('Article community'),
         :default_weight => 600,
         :condition => lambda {|target| target.profile.community? }
       },
@@ -59,7 +59,7 @@ module Merit
         :to => lambda {|vote| vote.voteable.author},
         :profile => lambda {|vote| vote.voteable.profile},
         :value => lambda {|vote| vote.vote},
-        :description => _('Point weight for the author of a voted content'),
+        :description => _('Author of a voted content'),
         :default_weight => 50,
       },
       :vote_voteable => {
@@ -68,7 +68,7 @@ module Merit
         :to => lambda {|vote| vote.voteable},
         :profile => lambda {|vote| vote.voteable.profile},
         :value => lambda {|vote| vote.vote},
-        :description => _('Point weight for a voted content'),
+        :description => _('Voted content'),
         :default_weight => 50
       },
       :vote_voter => {
@@ -76,7 +76,7 @@ module Merit
         :undo_action => 'vote#destroy',
         :to => lambda {|vote| vote.voter},
         :value => lambda {|vote| 1},
-        :description => _('Point weight for a voter'),
+        :description => _('Voter'),
         :default_weight => 10
       },
     }

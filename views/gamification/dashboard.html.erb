@@ -24,7 +24,7 @@
       <% @target.score_points.order('created_at desc').limit(5).each do |point| %>
         <div class="score <%= point.score.category %> <%= score_point_class(point) %>">
           <span class="value"><%= point.num_points %></span>
-          <span class="category"><%= point.score.category %></span>
+          <span class="category"><%= score_point_category(point) %></span>
           <span class="date timeago" title="<%= point.created_at %>"><%= point.created_at %></span>
         </div>
       <% end %>

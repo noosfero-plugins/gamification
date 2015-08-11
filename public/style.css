@@ -104,3 +104,7 @@
   text-align: right;
   margin-right: 4px;
 }
+
+.gamification-dashboard .scores .date {
+  color: gray;
+}
