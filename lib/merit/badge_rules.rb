@@ -19,7 +19,7 @@ module Merit
         :action => 'article#create',
         :default_threshold => 5,
         :to => :author,
-        :value => lambda { |article| article.author.present? ? article.author.articles.count : 0 }
+        :value => lambda { |article| article.author.present? ? article.environment.articles.text_articles.where(:author_id => article.author.id).count : 0 }
       },
       :positive_votes_received => {
         :action => 'vote#create',
