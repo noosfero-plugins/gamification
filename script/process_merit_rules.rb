@@ -1,6 +1,18 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+class ProcessObserver
+  def update(changed_data)
+    #puts changed_data
+    merit = changed_data[:merit_object]
+    if merit.kind_of?(Merit::Score::Point)
+      #puts "FIX"
+      action = Merit::Action.find(changed_data[:merit_action_id])
+      merit.update_attribute(:created_at, YAML.load(action.target_data).created_at)
+    end
+  end
+end
+
 def create_action(obj, index, count)
   target_model = obj.class.base_class.name.downcase
   action = Merit::Action.find_by_target_id_and_target_model_and_action_method(obj.id, target_model, 'create')
@@ -12,12 +24,14 @@ end
 
 #puts "Destroy all merit actions"
 #Merit::Action.destroy_all
-
+#
 #count = Person.count
 #Person.all.each.with_index(1) do |person, i|
 #  puts "#{i}/#{count} Remove sash from #{person.identifier}"
 #  person.sash.destroy unless person.sash.nil?
 #end
+
+Merit.observers << 'ProcessObserver'
 
 Environment.all.each do |environment|
 
