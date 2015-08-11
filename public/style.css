@@ -12,6 +12,7 @@
   width: 17px;
   display: inline-block;
   border: 0;
+  height: 14px;
 }
 .gamification-plugin.user-info-template .icon:hover {
   background-color: transparent;
