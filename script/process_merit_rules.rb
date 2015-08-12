@@ -3,12 +3,12 @@
 
 class ProcessObserver
   def update(changed_data)
-    #puts changed_data
     merit = changed_data[:merit_object]
     if merit.kind_of?(Merit::Score::Point)
-      #puts "FIX"
       action = Merit::Action.find(changed_data[:merit_action_id])
-      merit.update_attribute(:created_at, YAML.load(action.target_data).created_at)
+      new_date = YAML.load(action.target_data).created_at
+      action.update_attribute(:created_at, new_date)
+      merit.update_attribute(:created_at, new_date)
     end
   end
 end
