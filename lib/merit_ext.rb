@@ -14,6 +14,12 @@ module Merit
 
   end
 
+  class Score
+    class Point
+      belongs_to :action
+    end
+  end
+
   class TargetFinder
     # Accept proc in rule.to
     def other_target

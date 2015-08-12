@@ -13,6 +13,7 @@ class ArticleTest < ActiveSupport::TestCase
   should 'add merit points to author when create a new article' do
     create(TextArticle, :profile_id => person.id, :author => person)
     assert_equal 1, person.score_points.count
+    assert person.score_points.first.action.present?
   end
 
   should 'subtract merit points to author when destroy an article' do

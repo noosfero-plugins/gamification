@@ -58,6 +58,7 @@ class GamificationPlugin < Noosfero::Plugin
       config.checks_on_each_request = false
       config.user_model_name = 'Profile'
       config.current_user_method = 'current_person'
+      config.add_observer 'Merit::PointTrackObserver'
       config.add_observer 'Merit::RankObserver'
     end
 
