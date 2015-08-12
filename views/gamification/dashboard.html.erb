@@ -20,7 +20,7 @@
 
     <% unless @target.score_points.empty? %>
     <div class="scores">
-      <h3><%= _('Last Score Points') %></h3>
+      <h3><%= _('Latest Score Points') %></h3>
       <% @target.score_points.order('created_at desc').limit(5).each do |point| %>
         <div class="score <%= point.score.category %> <%= score_point_class(point) %>">
           <span class="value"><%= point.num_points %></span>
@@ -56,7 +56,8 @@ $('.gamification .badge-list').slick({
   infinite: false,
   speed: 300,
   slidesToShow: 3,
-  slidesToScroll: 1,
+  slidesToScroll: 2,
+  rows: 2,
 });
 $(".gamification-dashboard .timeago").timeago();
 </script>
