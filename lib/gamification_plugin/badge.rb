@@ -4,7 +4,7 @@ class GamificationPlugin::Badge < Noosfero::Plugin::ActiveRecord
 
   has_many :badges_sash, :class_name => 'Merit::BadgesSash'
 
-  attr_accessible :owner, :name, :description, :level, :custom_fields
+  attr_accessible :owner, :name, :description, :level, :custom_fields, :title
 
   serialize :custom_fields
 

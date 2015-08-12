@@ -3,7 +3,7 @@
 <table>
   <tr>
     <th>Name</th>
-    <th>Description</th>
+    <th>Title</th>
     <th>Level</th>
     <th>Threshold</th>
     <th></th>
@@ -14,7 +14,7 @@
 <% @gamification_plugin_badges.each do |gamification_plugin_badge| %>
   <tr>
     <td><%= gamification_plugin_badge.name %></td>
-    <td><%= gamification_plugin_badge.description %></td>
+    <td><%= gamification_plugin_badge.title %></td>
     <td><%= gamification_plugin_badge.level %></td>
     <td><%= gamification_plugin_badge.threshold %></td>
     <td><%= link_to 'Show', :action => :show, :id => gamification_plugin_badge.id %></td>

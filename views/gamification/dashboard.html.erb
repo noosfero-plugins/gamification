@@ -38,9 +38,9 @@
     <ul class="badge-list">
       <% environment.gamification_plugin_badges.each do |badge| %>
         <li class="badge <%= badge.name %> <%= @target.badges.include?(badge) ? 'earned' : 'not-earned' %>">
-          <div class="badge">
+          <div class="badge" title="<%= badge.description %>">
             <div class="image <%= badge.name %>"></div>
-            <div class="description"><%= badge.description %></div>
+            <div class="title"><%= badge.title %></div>
             <div class="level"><%= _('Level %s' % badge.level) %></div>
           </div>
         </li>

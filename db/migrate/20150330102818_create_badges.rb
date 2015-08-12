@@ -3,6 +3,7 @@ class CreateBadges < ActiveRecord::Migration
     create_table :gamification_plugin_badges do |t|
       t.string :name
       t.integer :level
+      t.string :title
       t.string :description
       t.string :custom_fields
       t.references :owner, :polymorphic => true
