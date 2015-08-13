@@ -6,7 +6,7 @@
 #user .gamification-plugin.user-info-template:hover {
   background-color: rgb(228, 228, 228);
 }
-.gamification-plugin.user-info-template .icon {
+.gamification-plugin.user-info-template .icon, .gamification-icon {
   background-size: 14px;
   background-repeat: no-repeat;
   width: 17px;
@@ -17,13 +17,13 @@
 .gamification-plugin.user-info-template .icon:hover {
   background-color: transparent;
 }
-.gamification-plugin.user-info-template .level .icon {
+.gamification-plugin.user-info-template .level .icon, .gamification-icon.level {
   background-image: url(/plugins/gamification/images/level-icon.png);
 }
 .gamification-plugin.user-info-template .badges .icon  {
   background-image: url(/plugins/gamification/images/badge-icon.png);
 }
-.gamification-plugin.user-info-template .points .icon  {
+.gamification-plugin.user-info-template .points .icon, .gamification-icon.points {
   background-image: url(/plugins/gamification/images/points-icon.png);
 }
 
@@ -108,4 +108,66 @@
 
 .gamification-dashboard .scores .date {
   color: gray;
+}
+
+.gamification-rankings .ranking-item .target .image img {
+  width: 20px;
+  height: 20px;
+}
+
+.gamification-rankings ul.ranking {
+  list-style-type: none;
+  padding: 0;
+}
+
+.gamification-rankings .ranking-item .target .label {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 120px;
+  display: inline-block;
+  color: rgb(68, 68, 68);
+}
+
+.gamification-rankings .ranking.all-time,
+.gamification-rankings .ranking.month {
+  display: inline-block;
+  width: 45%;
+  margin: 5px 0;
+}
+
+.gamification-rankings .ranking.all-time {
+  margin-left: 4%;
+}
+
+.gamification-rankings .ranking.month {
+  margin-right: 4%;
+}
+
+.gamification-rankings .ranking.week .ranking-item .target .label {
+  width: 300px;
+}
+
+.gamification-rankings .ranking-item .target a {
+  text-decoration: none;
+}
+
+.gamification-rankings .target-position {
+  text-align: right;
+  color: rgb(160, 160, 160);
+}
+
+.gamification-rankings .ranking-item .score,
+.gamification-rankings .ranking-item .level {
+  float: right;
+}
+
+.gamification-rankings h4 {
+  text-align: center;
+}
+
+.gamification-rankings .ranking-item .position {
+  font-weight: bold;
+  font-size: 16px;
+  color: rgb(97, 97, 97);
 }

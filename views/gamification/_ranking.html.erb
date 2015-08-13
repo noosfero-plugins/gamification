@@ -1,19 +1,25 @@
 <ul class="ranking">
-  <% if target_ranking.present? %>
-    <span><%= _('Your position: ') %></span>
-    <span><%= target_ranking.gamification_position %></span>
-  <% else %>
-    <%= _('Not scored yet') %>
-  <% end %>
+  <div class="target-position">
+    <% if target_ranking.present? %>
+      <span><%= _('Your position: ') %></span>
+      <span><%= target_ranking.gamification_position %></span>
+    <% else %>
+      <%= _('Not scored yet') %>
+    <% end %>
+ </div>
   <% ranking.each_with_index do |person, i| %>
     <li class="ranking-item">
       <span class="position">
         <%= i+1 %>
       </span>
-      <span class="name">
-        <%= person.name %>
+      <span class="target">
+        <%= link_to person.url do %>
+          <span class="image"><%= profile_image(person, :icon) %></span>
+          <span class="label"><%= person.name %></span>
+        <% end %>
       </span>
       <span class="score">
+        <span class="gamification-icon points">&nbsp;</span>
         <%= person.gamification_points %>
       </span>
     </li>

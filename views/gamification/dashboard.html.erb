@@ -51,11 +51,11 @@
 </div>
 
 <% if @target.kind_of?(Profile) %>
-<div class="rankings">
+<div class="gamification-rankings">
   <h3><%= _('Ranking') %></h3>
   <div class="ranking week">
     <h4><%= _('Week') %></h4>
-    <%= ranking(@target, Time.zone.now.at_beginning_of_week) %>
+    <%= ranking(@target, Time.zone.now.at_beginning_of_week, 5) %>
   </div>
   <div class="ranking month">
     <h4><%= _('Month') %></h4>
