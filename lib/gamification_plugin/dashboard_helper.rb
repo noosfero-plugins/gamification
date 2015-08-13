@@ -15,14 +15,14 @@ module GamificationPlugin::DashboardHelper
     HashWithIndifferentAccess.new(Merit::PointRules::AVAILABLE_RULES)[point.score.category][:description]
   end
 
-  def ranking(from_date=nil, limit=10)
+  def ranking(target, from_date=nil, limit=10)
     # FIXME move these queries to profile model
-    ranking = Profile.select('profiles.*, sum(num_points) as gamification_points, ROW_NUMBER() OVER(order by sum(num_points) DESC) as gamification_position').joins(:sash => {:scores => :score_points}).where(:type => 'Person').order('sum(num_points) DESC').group('profiles.id')
+    ranking = Profile.select('profiles.*, sum(num_points) as gamification_points, ROW_NUMBER() OVER(order by sum(num_points) DESC) as gamification_position').joins(:sash => {:scores => :score_points}).where(:type => target.class).order('sum(num_points) DESC').group('profiles.id')
     ranking = ranking.where("merit_score_points.created_at >= ?", from_date) if from_date.present?
-    profile_ranking = Profile.from("(#{ranking.to_sql}) profiles").where('profiles.id' => profile.id).first
+    target_ranking = Profile.from("(#{ranking.to_sql}) profiles").where('profiles.id' => target.id).first
     ranking = ranking.limit(limit)
 
-    render :partial => 'gamification/ranking', :locals => {:ranking => ranking, :profile_ranking => profile_ranking}
+    render :partial => 'gamification/ranking', :locals => {:ranking => ranking, :target_ranking => target_ranking}
   end
 
 end
