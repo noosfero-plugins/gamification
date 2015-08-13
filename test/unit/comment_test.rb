@@ -32,6 +32,14 @@ class CommentTest < ActiveSupport::TestCase
     assert_equal 'comment_author', person.badges.first.name
   end
 
+  should 'add merit badge to source author when create 5 new comments' do
+    GamificationPlugin::Badge.create!(:owner => environment, :name => 'comment_received')
+    GamificationPlugin.gamification_set_rules(environment)
+
+    5.times { create(Comment, :source => article, :author_id => person.id) }
+    assert_equal 'comment_received', author.badges.first.name
+  end
+
   should 'add badge to author when users like his comment' do
     GamificationPlugin::Badge.create!(:owner => environment, :name => 'positive_votes_received')
     GamificationPlugin.gamification_set_rules(environment)

@@ -15,6 +15,12 @@ module Merit
         :to => :author,
         :value => lambda { |comment| comment.author.present? ? comment.author.comments.count : 0 }
       },
+      :comment_received => {
+        :action => 'comment#create',
+        :default_threshold => 5,
+        :to => lambda {|comment| comment.source.author},
+        :value => lambda { |comment| comment.source.author.present? ? Comment.where(:source_id => Article.where(:author_id => comment.source.author.id)).count : 0 }
+      },
       :article_author => {
         :action => 'article#create',
         :default_threshold => 5,
