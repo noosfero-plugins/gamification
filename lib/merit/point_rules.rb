@@ -79,6 +79,14 @@ module Merit
         :description => _('Voter'),
         :default_weight => 10
       },
+      :friends => {
+        :action => 'friendship#create',
+        :undo_action => 'friendship#destroy',
+        :to => lambda {|friendship| friendship.person},
+        :value => 1,
+        :description => _('Friends'),
+        :default_weight => 5
+      },
     }
 
     def weight(category)

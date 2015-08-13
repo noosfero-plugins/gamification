@@ -27,4 +27,10 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal 'friendly', person.reload.badges.first.name
   end
 
+  should 'add points when add someone as a friendly' do
+    other_person = create_user("testuserfriend").person
+    person.add_friend(other_person)
+    assert_equal 5, person.score_points(:category => :friends).sum(:num_points)
+  end
+
 end
