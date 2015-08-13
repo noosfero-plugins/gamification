@@ -8,7 +8,7 @@ class Profile
     settings = GamificationPlugin.settings(environment)
     score = self.points
     last_level = 0
-    (settings.get_setting(:rank_rules) || []).sort_by {|r| r[:points].to_i }.each_with_index do |rule, i|
+    (settings.get_setting(:rank_rules) || []).reject{|r| r[:points].blank?}.sort_by {|r| r[:points].to_i }.each_with_index do |rule, i|
       return last_level if score < rule[:points].to_i
       last_level = rule[:level] || i+1
     end

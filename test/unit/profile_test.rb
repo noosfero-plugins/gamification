@@ -21,6 +21,19 @@ class ProfileTest < ActiveSupport::TestCase
     assert_equal 2, profile.gamification_plugin_calculate_level
   end
 
+  should 'calculate profile level ignoring blank values' do
+    @settings.set_setting(:rank_rules, [
+      {:points => 10},
+      {:points => 20},
+      {:points => 30},
+      {:points => ""},
+      {:points => nil},
+    ])
+    @settings.save!
+    profile.stubs(:points).returns(25)
+    assert_equal 2, profile.gamification_plugin_calculate_level
+  end
+
   should 'calculate profile last level' do
     profile.stubs(:points).returns(35)
     assert_equal 3, profile.gamification_plugin_calculate_level
