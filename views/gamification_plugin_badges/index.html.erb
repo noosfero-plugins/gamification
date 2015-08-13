@@ -19,7 +19,7 @@
     <td><%= gamification_plugin_badge.threshold %></td>
     <td><%= link_to 'Show', :action => :show, :id => gamification_plugin_badge.id %></td>
     <td><%= link_to 'Edit', :action => :edit, :id => gamification_plugin_badge.id %></td>
-    <td><%= link_to 'Destroy', :action => :destroy, :id => gamification_plugin_badge.id, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= button_without_text :delete, _('Remove'), {:action => :destroy, :id => gamification_plugin_badge.id}, :method => :post, :confirm => _('Are you sure?') %></td>
   </tr>
 <% end %>
 </table>
