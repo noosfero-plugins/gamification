@@ -50,6 +50,22 @@
   <% end %>
 </div>
 
+<div class="rankings">
+  <h3><%= _('Ranking') %></h3>
+  <div class="ranking week">
+    <h4><%= _('Week') %></h4>
+    <%= ranking(Time.zone.now.at_beginning_of_week) %>
+  </div>
+  <div class="ranking month">
+    <h4><%= _('Month') %></h4>
+    <%= ranking(Time.zone.now.at_beginning_of_month) %>
+  </div>
+  <div class="ranking all-time">
+    <h4><%= _('All Time') %></h4>
+    <%= ranking %>
+  </div>
+</div>
+
 <script>
 $('.gamification .badge-list').slick({
   dots: true,

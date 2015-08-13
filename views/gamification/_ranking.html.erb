@@ -1,0 +1,21 @@
+<ul class="ranking">
+  <% if current_person_ranking.present? %>
+    <span><%= _('Your position: ') %></span>
+    <span><%= current_person_ranking.gamification_position %></span>
+  <% else %>
+    <%= _('Not scored yet') %>
+  <% end %>
+  <% ranking.each_with_index do |person, i| %>
+    <li class="ranking-item">
+      <span class="position">
+        <%= i+1 %>
+      </span>
+      <span class="name">
+        <%= person.name %>
+      </span>
+      <span class="score">
+        <%= person.gamification_points %>
+      </span>
+    </li>
+  <% end %>
+</ul>
