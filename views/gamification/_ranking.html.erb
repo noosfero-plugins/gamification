@@ -1,7 +1,7 @@
 <ul class="ranking">
-  <% if current_person_ranking.present? %>
+  <% if profile_ranking.present? %>
     <span><%= _('Your position: ') %></span>
-    <span><%= current_person_ranking.gamification_position %></span>
+    <span><%= profile_ranking.gamification_position %></span>
   <% else %>
     <%= _('Not scored yet') %>
   <% end %>
