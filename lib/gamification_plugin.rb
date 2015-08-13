@@ -36,7 +36,7 @@ class GamificationPlugin < Noosfero::Plugin
   def body_ending
     proc do
       if current_person.present? && response.status == 200
-        badges = current_person.badges.notification_pending
+        badges = current_person.badges.notification_pending.all
         current_person.sash.notify_all_badges_from_user
         render :file => 'gamification/display_notifications', :locals => {:badges => badges}
       else
