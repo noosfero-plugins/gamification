@@ -142,8 +142,8 @@ msgid "All Time"
 msgstr "Todo o Período"
 
 #: plugins/gamification/views/gamification/_ranking.html.erb:4
-msgid "Your position: "
-msgstr "Sua posição:"
+msgid "Current position: "
+msgstr "Posição atual:"
 
 #: plugins/gamification/views/gamification/_ranking.html.erb:7
 msgid "Not scored yet"

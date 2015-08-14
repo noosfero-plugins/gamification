@@ -142,7 +142,7 @@ msgid "All Time"
 msgstr ""
 
 #: plugins/gamification/views/gamification/_ranking.html.erb:4
-msgid "Your position: "
+msgid "Current position: "
 msgstr ""
 
 #: plugins/gamification/views/gamification/_ranking.html.erb:7
