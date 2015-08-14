@@ -28,6 +28,8 @@
 }
 
 .gamification-notification .badge .image,
+.gamification li.badge {
+}
 .gamification .badge .image {
   width: 120px;
   height: 90px;
@@ -37,6 +39,7 @@
   background-color: rgba(128, 128, 128, 0.25);
   margin-left: auto;
   margin-right: auto;
+  background-size: contain;
 }
 
 .gamification .badge {
@@ -187,7 +190,7 @@
   position: relative;
   font-size: 20px;
   width: 1.1em;
-  bottom: 22px;
+  bottom: 0px;
 }
 .rating > span.earned:before {
    content: "\2605";
