@@ -5,8 +5,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.2~rc1-2843-g999a037\n"
-"POT-Creation-Date: 2015-08-06 08:53-0300\n"
+"Project-Id-Version: 1.2~rc1-3005-gac3d398\n"
+"POT-Creation-Date: 2015-08-14 09:58-0300\n"
 "PO-Revision-Date: 2015-06-05 08:42-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,44 +29,56 @@ msgid "Gamification Plugin"
 msgstr "Plugin de Gamificação"
 
 #: plugins/gamification/lib/merit/point_rules.rb:11
-msgid "Point weight for comment author"
-msgstr "Peso do ponto para o autor do comentário"
+msgid "Comment author"
+msgstr "Autor do Comentário"
 
 #: plugins/gamification/lib/merit/point_rules.rb:19
-msgid "Point weight for article author of a comment"
-msgstr "Peso do ponto para o autor do artigo do comentário"
+msgid "Article author of a comment"
+msgstr "Autor do artigo do comentário"
 
 #: plugins/gamification/lib/merit/point_rules.rb:27
-msgid "Point weight for source article of a comment"
-msgstr "Peso do ponto para a fonte do artigo do comentário"
+msgid "Source article of a comment"
+msgstr "Fonte od artigo do comentário"
 
 #: plugins/gamification/lib/merit/point_rules.rb:35
-msgid "Point weight for article community of a comment"
-msgstr "Peso do ponto para o artigo da comunidade do comentário"
+msgid "Article community of a comment"
+msgstr "Comentário em artigo da comunidade"
 
 #: plugins/gamification/lib/merit/point_rules.rb:44
-msgid "Point weight for article author"
-msgstr "Peso do ponto para o autor do artigo"
+msgid "Article author"
+msgstr "Autor do artigo"
 
 #: plugins/gamification/lib/merit/point_rules.rb:52
-msgid "Point weight for article community"
-msgstr "Peso do ponto para o artigo da comunidade"
+msgid "Article community"
+msgstr "Artigo da comunidade"
 
 #: plugins/gamification/lib/merit/point_rules.rb:62
-msgid "Point weight for the author of a voted content"
-msgstr "Peso do ponto para o autor de um conteúdo votado"
+msgid "Author of a voted content"
+msgstr "Autor de um conteúdo votado"
 
 #: plugins/gamification/lib/merit/point_rules.rb:71
-msgid "Point weight for a voted content"
-msgstr "Peso do ponto para um conteúdo votado"
+msgid "Voted content"
+msgstr "Conteúdo votado"
 
 #: plugins/gamification/lib/merit/point_rules.rb:79
-msgid "Point weight for a voter"
-msgstr "Peso do ponto para quem votou"
+msgid "Voter"
+msgstr "Votante"
+
+#: plugins/gamification/lib/merit/point_rules.rb:87
+msgid "Friends"
+msgstr "Amigos"
 
 #: plugins/gamification/views/gamification_plugin_badges/index.html.erb:1
 msgid "Gamification Settings: Listing Badges"
 msgstr "Configurações de Gamificação: Litando Troféis"
+
+#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:22
+msgid "Remove"
+msgstr "Remover"
+
+#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:22
+msgid "Are you sure?"
+msgstr "Você tem certeza?"
 
 #: plugins/gamification/views/gamification_plugin_badges/edit.html.erb:1
 msgid "Gamification Settings: Editing Badge"
@@ -85,7 +97,6 @@ msgid "You earn a new badge!"
 msgstr "Você ganhou um troféu!"
 
 #: plugins/gamification/views/gamification/notification_badge.html.erb:6
-#: plugins/gamification/views/gamification/dashboard.html.erb:43
 msgid "Level %s"
 msgstr "Nível %s"
 
@@ -107,12 +118,36 @@ msgid "Score: "
 msgstr "Ponto: "
 
 #: plugins/gamification/views/gamification/dashboard.html.erb:23
-msgid "Last Score Points"
-msgstr "Pontos da Última Contagem"
+msgid "Latest Score Points"
+msgstr "Última Contagem de Pontos"
 
-#: plugins/gamification/views/gamification/dashboard.html.erb:36
+#: plugins/gamification/views/gamification/dashboard.html.erb:37
 msgid "Badges"
 msgstr "Emblemas"
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:61
+msgid "Ranking"
+msgstr "Ranking"
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:63
+msgid "Week"
+msgstr "Semana"
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:67
+msgid "Month"
+msgstr "Mês"
+
+#: plugins/gamification/views/gamification/dashboard.html.erb:71
+msgid "All Time"
+msgstr "Todo o Período"
+
+#: plugins/gamification/views/gamification/_ranking.html.erb:4
+msgid "Your position: "
+msgstr "Sua posição:"
+
+#: plugins/gamification/views/gamification/_ranking.html.erb:7
+msgid "Not scored yet"
+msgstr "Não pontuou ainda"
 
 #: plugins/gamification/views/gamification_plugin_admin/index.html.erb:1
 msgid "Gamification Settings"
@@ -153,6 +188,18 @@ msgstr "Configurações de Gamificação: regras dos Pontos"
 #: plugins/gamification/views/gamification_plugin_admin/points.html.erb:6
 msgid "Point Rules"
 msgstr "Regras de Pontos"
+
+#~ msgid "Point weight for comment author"
+#~ msgstr "Peso do ponto para o autor do comentário"
+
+#~ msgid "Point weight for article author"
+#~ msgstr "Peso do ponto para o autor do artigo"
+
+#~ msgid "Point weight for the author of a voted content"
+#~ msgstr "Peso do ponto para o autor de um conteúdo votado"
+
+#~ msgid "Point weight for a voter"
+#~ msgstr "Peso do ponto para quem votou"
 
 #~ msgid "Level:"
 #~ msgstr "Nivel:"
