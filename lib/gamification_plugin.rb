@@ -53,6 +53,12 @@ class GamificationPlugin < Noosfero::Plugin
     ['jquery.noty.packaged.min.js', 'jquery.easypiechart.min.js', 'main.js']
   end
 
+
+  def self.extra_blocks
+    { GamificationPlugin::RankingBlock => {}}
+  end
+
+
   ActionDispatch::Reloader.to_prepare do
     Merit.setup do |config|
       config.checks_on_each_request = false

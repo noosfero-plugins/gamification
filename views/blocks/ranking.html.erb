@@ -1,0 +1,6 @@
+<%= block_title(block.title) %>
+<% extend GamificationPlugin::DashboardHelper %>
+
+<div class="ranking_block" id="ranking_block_<%= block.id %>">
+  <%= ranking(block.owner, Time.zone.now.at_beginning_of_week, 5) %>
+</div>
