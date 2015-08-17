@@ -33,7 +33,7 @@ class GamificationPluginProfileControllerTest < ActionController::TestCase
     person.add_badge(badge1.id)
     person.add_badge(badge2.id)
     get :dashboard, :profile => person.identifier
-    assert_select '.badges .badge-list .badge', 2
+    assert_select '.badges .badge-list .badge', 1
   end
 
 end
