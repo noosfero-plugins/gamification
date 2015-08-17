@@ -5,8 +5,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.2~rc1-3005-gac3d398\n"
-"POT-Creation-Date: 2015-08-14 09:58-0300\n"
+"Project-Id-Version: 1.1-3172-g3455bd0\n"
+"POT-Creation-Date: 2015-08-17 16:21-0300\n"
 "PO-Revision-Date: 2015-06-05 08:42-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,9 +24,14 @@ msgstr "Troféu foi criado com sucesso."
 msgid "Badge was successfully updated."
 msgstr "Troféu foi atualizado com sucesso."
 
-#: plugins/gamification/lib/gamification_plugin.rb:8
-msgid "Gamification Plugin"
-msgstr "Plugin de Gamificação"
+#: plugins/gamification/lib/gamification_plugin/ranking_block.rb:6
+#: plugins/gamification/lib/gamification_plugin/ranking_block.rb:14
+msgid "Gamification Ranking"
+msgstr "Ranking da Gamificação"
+
+#: plugins/gamification/lib/gamification_plugin/ranking_block.rb:10
+msgid "This block display te gamification rank."
+msgstr "Este bloco exibe a classificação da gamificação."
 
 #: plugins/gamification/lib/merit/point_rules.rb:11
 msgid "Comment author"
@@ -68,41 +73,13 @@ msgstr "Votante"
 msgid "Friends"
 msgstr "Amigos"
 
-#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:1
-msgid "Gamification Settings: Listing Badges"
-msgstr "Configurações de Gamificação: Litando Troféis"
+#: plugins/gamification/lib/gamification_plugin.rb:8
+msgid "Gamification Plugin"
+msgstr "Plugin de Gamificação"
 
-#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:22
-msgid "Remove"
-msgstr "Remover"
-
-#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:22
-msgid "Are you sure?"
-msgstr "Você tem certeza?"
-
-#: plugins/gamification/views/gamification_plugin_badges/edit.html.erb:1
-msgid "Gamification Settings: Editing Badge"
-msgstr "Configurações de Gamificação: Editando Troféus"
-
-#: plugins/gamification/views/gamification_plugin_badges/show.html.erb:1
-msgid "Gamification Settings: Show Badge"
-msgstr "Configurações de Gamificação: Mostrar Troféu"
-
-#: plugins/gamification/views/gamification_plugin_badges/new.html.erb:1
-msgid "Gamification Settings: New Badge"
-msgstr "Configurações de Gamificação: Novo Troféu"
-
-#: plugins/gamification/views/gamification/notification_badge.html.erb:2
-msgid "You earn a new badge!"
-msgstr "Você ganhou um troféu!"
-
-#: plugins/gamification/views/gamification/notification_badge.html.erb:6
-msgid "Level %s"
-msgstr "Nível %s"
-
-#: plugins/gamification/views/gamification/notification_badge.html.erb:8
-msgid "My Badges"
-msgstr "Meus Troféus"
+#: plugins/gamification/views/gamification/_ranking.html.erb:2
+msgid "Not enough points for this ranking yet"
+msgstr "Ainda não existem pontos para a classificação"
 
 #: plugins/gamification/views/gamification/dashboard.html.erb:9
 msgid "Gamification Dashboard for %s"
@@ -141,13 +118,49 @@ msgstr "Mês"
 msgid "All Time"
 msgstr "Todo o Período"
 
-#: plugins/gamification/views/gamification/_ranking.html.erb:4
-msgid "Current position: "
-msgstr "Posição atual:"
+#: plugins/gamification/views/gamification/notification_badge.html.erb:2
+msgid "You earn a new badge!"
+msgstr "Você ganhou um troféu!"
 
-#: plugins/gamification/views/gamification/_ranking.html.erb:7
-msgid "Not scored yet"
-msgstr "Não pontuou ainda"
+#: plugins/gamification/views/gamification/notification_badge.html.erb:6
+msgid "Level %s"
+msgstr "Nível %s"
+
+#: plugins/gamification/views/gamification/notification_badge.html.erb:8
+msgid "My Badges"
+msgstr "Meus Troféus"
+
+#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:1
+msgid "Gamification Settings: Listing Badges"
+msgstr "Configurações de Gamificação: Litando Troféis"
+
+#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:22
+msgid "Remove"
+msgstr "Remover"
+
+#: plugins/gamification/views/gamification_plugin_badges/index.html.erb:22
+msgid "Are you sure?"
+msgstr "Você tem certeza?"
+
+#: plugins/gamification/views/gamification_plugin_badges/new.html.erb:1
+msgid "Gamification Settings: New Badge"
+msgstr "Configurações de Gamificação: Novo Troféu"
+
+#: plugins/gamification/views/gamification_plugin_badges/edit.html.erb:1
+msgid "Gamification Settings: Editing Badge"
+msgstr "Configurações de Gamificação: Editando Troféus"
+
+#: plugins/gamification/views/gamification_plugin_badges/show.html.erb:1
+msgid "Gamification Settings: Show Badge"
+msgstr "Configurações de Gamificação: Mostrar Troféu"
+
+#: plugins/gamification/views/gamification_plugin_admin/points.html.erb:1
+msgid "Gamification Settings: Point Rules"
+msgstr "Configurações de Gamificação: regras dos Pontos"
+
+#: plugins/gamification/views/gamification_plugin_admin/points.html.erb:6
+msgid "Point Rules"
+msgstr "Regras de Pontos"
 
 #: plugins/gamification/views/gamification_plugin_admin/index.html.erb:1
 msgid "Gamification Settings"
@@ -181,13 +194,11 @@ msgstr "Regras de Classificação"
 msgid "New Level"
 msgstr "Novo Nível"
 
-#: plugins/gamification/views/gamification_plugin_admin/points.html.erb:1
-msgid "Gamification Settings: Point Rules"
-msgstr "Configurações de Gamificação: regras dos Pontos"
+#~ msgid "Current position: "
+#~ msgstr "Posição atual:"
 
-#: plugins/gamification/views/gamification_plugin_admin/points.html.erb:6
-msgid "Point Rules"
-msgstr "Regras de Pontos"
+#~ msgid "Not scored yet"
+#~ msgstr "Não pontuou ainda"
 
 #~ msgid "Point weight for comment author"
 #~ msgstr "Peso do ponto para o autor do comentário"
