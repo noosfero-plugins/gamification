@@ -177,6 +177,16 @@
 
 .gamification-rankings .ranking {
   vertical-align: top;
+  margin: 0;
+}
+
+.gamification-rankings .ranking-item.current {
+  font-weight: bold;
+}
+
+.gamification-rankings .ranking.context {
+  background-color: rgb(230, 230, 230);
+  opacity: 0.8;
 }
 
 /* Star Rating */

@@ -1,16 +1,8 @@
-<ul class="ranking">
-  <div class="target-position">
-    <% if target_ranking.present? %>
-      <span><%= _('Current position: ') %></span>
-      <span><%= target_ranking.gamification_position %></span>
-    <% else %>
-      <%= _('Not scored yet') %>
-    <% end %>
- </div>
-  <% ranking.each_with_index do |person, i| %>
-    <li class="ranking-item">
+<ul class="ranking <%= defined?(ranking_class) ? ranking_class : '' %>">
+  <% ranking.each do |person| %>
+     <li class="ranking-item <%= person == target_ranking ? 'current' : '' %>">
       <span class="position">
-        <%= i+1 %>
+        <%= person.gamification_position %>
       </span>
       <span class="target">
         <%= link_to person.url do %>
