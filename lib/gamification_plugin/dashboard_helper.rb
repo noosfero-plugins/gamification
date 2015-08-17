@@ -30,7 +30,7 @@ module GamificationPlugin::DashboardHelper
     end
     ranking = ranking.limit(limit)
 
-    render(:partial => 'gamification/ranking', :locals => {:ranking => ranking, :target_ranking => target_ranking, :context_ranking => context_ranking}) +
+    render(:partial => 'gamification/ranking', :locals => {:ranking => ranking, :target_ranking => target_ranking}) +
     (context_ranking.blank? ? '' : render(:partial => 'gamification/ranking', :locals => {:ranking => context_ranking, :target_ranking => target_ranking, :ranking_class => 'context'}))
   end
 

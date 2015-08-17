@@ -189,6 +189,12 @@
   opacity: 0.8;
 }
 
+.gamification-rankings .ranking-empty {
+  text-align: center;
+  color: rgb(158, 158, 158);
+  font-style: italic;
+}
+
 /* Star Rating */
 
 .rating {

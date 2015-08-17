@@ -1,3 +1,6 @@
+<% if ranking.empty? %>
+  <div class="ranking-empty"><%= _('Not enough points for this ranking yet') %></div>
+<% else %>
 <ul class="ranking <%= defined?(ranking_class) ? ranking_class : '' %>">
   <% ranking.each do |person| %>
      <li class="ranking-item <%= person == target_ranking ? 'current' : '' %>">
@@ -17,3 +20,4 @@
     </li>
   <% end %>
 </ul>
+<% end %>
