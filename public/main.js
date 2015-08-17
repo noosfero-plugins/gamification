@@ -7,6 +7,7 @@ var gamificationPlugin = {
       layout: 'center',
       modal: 'true',
       theme: 'relax',
+      closeWith: ['click', 'backdrop'],
       animation: {
         open  : 'animated bounceInLeft',
         close : 'animated bounceOutLeft',
