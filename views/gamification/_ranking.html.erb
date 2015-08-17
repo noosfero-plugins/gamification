@@ -5,7 +5,7 @@
         <%= person.gamification_position %>
       </span>
       <span class="target">
-        <%= link_to person.url do %>
+        <%= link_to :controller => 'gamification_plugin_profile', :action => :dashboard, :profile => person.identifier do %>
           <span class="image"><%= profile_image(person, :icon) %></span>
           <span class="label"><%= person.name %></span>
         <% end %>
