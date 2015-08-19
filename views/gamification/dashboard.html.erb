@@ -44,7 +44,7 @@
             <div class="image <%= badge.name %>"></div>
             <ul class="level rating">
               <% 1.upto(badge.level).map do |n|%>
-                <span class="<%= (person_badge && person_badge.level >= n) ? 'earned' : 'not-earned' %>" > ☆ </span>
+                <span class="star <%= (person_badge && person_badge.level >= n) ? 'earned' : 'not-earned' %>" >★</span>
               <% end %>
             </ul>
             <div class="title"><%= badge.title %></div>

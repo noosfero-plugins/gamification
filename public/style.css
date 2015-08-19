@@ -44,6 +44,8 @@
 
 .gamification .badge {
   text-align: center;
+  margin-bottom: 4px;
+  min-height: 150px;
 }
 
 .gamification .badge.not-earned {
@@ -197,24 +199,23 @@
 
 /* Star Rating */
 
-.rating {
+.gamification-dashboard .rating {
   padding: 0px;
+  line-height: 30px;
 }
 
-.rating > span {
+.gamification-dashboard .rating .star {
   display: inline-block;
-  position: relative;
   font-size: 32px;
   width: 1.1em;
-  bottom: 0px;
   margin: 0 -7px;
-  color: #C0C0C0;
+  color: #E9E9E9;
+  vertical-align: top;
 }
-.rating > span.earned:before {
-   content: "\2605";
-   position: absolute;
+.gamification-dashboard .rating .star.earned {
    color: #FFE13D;
    font-size: 42px;
    top: -7px;
    left: 0px;
+   margin: 0 -12px;
 }
