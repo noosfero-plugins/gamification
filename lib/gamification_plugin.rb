@@ -58,6 +58,9 @@ class GamificationPlugin < Noosfero::Plugin
     { GamificationPlugin::RankingBlock => {}}
   end
 
+  def self.api_mount_points
+    [GamificationPlugin::API]
+  end
 
   ActionDispatch::Reloader.to_prepare do
     Merit.setup do |config|
