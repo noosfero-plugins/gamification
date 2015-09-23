@@ -26,6 +26,14 @@ class APITest <  ActiveSupport::TestCase
     assert_not_nil json['percent']
   end
 
+  should 'get my total pontuation' do
+    badge = GamificationPlugin::Badge.create!(:owner => environment, :name => 'test_badge')
+    person.add_badge(badge.id)
+    get "/api/v1/gamification_plugin/my/points?#{params.to_query}"
+    json = JSON.parse(last_response.body)
+    assert_not_nil json['points']
+  end
+
   should 'get badges of the public person' do
     badge = GamificationPlugin::Badge.create!(:owner => environment, :name => 'test_badge')
     another_person = create(User, :environment => environment).person
