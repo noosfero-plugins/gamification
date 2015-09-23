@@ -2,12 +2,15 @@ class GamificationPlugin::API < Grape::API
 
   resource :gamification_plugin do
 
-      resource :my do 
+      resource :my do
         get 'badges' do
           present current_person.badges
         end
         get 'level' do
           {:level => current_person.level, :percent => current_person.gamification_plugin_level_percent}
+        end
+        get 'points' do
+          {points: current_person.points}
         end
 
       end
@@ -17,6 +20,12 @@ class GamificationPlugin::API < Grape::API
         person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
         return not_found! if person.blank?
         present person.badges
+      end
+
+      get ':id/points' do
+        person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
+        return not_found! if person.blank?
+        {:points => person.points}
       end
 
       get ':id/level' do
