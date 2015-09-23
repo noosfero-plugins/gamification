@@ -6,7 +6,7 @@ class GamificationPlugin::API < Grape::API
       environment.gamification_plugin_badges.group(:name).count
     end
 
-    resource :my do 
+    resource :my do
       get 'badges' do
         authenticate!
         present current_person.badges, :with => Noosfero::API::Entities::Badge
@@ -16,6 +16,11 @@ class GamificationPlugin::API < Grape::API
         authenticate!
         {:level => current_person.level, :percent => current_person.gamification_plugin_level_percent, :score => current_person.points}
       end
+
+      get 'points' do
+        authenticate!
+        {points: current_person.points}
+      end
     end
 
     resource :people do
@@ -23,6 +28,12 @@ class GamificationPlugin::API < Grape::API
         person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
         return not_found! if person.blank?
         present person.badges
+      end
+
+      get ':id/points' do
+        person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
+        return not_found! if person.blank?
+        {:points => person.points}
       end
 
       get ':id/level' do
