@@ -2,15 +2,21 @@ class GamificationPlugin::API < Grape::API
 
   resource :gamification_plugin do
 
-      resource :my do 
-        get 'badges' do
-          present current_person.badges
-        end
-        get 'level' do
-          {:level => current_person.level, :percent => current_person.gamification_plugin_level_percent}
-        end
+    get 'badges' do
+      environment.gamification_plugin_badges.group(:name).count
+    end
 
+    resource :my do 
+      get 'badges' do
+        authenticate!
+        present current_person.badges
       end
+
+      get 'level' do
+        authenticate!
+        {:level => current_person.level, :percent => current_person.gamification_plugin_level_percent}
+      end
+    end
 
     resource :people do
       get ':id/badges' do
