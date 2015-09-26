@@ -12,6 +12,15 @@ class GamificationPlugin::API < Grape::API
         get 'points' do
           {points: current_person.points}
         end
+        get 'points_by_type' do
+          {points: current_person.points_by_type(params[:type]) }
+        end
+        get 'points_by_profile' do
+          {points: current_person.points_by_profile(params[:profile]) }
+        end
+        get 'points_out_of_profiles' do
+          {points: current_person.points_out_of_profiles }
+        end
 
       end
 
@@ -26,6 +35,24 @@ class GamificationPlugin::API < Grape::API
         person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
         return not_found! if person.blank?
         {:points => person.points}
+      end
+
+      get ':id/points_by_type' do
+        person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
+        return not_found! if person.blank?
+        {points: person.points_by_type(params[:type]) }
+      end
+
+      get ':id/points_by_profile' do
+        person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
+        return not_found! if person.blank?
+        {points: person.points_by_type(params[:profile]) }
+      end
+
+      get ':id/points_out_of_profiles' do
+        person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
+        return not_found! if person.blank?
+        {points: person.points_out_of_profiles }
       end
 
       get ':id/level' do
