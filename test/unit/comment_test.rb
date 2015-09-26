@@ -5,11 +5,12 @@ class CommentTest < ActiveSupport::TestCase
   def setup
     @person = create_user('testuser').person
     @author = create_user('testauthoruser').person
-    @article = create(TextileArticle, :profile_id => person.id, :author_id => @author.id)
+    @community = create_merit_categorization
+    @article = create(TextileArticle, :profile_id => @community.id, :author_id => @author.id)
     @environment = Environment.default
     GamificationPlugin.gamification_set_rules(@environment)
   end
-  attr_accessor :person, :article, :environment, :author
+  attr_accessor :person, :article, :environment, :author, :community
 
   should 'add merit points to author when create a new comment' do
     create(Comment, :source => article, :author_id => person.id)
@@ -67,7 +68,8 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit points to comment owner when an user like his comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    assert_difference 'comment.author.points(:category => :vote_voteable_author)', 50 do
+    c = GamificationPlugin::PointsCategorization.by_type(:vote_voteable_author).where(profile_id: article.profile.id).first
+    assert_difference 'comment.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => comment, :vote => 1)
     end
   end
@@ -84,7 +86,8 @@ class CommentTest < ActiveSupport::TestCase
   should 'subtract merit points from comment owner when an user dislike his comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    assert_difference 'comment.author.points(:category => :vote_voteable_author)', -50 do
+    c = GamificationPlugin::PointsCategorization.by_type(:vote_voteable_author).where(profile_id: article.profile.id).first
+    assert_difference 'comment.author.points(:category => c.id.to_s)', -1*c.weight do
       Vote.create!(:voter => person, :voteable => comment, :vote => -1)
     end
   end
@@ -107,7 +110,8 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit points to voter when he likes a comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    assert_difference 'comment.author.points(:category => :vote_voter)', 10 do
+    c = GamificationPlugin::PointsCategorization.by_type(:vote_voter).where(profile_id: community.id).first
+    assert_difference 'comment.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => comment, :vote => 1)
     end
   end
@@ -115,21 +119,24 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit points to voter when he dislikes a comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    assert_difference 'comment.author.points(:category => :vote_voter)', 10 do
+    c = GamificationPlugin::PointsCategorization.by_type(:vote_voter).where(profile_id: community.id).first
+    assert_difference 'comment.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => comment, :vote => -1)
     end
   end
 
   should 'add merit points to source article when create a comment' do
-    assert_difference 'article.points(:category => :comment_article)', 50 do
+    c = GamificationPlugin::PointsCategorization.by_type(:comment_article).where(profile_id: community.id).first
+    assert_difference 'article.points(:category => c.id.to_s)', c.weight do
       create(Comment, :source => article, :author_id => person.id)
     end
   end
 
   should 'add merit points to source community when create a comment' do
-    community = fast_create(Community)
-    article = create(TextileArticle, :profile_id => community.id, :author_id => @author.id)
-    assert_difference 'community.points(:category => :comment_community)', 50 do
+    article = create(TextileArticle, :profile_id => community.id, :author_id => author.id)
+
+    c = GamificationPlugin::PointsCategorization.by_type(:comment_community).where(profile_id: community.id).first
+    assert_difference 'community.points(:category => c.id.to_s)', c.weight do
       create(Comment, :source => article, :author_id => person.id)
     end
   end

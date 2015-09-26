@@ -9,7 +9,8 @@ module Merit
         to: :author,
         value: 1,
         description: _('Comment author'),
-        default_weight: 150
+        default_weight: 150,
+        condition: lambda {|comment, profile| comment.source.profile == profile},
       },
       comment_article_author: {
         action: 'comment#create',
@@ -17,7 +18,8 @@ module Merit
         to: lambda {|comment| comment.source.author},
         value: 1,
         description: _('Article author of a comment'),
-        default_weight: 50
+        default_weight: 50,
+        condition: lambda {|comment, profile| comment.source.profile == profile},
       },
       comment_article: {
         action: 'comment#create',
@@ -25,7 +27,8 @@ module Merit
         to: lambda {|comment| comment.source},
         value: 1,
         description: _('Source article of a comment'),
-        default_weight: 50
+        default_weight: 50,
+        condition: lambda {|comment, profile| comment.source.profile == profile},
       },
       comment_community: {
         action: 'comment#create',
@@ -34,7 +37,7 @@ module Merit
         value: 1,
         description: _('Article community of a comment'),
         default_weight: 50,
-        condition: lambda {|target| target.profile.community? }
+        condition: lambda {|comment, profile| comment.profile.community? and comment.profile == profile }
       },
       article_author: {
         action: 'article#create',
@@ -42,7 +45,8 @@ module Merit
         to: :author,
         value: 1,
         description: _('Article author'),
-        default_weight: 500
+        default_weight: 500,
+        condition: lambda {|article, profile| article.profile == profile},
       },
       article_community: {
         action: 'article#create',
@@ -51,7 +55,7 @@ module Merit
         value: 1,
         description: _('Article community'),
         default_weight: 600,
-        condition: lambda {|target| target.profile.community? }
+        condition: lambda {|article, profile| article.profile.community? and article.profile == profile }
       },
       vote_voteable_author: {
         action: 'vote#create',
@@ -61,6 +65,7 @@ module Merit
         value: lambda {|vote| vote.vote},
         description: _('Author of a voted content'),
         default_weight: 50,
+        condition: lambda {|vote, profile| vote.voteable.profile == profile }
       },
       vote_voteable: {
         action: 'vote#create',
@@ -69,7 +74,8 @@ module Merit
         profile: lambda {|vote| vote.voteable.profile},
         value: lambda {|vote| vote.vote},
         description: _('Voted content'),
-        default_weight: 50
+        default_weight: 50,
+        condition: lambda {|vote, profile| vote.voteable.profile == profile }
       },
       vote_voter: {
         action: 'vote#create',
@@ -77,7 +83,9 @@ module Merit
         to: lambda {|vote| vote.voter},
         value: lambda {|vote| 1},
         description: _('Voter'),
-        default_weight: 10
+        default_weight: 10,
+        condition: lambda {|vote, profile| vote.voteable.profile == profile }
+
       },
       friends: {
         action: 'friendship#create',
@@ -85,7 +93,8 @@ module Merit
         to: lambda {|friendship| friendship.person},
         value: 1,
         description: _('Friends'),
-        default_weight: 5
+        default_weight: 5,
+        profile_action: false
       },
       profile_completion: {
         action: ['account#create', 'account#update'],
@@ -93,35 +102,42 @@ module Merit
         to: lambda {|user| user.person},
         value: 1,
         description: _('Profile Completion'),
-        default_weight: 5,
+        default_weight: 100,
         model_name: "User",
-        condition: lambda {|user| user.person.profile_completion_score_condition }
+        condition: lambda {|user| user.person.profile_completion_score_condition },
+        profile_action: false
       }
     }
 
-    def weight(category)
-      settings = Noosfero::Plugin::Settings.new(@environment, GamificationPlugin)
-      settings.settings.fetch(:point_rules, {}).fetch(category.to_s, {}).fetch('weight', AVAILABLE_RULES[category][:default_weight]).to_i
-    end
-
-    def calculate_score(target, category, value)
+    def calculate_score(target, weight, value)
       value = value.call(target) if value.respond_to?(:call)
-      weight(category) * value
+      weight * value
     end
 
-    def condition(setting, target)
+    def condition(setting, target, profile)
       condition = setting[:condition]
-      condition.present? ? condition.call(target) : true
+      if condition.present?
+        if setting.fetch(:profile_action, true)
+          condition.call(target, profile)
+        else
+          condition.call(target)
+        end
+      else
+        true
+      end
     end
 
     def initialize(environment=nil)
-      return if environment.nil?
+      #return if environment.nil?
       @environment = environment
+      @environment = Environment.default if environment.nil?
 
-      AVAILABLE_RULES.each do |category, setting|
-        [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
-          score lambda {|target| signal * calculate_score(target, category, setting[:value])}, on: action, to: setting[:to], category: category do |target|
-            condition(setting, target)
+      AVAILABLE_RULES.each do |point_type, setting|
+        GamificationPlugin::PointsCategorization.by_type(point_type).includes(:profile).each do |categorization|
+          [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
+            score lambda {|target| signal * calculate_score(target, categorization.weight, setting[:value])}, on: action, to: setting[:to], category: categorization.id.to_s do |target|
+              condition(setting, target, categorization.profile)
+            end
           end
         end
       end

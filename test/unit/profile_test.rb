@@ -45,10 +45,12 @@ class ProfileTest < ActiveSupport::TestCase
   end
 
   should 'update profile level when the score changes' do
+    community = create_merit_categorization
     GamificationPlugin.gamification_set_rules(environment)
+
     person = create_user('testuser').person
     assert_equal 0, person.level
-    create(TextArticle, :profile_id => profile.id, :author => person)
+    create(TextArticle, :profile_id => community.id, :author => person)
     assert_equal 3, person.reload.level
   end
 
