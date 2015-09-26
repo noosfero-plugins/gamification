@@ -9,7 +9,7 @@ module Merit
         to: :author,
         value: 1,
         description: _('Comment author'),
-        default_weight: 150,
+        default_weight: 40,
         condition: lambda {|comment, profile| comment.source.profile == profile},
       },
       comment_article_author: {
@@ -45,7 +45,7 @@ module Merit
         to: :author,
         value: 1,
         description: _('Article author'),
-        default_weight: 500,
+        default_weight: 10,
         condition: lambda {|article, profile| article.profile == profile},
       },
       article_community: {
@@ -54,7 +54,7 @@ module Merit
         to: :profile,
         value: 1,
         description: _('Article community'),
-        default_weight: 600,
+        default_weight: 10,
         condition: lambda {|article, profile| article.profile.community? and article.profile == profile }
       },
       vote_voteable_author: {
@@ -64,7 +64,7 @@ module Merit
         profile: lambda {|vote| vote.voteable.profile},
         value: lambda {|vote| vote.vote},
         description: _('Author of a voted content'),
-        default_weight: 50,
+        default_weight: 20,
         condition: lambda {|vote, profile| vote.voteable.profile == profile }
       },
       vote_voteable: {
@@ -74,7 +74,7 @@ module Merit
         profile: lambda {|vote| vote.voteable.profile},
         value: lambda {|vote| vote.vote},
         description: _('Voted content'),
-        default_weight: 50,
+        default_weight: 30,
         condition: lambda {|vote, profile| vote.voteable.profile == profile }
       },
       vote_voter: {
@@ -105,7 +105,57 @@ module Merit
         model_name: "User",
         condition: lambda {|user| user.person.profile_completion_score_condition },
         profile_action: false
-      }
+      },
+      follower: {
+        action: 'follow#create',
+        undo_action: 'follow#destroy',
+        to: lambda {|follow| follow.profile },
+        value: 1,
+        description: _('Follower'),
+        default_weight: 10,
+        condition: lambda {|follow, profile| follow.source.profile == profile },
+        profile_action: true
+      },
+      followed_article_author: {
+        action: 'follow#create',
+        undo_action: 'follow#destroy',
+        to: lambda {|follow| follow.source.author },
+        value: 1,
+        description: _('Followed'),
+        default_weight: 20,
+        condition: lambda {|follow, profile| follow.source.profile == profile },
+        profile_action: true
+      },
+      #mobilizer: {
+        #action: 'mobilize#create',
+        #undo_action: 'mobilize#destroy',
+        #to: lambda {|target| target.source.author },
+        #value: 1,
+        #description: _('Mobilized Article Author'),
+        #default_weight: 60,
+        #condition: lambda {|target, profile| target.source.profile == profile },
+        #profile_action: true
+      #},
+      #mobilized_article_author: {
+        #action: 'mobilize#create',
+        #undo_action: 'mobilize#destroy',
+        #to: lambda {|target| target.source.author },
+        #value: 1,
+        #description: _('Mobilized Article Author'),
+        #default_weight: 70,
+        #condition: lambda {|follow, profile| follow.source.profile == profile },
+        #profile_action: true
+      #},
+      #mobilized_article: {
+        #action: 'mobilize#create',
+        #undo_action: 'mobilize#destroy',
+        #to: lambda {|target| target.source },
+        #value: 1,
+        #description: _('Mobilized Article Author'),
+        #default_weight: 70,
+        #condition: lambda {|follow, profile| follow.source.profile == profile },
+        #profile_action: true
+      #}
     }
 
     def calculate_score(target, weight, value)
