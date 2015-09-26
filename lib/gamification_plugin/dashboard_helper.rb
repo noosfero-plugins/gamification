@@ -12,7 +12,8 @@ module GamificationPlugin::DashboardHelper
   end
 
   def score_point_category(point)
-    HashWithIndifferentAccess.new(Merit::PointRules::AVAILABLE_RULES)[point.score.category][:description]
+    point = GamificationPlugin::PointsType.where(name: point.score.category).first
+    point.nil? ? '' : point.description
   end
 
   def ranking(target, from_date=nil, limit=10)
