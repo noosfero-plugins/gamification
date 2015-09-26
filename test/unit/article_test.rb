@@ -5,19 +5,20 @@ class ArticleTest < ActiveSupport::TestCase
   def setup
     @person = create_user('testuser').person
     @environment = Environment.default
+    @community = create_merit_categorization
     GamificationPlugin.gamification_set_rules(@environment)
   end
 
-  attr_accessor :person, :environment
+  attr_accessor :person, :environment, :community
 
   should 'add merit points to author when create a new article' do
-    create(TextArticle, :profile_id => person.id, :author => person)
+    create(TextArticle, :profile_id => community.id, :author => person)
     assert_equal 1, person.score_points.count
     assert person.score_points.first.action.present?
   end
 
   should 'subtract merit points to author when destroy an article' do
-    article = create(TextArticle, :profile_id => person.id, :author => person)
+    article = create(TextArticle, :profile_id => @community.id, :author => person)
     assert_equal 1, person.score_points.count
     article.destroy
     assert_equal 2, person.score_points.count
@@ -43,42 +44,45 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal [1, 2], person.badges.map(&:level)
   end
 
-  should 'add merit points to article owner when an user like it' do
-    article = create(TextArticle, :name => 'Test', :profile => person, :author => person)
+  should 'add merit points to community article owner when an user like it' do
+    article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
 
-    assert_difference 'article.author.points(:category => :vote_voteable_author)', 50 do
+    c = GamificationPlugin::PointsCategorization.by_type(:vote_voteable_author).where(profile_id: @community.id).first
+    assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => article, :vote => 1)
     end
   end
 
   should 'add merit points to article when an user like it' do
-    article = create(TextArticle, :name => 'Test', :profile => person, :author => person)
+    article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
     article = article.reload
 
-    assert_difference 'article.points(:category => :vote_voteable)', 50 do
+    c = GamificationPlugin::PointsCategorization.by_type(:vote_voteable).where(profile_id: @community.id).first
+    assert_difference 'article.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => article, :vote => 1)
     end
   end
 
   should 'add merit points to community when create a new article' do
-    community = fast_create(Community)
     assert_difference 'community.score_points.count' do
-      create(TextArticle, :profile_id => community.id, :author => person)
+      create(TextArticle, :profile_id => @community.id, :author => person)
     end
   end
 
   should 'add merit points to voter when he likes an article' do
-    article = create(TextArticle, :name => 'Test', :profile => person, :author => person)
+    article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
 
-    assert_difference 'article.author.points(:category => :vote_voter)', 10 do
+    c = GamificationPlugin::PointsCategorization.by_type(:vote_voter).where(profile_id: @community.id).first
+    assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => article, :vote => 1)
     end
   end
 
   should 'add merit points to voter when he dislikes an article' do
-    article = create(TextArticle, :name => 'Test', :profile => person, :author => person)
+    article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
 
-    assert_difference 'article.author.points(:category => :vote_voter)', 10 do
+    c = GamificationPlugin::PointsCategorization.by_type(:vote_voter).where(profile_id: @community.id).first
+    assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => article, :vote => -1)
     end
   end

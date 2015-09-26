@@ -9,6 +9,7 @@ class Person
     self.points(category: 'profile_completion') == 0 and self.is_profile_complete?
   end
   def is_profile_complete?
-    true
+    # FIXME: FIND OUT A WAY TO CHECK EVERY REGISTRY FIELD
+    false
   end
 end
