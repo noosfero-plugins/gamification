@@ -85,7 +85,6 @@ module Merit
         description: _('Voter'),
         default_weight: 10,
         condition: lambda {|vote, profile| vote.voteable.profile == profile }
-
       },
       friends: {
         action: 'friendship#create',

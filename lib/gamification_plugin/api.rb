@@ -32,11 +32,6 @@ class GamificationPlugin::API < Grape::API
         authenticate!
         {:level => current_person.level, :percent => current_person.gamification_plugin_level_percent, :score => current_person.points}
       end
-
-      get 'points' do
-        authenticate!
-        {points: current_person.points}
-      end
     end
 
     resource :people do
