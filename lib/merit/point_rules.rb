@@ -177,9 +177,8 @@ module Merit
     end
 
     def initialize(environment=nil)
-      #return if environment.nil?
+      return if environment.nil?
       @environment = environment
-      @environment = Environment.default if environment.nil?
 
       AVAILABLE_RULES.each do |point_type, setting|
         GamificationPlugin::PointsCategorization.by_type(point_type).includes(:profile).each do |categorization|
