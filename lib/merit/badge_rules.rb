@@ -9,75 +9,126 @@ module Merit
     include Merit::BadgeRulesMethods
 
     AVAILABLE_RULES = {
-      :comment_author => [
+      comment_author: [
         {
-          :action => 'comment#create',
-          :default_threshold => 5,
-          :to => :author,
-          :value => lambda { |author| author.present? ? author.comments.count : 0 }
+          action: 'comment#create',
+          default_threshold: 5,
+          to: :author,
+          value: lambda { |comment, author| author.present? ? author.conference_comments.count : 0 }
         }
       ],
-      :comment_received => [
+      comment_received: [
         {
-          :action => 'comment#create',
-          :default_threshold => 5,
-          :to => lambda {|comment| comment.source.author},
-          :value => lambda { |author| author.present? ? Comment.where(:source_id => Article.where(:author_id => author.id)).count : 0 }
+          action: 'comment#create',
+          default_threshold: 5,
+          to: lambda {|comment| comment.source.author},
+          value: lambda { |comment, author| author.present? ? Comment.where(source_id: Article.conference_articles.where(author_id: author.id)).count : 0 }
         }
       ],
-      :article_author => [
+      article_author: [
         {
-          :action => 'article#create',
-          :default_threshold => 5,
-          :to => :author,
-          :value => lambda { |author| author.present? ? author.environment.articles.text_articles.where(:author_id => author.id).count : 0 }
+          action: 'article#create',
+          default_threshold: 5,
+          to: :author,
+          value: lambda { |article, author| author.present? ? TextArticle.conference_articles.comments.where(author_id: author.id).count : 0 }
         },
       ],
-      :positive_votes_received => [
+      positive_votes_received: [
           {
-          :action => 'vote#create',
-          :default_threshold => 5,
-          :to => lambda {|vote| vote.voteable.author},
-          :value => lambda { |vote| Vote.for_voteable(vote.voteable).where('vote > 0').count }
+          action: 'vote#create',
+          default_threshold: 5,
+          to: lambda {|vote| vote.voteable.author},
+          value: lambda { |vote, author| Vote.for_voteable(vote.voteable).where('vote > 0').count }
         }
       ],
-      :negative_votes_received => [
+      negative_votes_received: [
         {
-          :action => 'vote#create',
-          :default_threshold => 5,
-          :to => lambda {|vote| vote.voteable.author},
-          :value => lambda { |vote| Vote.for_voteable(vote.voteable).where('vote < 0').count }
+          action: 'vote#create',
+          default_threshold: 5,
+          to: lambda {|vote| vote.voteable.author},
+          value: lambda { |vote, author| Vote.for_voteable(vote.voteable).where('vote < 0').count }
         }
       ],
-      :votes_performed => [
+      votes_performed: [
         {
-          :action => 'vote#create',
-          :default_threshold => 5,
-          :to => lambda {|vote| vote.voter},
-          :value => lambda { |vote| Vote.for_voter(vote.voter).count }
+          action: 'vote#create',
+          default_threshold: 5,
+          to: lambda {|vote| vote.voter},
+          value: lambda { |vote, voter| Vote.for_voter(voter).count }
         }
       ],
-      :friendly => [
+      friendly: [
         {
-          :action => 'friendship#create',
-          :default_threshold => 5,
-          :to => lambda {|friendship| friendship.person},
-          :value => lambda { |person| person.friends.count }
+          action: 'friendship#create',
+          default_threshold: 5,
+          to: lambda {|friendship| friendship.person},
+          value: lambda { |friendship, person| person.friends.count }
         }
       ],
-      :creative => [
+      creative: [
         {
-          :action => 'comment#create',
-          :default_threshold => 5,
-          :to => :author,
-          :value => lambda { |author| author.present? ? author.comments.count : 0 }
+          action: 'comment#create',
+          default_threshold: 5,
+          to: :author,
+          value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
         },
         {
-          :action => 'proposal#create',
-          :default_threshold => 5,
-          :to => :author,
-          :value => lambda { |author| author.present? ? author.proposals.count : 0 }
+          action: 'article#create',
+          default_threshold: 5,
+          to: :author,
+          value: lambda { |article, author| author.present? ? author.articles.count : 0 }
         },
+      ],
+      observer: [
+        {
+          action: 'article_follower#create',
+          default_threshold: 5,
+          to: lambda {|article| article.person },
+          value: lambda { |article, person| person.present? ? person.article_followers.count : 0 }
+        }
+      ],
+      mobilizer: [
+        {
+          action: 'Vote#create',
+          default_threshold: 5,
+          to: lambda { |vote| vote.voter },
+          value: lambda { |vote, voter| Vote.for_voter(voter).count }
+        },
+        {
+          action: 'Event#create',
+          default_threshold: 5,
+          to: lambda { |article| article.author },
+          value: lambda { |event, author| author.events.count }
+        },
+      ],
+      generous: [
+        {
+          action: 'vote#create',
+          default_threshold: 5,
+          to: lambda {|vote| vote.voter},
+          value: lambda { |vote, voter| voter.votes.where('vote > 0').count }
+        },
+        {
+          action: 'comment#create',
+          default_threshold: 5,
+          to: :author,
+          value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
+        }
+      ],
+      articulator: [
+        {
+          action: 'article_follower#create',
+          default_threshold: 5,
+          to: :person,
+          value: lambda { |article_follower, person| person.present? ? person.article_followers.count : 0 }
+        },
+        {
+          action: 'comment#create',
+          default_threshold: 5,
+          to: :author,
+          value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
+        },
+        #mobilizer#create
       ]
     }
 
@@ -85,19 +136,28 @@ module Merit
       return if environment.nil?
       @environment = environment
 
+      rules = AVAILABLE_RULES
+      rules.merge! CONFERENCE_RULES if defined? CONFERENCE_RULES
+
       environment.gamification_plugin_badges.all.each do |badge|
-        settings = AVAILABLE_RULES[badge.name.to_sym]
-        settings.each_with_index do |setting,i|
-          grant_on setting[:action], :badge => badge.name, :level => badge.level, :to => setting[:to] do |source|
+        next if rules[badge.name.to_sym].nil?
+        rules[badge.name.to_sym].each do |setting|
+          grant_on setting[:action], badge: badge.name, level: badge.level, to: setting[:to] do |source|
             can_be_granted = true
-            settings.each_with_index do |s,j|
+            rules[badge.name.to_sym].each do |s|
               if s[:to].is_a? Symbol
-                receiver = source.send s[:to]
+                to = source.send(setting[:to])
               else
-                receiver = s[:to].call source
+                begin
+                  to = setting[:to].call(source)
+                rescue
+                  to = nil
+                end
               end
-              can_be_granted &= s[:value].call(receiver) >= (badge.custom_fields || {}).fetch(:threshold, s[:default_threshold]).to_i
+                # pass source and to for different situations
+              can_be_granted &= s[:value].call(source, to) >= (badge.custom_fields || {}).fetch(:threshold, s[:default_threshold]).to_i
             end
+            can_be_granted
           end
         end
       end
