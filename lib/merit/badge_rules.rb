@@ -145,7 +145,7 @@ module Merit
           grant_on setting[:action], badge: badge.name, level: badge.level, to: setting[:to] do |source|
             can_be_granted = true
             rules[badge.name.to_sym].each do |s|
-              if s[:to].is_a? Symbol
+              if setting[:to].is_a? Symbol
                 to = source.send(setting[:to])
               else
                 begin
@@ -155,7 +155,8 @@ module Merit
                 end
               end
                 # pass source and to for different situations
-              can_be_granted &= s[:value].call(source, to) >= (badge.custom_fields || {}).fetch(:threshold, s[:default_threshold]).to_i
+              action = (badge.custom_fields || {}).fetch(s[:action], {})
+              can_be_granted &= s[:value].call(source, to) >= action.fetch(:threshold, s[:default_threshold]).to_i
             end
             can_be_granted
           end
