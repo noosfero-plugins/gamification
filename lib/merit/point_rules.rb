@@ -55,7 +55,7 @@ module Merit
         value: 1,
         description: _('Article community'),
         default_weight: 10,
-        condition: lambda {|article, profile| article.profile.community? and article.profile == profile }
+        condition: lambda {|article, profile| article.profile.present? and article.profile.community? and article.profile == profile }
       },
       vote_voteable_author: {
         action: 'vote#create',
@@ -181,7 +181,7 @@ module Merit
       @environment = environment
 
       AVAILABLE_RULES.each do |point_type, setting|
-        GamificationPlugin::PointsCategorization.by_type(point_type).includes(:profile).each do |categorization|
+        GamificationPlugin::PointsCategorization.for_type(point_type).includes(:profile).each do |categorization|
           [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
             score lambda {|target| signal * calculate_score(target, categorization.weight, setting[:value])}, on: action, to: setting[:to], category: categorization.id.to_s do |target|
               condition(setting, target, categorization.profile)

@@ -1,14 +1,16 @@
 <h1><%= _('Gamification Settings: Point Rules')%></h1>
 
-<%= form_for(:settings) do |f| %>
-  <%= f.fields_for :point_rules do |p| %>
-    <div class="point-rules">
-      <h3><%= _('Point Rules') %></h3>
-      <% Merit::PointRules::AVAILABLE_RULES.each do |category, setting| %>
-        <%= labelled_form_field(_(setting[:description]), p.text_field("#{category}[weight]", :value => @settings.settings.fetch(:point_rules, {}).fetch(category.to_s, {}).fetch('weight', setting[:default_weight]))) %>
+<%= form_for('points_categorizations') do |f| %>
+  <div class="point-rules">
+    <h3><%= _('Point Rules') %></h3>
+    <% GamificationPlugin::PointsCategorization.grouped_profiles.each do |categorization| %>
+      <% title = categorization.profile.nil? ? _('general points') : _('points for %{name}') % {name: categorization.profile.name} %>
+      <h4><%= title %></h4>
+      <% GamificationPlugin::PointsCategorization.where(profile_id: categorization.profile).each do |c| %>
+        <%= labelled_form_field(_(c.point_type.description), f.text_field("[][weight]", :value => c.weight)) %>
       <% end %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 
   <% button_bar do %>
     <%= submit_button(:save, c_('Save'), :cancel => {:action => 'index'}) %>

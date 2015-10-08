@@ -14,12 +14,12 @@ class Person
   end
 
   def points_by_type type
-    categorizations = GamificationPlugin::PointsCategorization.by_type(type)
+    categorizations = GamificationPlugin::PointsCategorization.for_type(type)
     categorizations.inject(0) {|sum, c| sum += self.points(category: c.id.to_s) }
   end
 
   def points_by_profile profile
-    categorizations = GamificationPlugin::PointsCategorization.by_profile(profile)
+    categorizations = GamificationPlugin::PointsCategorization.for_profile(profile)
     categorizations.inject(0) {|sum, c| sum += self.points(category: c.id.to_s) }
   end
 

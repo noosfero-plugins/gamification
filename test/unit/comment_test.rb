@@ -68,7 +68,7 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit points to comment owner when an user like his comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    c = GamificationPlugin::PointsCategorization.by_type(:vote_voteable_author).where(profile_id: article.profile.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:vote_voteable_author).where(profile_id: article.profile.id).first
     assert_difference 'comment.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => comment, :vote => 1)
     end
@@ -86,7 +86,7 @@ class CommentTest < ActiveSupport::TestCase
   should 'subtract merit points from comment owner when an user dislike his comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    c = GamificationPlugin::PointsCategorization.by_type(:vote_voteable_author).where(profile_id: article.profile.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:vote_voteable_author).where(profile_id: article.profile.id).first
     assert_difference 'comment.author.points(:category => c.id.to_s)', -1*c.weight do
       Vote.create!(:voter => person, :voteable => comment, :vote => -1)
     end
@@ -110,7 +110,7 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit points to voter when he likes a comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    c = GamificationPlugin::PointsCategorization.by_type(:vote_voter).where(profile_id: community.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:vote_voter).where(profile_id: community.id).first
     assert_difference 'comment.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => comment, :vote => 1)
     end
@@ -119,14 +119,14 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit points to voter when he dislikes a comment' do
     comment = create(Comment, :source => article, :author_id => person.id)
 
-    c = GamificationPlugin::PointsCategorization.by_type(:vote_voter).where(profile_id: community.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:vote_voter).where(profile_id: community.id).first
     assert_difference 'comment.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => comment, :vote => -1)
     end
   end
 
   should 'add merit points to source article when create a comment' do
-    c = GamificationPlugin::PointsCategorization.by_type(:comment_article).where(profile_id: community.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:comment_article).where(profile_id: community.id).first
     assert_difference 'article.points(:category => c.id.to_s)', c.weight do
       create(Comment, :source => article, :author_id => person.id)
     end
@@ -135,7 +135,7 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit points to source community when create a comment' do
     article = create(TextileArticle, :profile_id => community.id, :author_id => author.id)
 
-    c = GamificationPlugin::PointsCategorization.by_type(:comment_community).where(profile_id: community.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:comment_community).where(profile_id: community.id).first
     assert_difference 'community.points(:category => c.id.to_s)', c.weight do
       create(Comment, :source => article, :author_id => person.id)
     end

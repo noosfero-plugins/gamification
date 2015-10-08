@@ -3,14 +3,6 @@ class GamificationPluginAdminController < PluginAdminController
 
   before_filter :load_settings
 
-  def points
-    if save_settings
-      render :file => 'gamification_plugin_admin/index'
-    else
-      render :file => 'gamification_plugin_admin/points'
-    end
-  end
-
   def levels
     if save_settings
       render :file => 'gamification_plugin_admin/index'
