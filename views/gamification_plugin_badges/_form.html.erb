@@ -11,9 +11,11 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <% rules =  Merit::BadgeRules::AVAILABLE_RULES %>
+  <% rules.merge! Merit::BadgeRules::CONFERENCE_RULES %>
+  <div class="field" id="gamification-plugin-form-badge-name">
     <%= f.label :name %><br />
-    <%= f.select :name, Merit::BadgeRules::AVAILABLE_RULES.map{ |key, rule| key } %>
+    <%= f.select :name, rules.map{ |key, rule| key } %>
   </div>
   <div class="field">
     <%= f.label :title %><br />
@@ -27,11 +29,22 @@
     <%= f.label :level %><br />
     <%= f.text_field :level %>
   </div>
+  <h4><%= _('Actions') %></h4>
   <%= f.fields_for :custom_fields do |c| %>
-  <div class="field">
-    <%= c.label :threshold %><br />
-    <%= c.text_field :threshold %>
-  </div>
+    <% rules.each do |name, settings| %>
+      <div class='controller-actions <%= "name_#{name}" %>'>
+        <% settings.each do |setting| %>
+          <%= c.label _(setting[:action]) %>
+          <%= c.fields_for setting[:action]  do |d| %>
+            <% action = (@gamification_plugin_badge.custom_fields || {}).fetch(setting[:action], {}) %>
+            <div class="field">
+              <%= d.label :threshold %><br />
+              <%= d.text_field :threshold, {value: action.fetch('threshold', "")} %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
   <div class="actions">
     <%= f.submit %>
