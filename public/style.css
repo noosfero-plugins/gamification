@@ -219,3 +219,21 @@
    left: 0px;
    margin: 0 -12px;
 }
+
+/* *** *** ADMIN *** *** */
+.gamification_plugin_activate_profile label {
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.gamification_plugin_activate_profile .formfield, .gamification_plugin_activate_profile .formfieldline {
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.gamification_plugin_admin_points .point-rules .formfieldline label {
+  float: left;
+  width: 180px;
+}

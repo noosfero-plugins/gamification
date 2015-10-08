@@ -31,7 +31,7 @@ class PersonTest < ActiveSupport::TestCase
   should 'add points when add someone as a friendly' do
     other_person = create_user("testuserfriend").person
     person.add_friend(other_person)
-    c = GamificationPlugin::PointsCategorization.by_type(:friends).first
+    c = GamificationPlugin::PointsCategorization.for_type(:friends).first
     assert_equal 5, person.score_points(:category => c.id.to_s).sum(:num_points)
   end
 

@@ -47,7 +47,7 @@ class ArticleTest < ActiveSupport::TestCase
   should 'add merit points to community article owner when an user like it' do
     article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
 
-    c = GamificationPlugin::PointsCategorization.by_type(:vote_voteable_author).where(profile_id: @community.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:vote_voteable_author).where(profile_id: @community.id).first
     assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => article, :vote => 1)
     end
@@ -57,7 +57,7 @@ class ArticleTest < ActiveSupport::TestCase
     article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
     article = article.reload
 
-    c = GamificationPlugin::PointsCategorization.by_type(:vote_voteable).where(profile_id: @community.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:vote_voteable).where(profile_id: @community.id).first
     assert_difference 'article.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => article, :vote => 1)
     end
@@ -72,7 +72,7 @@ class ArticleTest < ActiveSupport::TestCase
   should 'add merit points to voter when he likes an article' do
     article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
 
-    c = GamificationPlugin::PointsCategorization.by_type(:vote_voter).where(profile_id: @community.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:vote_voter).where(profile_id: @community.id).first
     assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => article, :vote => 1)
     end
@@ -81,7 +81,7 @@ class ArticleTest < ActiveSupport::TestCase
   should 'add merit points to voter when he dislikes an article' do
     article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
 
-    c = GamificationPlugin::PointsCategorization.by_type(:vote_voter).where(profile_id: @community.id).first
+    c = GamificationPlugin::PointsCategorization.for_type(:vote_voter).where(profile_id: @community.id).first
     assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
       Vote.create!(:voter => person, :voteable => article, :vote => -1)
     end
