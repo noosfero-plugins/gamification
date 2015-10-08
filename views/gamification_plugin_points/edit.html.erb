@@ -1,0 +1,21 @@
+<h1><%= _('Gamification Settings: Point Rules')%></h1>
+
+<% title = profile.nil? ? _('general pontuation rules') : _('pontuation rules for %{name}') % {name: profile.name} %>
+<h3><%= title %></h3>
+<%= form_tag({action: :edit}, class: 'gamification_plugin_admin_points') do %>
+  <div class="point-rules">
+    <% @categories.each do |category| %>
+      <%= fields_for "gamification_plugin_points_categorizations[]", category do |c| %>
+      	<% desc = _(category.point_type.description) || category.point_type.name %>
+      	<%= labelled_form_field(desc, c.text_field(:weight, :value => category.weight)) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% button_bar do %>
+    <%= submit_button(:save, c_('Save'), :cancel => {:action => 'index'}) %>
+  <% end %>
+
+<% end %>
+
+
