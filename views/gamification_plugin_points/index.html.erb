@@ -1,0 +1,28 @@
+<h1><%= _('Gamification Plugin: Listing Points by profile') %></h1>
+
+<div class=error><%= flash[:notice] %></div>
+<table>
+  <tr>
+    <th>Comunidade</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @categories.each do |category| %>
+  <tr>
+    <td><%= category.profile.nil? ? _('General Pontuation') : category.profile.name %></td>
+    <td><%= link_to 'Edit', {action: :edit, id: category.profile_id} %></td>
+    <td><%= button_without_text :delete, _('Remove'), {:action => :destroy, :id => category.profile_id}, :method => :post, :confirm => _('Are you sure?') %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= form_tag({action: :create}, class: "gamification_plugin_activate_profile") do %>
+  <%= labelled_form_field(_('Activate pontuation rules for: '), text_field_tag(:identifier, nil,placeholder: _("Profile"), size: 40)) %>
+  <%= submit_button 'forward', _('submit') %>
+<% end %>
+
+<%= link_to 'Back', :controller => 'gamification_plugin_admin', :action => :index %>
+
