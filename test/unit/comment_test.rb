@@ -78,7 +78,7 @@ class CommentTest < ActiveSupport::TestCase
     comment = create(Comment, :source => article, :author_id => author.id)
     Vote.create!(:voter => person, :voteable => comment, :vote => 1)
 
-    assert_difference 'comment.author.points', -50 do
+    assert_difference 'comment.author.points', -20 do
       Vote.where(:voteable_id => comment.id).destroy_all
     end
   end
@@ -96,7 +96,7 @@ class CommentTest < ActiveSupport::TestCase
     comment = create(Comment, :source => article, :author_id => author.id)
     Vote.create!(:voter => person, :voteable => comment, :vote => -1)
 
-    assert_difference 'comment.author.points', 50 do
+    assert_difference 'comment.author.points', 20 do
       Vote.where(:voteable_id => comment.id).destroy_all
     end
   end

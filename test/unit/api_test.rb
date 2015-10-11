@@ -7,6 +7,8 @@ class APITest <  ActiveSupport::TestCase
     login_api
     environment = Environment.default
     environment.enable_plugin(GamificationPlugin)
+    @community = create_merit_categorization
+    GamificationPlugin.gamification_set_rules(@environment)
   end
 
   should 'get my own badges' do
@@ -14,7 +16,7 @@ class APITest <  ActiveSupport::TestCase
     person.add_badge(badge.id)
     get "/api/v1/gamification_plugin/my/badges?#{params.to_query}"
     json = JSON.parse(last_response.body)
-    assert_equal 'test_badge', json.first['name']
+    assert_equal 'test_badge', json['badges'].first['name']
   end
 
   should 'get my level' do
@@ -71,7 +73,7 @@ class APITest <  ActiveSupport::TestCase
     another_person.visible=false
     another_person.save
     get "/api/v1/gamification_plugin/people/#{another_person.id}/level?#{params.to_query}"
-    json = JSON.parse(last_response.body)
+    JSON.parse(last_response.body)
     assert_equal 404, last_response.status
   end
 
