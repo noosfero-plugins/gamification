@@ -14,7 +14,7 @@ module Merit
           action: 'comment#create',
           default_threshold: 5,
           to: :author,
-          value: lambda { |comment, author| author.present? ? author.conference_comments.count : 0 }
+          value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
         }
       ],
       comment_received: [
@@ -22,7 +22,7 @@ module Merit
           action: 'comment#create',
           default_threshold: 5,
           to: lambda {|comment| comment.source.author},
-          value: lambda { |comment, author| author.present? ? Comment.where(source_id: Article.conference_articles.where(author_id: author.id)).count : 0 }
+          value: lambda { |comment, author| author.present? ? Comment.where(source_id: Article.where(author_id: author.id)).count : 0 }
         }
       ],
       article_author: [
@@ -30,7 +30,7 @@ module Merit
           action: 'article#create',
           default_threshold: 5,
           to: :author,
-          value: lambda { |article, author| author.present? ? TextArticle.conference_articles.comments.where(author_id: author.id).count : 0 }
+          value: lambda { |article, author| author.present? ? TextArticle.where(author_id: author.id).count : 0 }
         },
       ],
       positive_votes_received: [
