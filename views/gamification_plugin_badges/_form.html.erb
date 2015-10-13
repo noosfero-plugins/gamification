@@ -12,7 +12,7 @@
   <% end %>
 
   <% rules =  Merit::BadgeRules::AVAILABLE_RULES %>
-  <% rules.merge! Merit::BadgeRules::CONFERENCE_RULES %>
+  <% rules.merge! Merit::BadgeRules::CONFERENCE_RULES if defined? Merit::BadgeRules::CONFERENCE_RULES %>
   <div class="field" id="gamification-plugin-form-badge-name">
     <%= f.label :name %><br />
     <%= f.select :name, rules.map{ |key, rule| key } %>
