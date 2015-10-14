@@ -14,12 +14,8 @@ class Person
   end
 
   def is_profile_complete?
-    !(self.name.blank? or
-      (self.data[:identidade_genero].blank? and self.data[:transgenero].blank?) or
-      self.data[:etnia].blank? or
-      self.data[:orientacao_sexual].blank? or
-      self.data[:state].blank? or
-      self.data[:city].blank?)
+    #FIXME: this method should check all fields on profile to be completed
+    false
   end
 
   def points_by_type type
