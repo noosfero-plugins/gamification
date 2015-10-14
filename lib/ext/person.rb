@@ -5,12 +5,21 @@ class Person
   # TODO why this relationship doesn't exists in core?
   has_many :comments, :foreign_key => 'author_id'
 
+  after_save { |obj| obj.new_merit_action(:update, {}) }
+
   def profile_completion_score_condition
-    self.points(category: 'profile_completion') == 0 and self.is_profile_complete?
+    categories = []
+    GamificationPlugin::PointsCategorization.for_type('profile_completion').each {|i| categories << i.id.to_s}
+    self.points(category: categories) == 0 and self.is_profile_complete?
   end
+
   def is_profile_complete?
-    # FIXME: FIND OUT A WAY TO CHECK EVERY REGISTRY FIELD
-    false
+    !(self.name.blank? or
+      (self.data[:identidade_genero].blank? and self.data[:transgenero].blank?) or
+      self.data[:etnia].blank? or
+      self.data[:orientacao_sexual].blank? or
+      self.data[:state].blank? or
+      self.data[:city].blank?)
   end
 
   def points_by_type type

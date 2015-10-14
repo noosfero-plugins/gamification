@@ -11,6 +11,7 @@ class GamificationPlugin::API < Grape::API
         authenticate!
         present current_person.badges, :with => Noosfero::API::Entities::Badge
       end
+
       get 'points' do
         authenticate!
         {points: current_person.points}

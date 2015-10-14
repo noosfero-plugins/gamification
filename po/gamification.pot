@@ -119,7 +119,7 @@ msgid "All Time"
 msgstr ""
 
 #: plugins/gamification/views/gamification/notification_badge.html.erb:2
-msgid "You earn a new badge!"
+msgid "You earned a new badge!"
 msgstr ""
 
 #: plugins/gamification/views/gamification/notification_badge.html.erb:6
