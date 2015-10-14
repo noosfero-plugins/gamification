@@ -107,23 +107,25 @@ module Merit
         profile_action: false
       },
       follower: {
-        action: 'follow#create',
-        undo_action: 'follow#destroy',
-        to: lambda {|follow| follow.profile },
+        action: 'articlefollower#create',
+        undo_action: 'articlefollower#destroy',
+        to: :person,
         value: 1,
         description: _('Follower'),
         default_weight: 10,
-        condition: lambda {|follow, profile|  profile.nil? or follow.source.profile == profile },
+        model: 'ArticleFollower',
+        condition: lambda {|follow, profile| profile.nil? or follow.article.profile == profile },
         profile_action: true
       },
       followed_article_author: {
-        action: 'follow#create',
-        undo_action: 'follow#destroy',
-        to: lambda {|follow| follow.source.author },
+        action: 'articlefollower#create',
+        undo_action: 'articlefollower#destroy',
+        to: lambda {|follow| follow.article.author },
         value: 1,
         description: _('Followed'),
         default_weight: 20,
-        condition: lambda {|follow, profile|  profile.nil? or follow.source.profile == profile },
+        model: 'ArticleFollower',
+        condition: lambda {|follow, profile| profile.nil? or follow.article.profile == profile },
         profile_action: true
       },
       #mobilizer: {
@@ -183,8 +185,9 @@ module Merit
       AVAILABLE_RULES.each do |point_type, setting|
         GamificationPlugin::PointsCategorization.for_type(point_type).includes(:profile).each do |categorization|
           [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
-            block = lambda {|target| signal * calculate_score(target, categorization.weight, setting[:value])}
-            score block, on: action, to: setting[:to], category: categorization.id.to_s do |target|
+            options = {on: action, to: setting[:to], category: categorization.id.to_s}
+            options[:model_name] = setting[:model] unless setting[:model].nil?
+            score lambda {|target| signal * calculate_score(target, categorization.weight, setting[:value])}, options do |target|
               condition(setting, target, categorization.profile)
             end
           end

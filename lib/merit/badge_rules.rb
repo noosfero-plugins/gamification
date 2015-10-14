@@ -81,9 +81,10 @@ module Merit
       ],
       observer: [
         {
-          action: 'article_follower#create',
+          action: 'articlefollower#create',
           default_threshold: 5,
           to: lambda {|article| article.person },
+          model: 'ArticleFollower',
           value: lambda { |article, person| person.present? ? person.article_followers.count : 0 }
         }
       ],
@@ -117,9 +118,10 @@ module Merit
       ],
       articulator: [
         {
-          action: 'article_follower#create',
+          action: 'articlefollower#create',
           default_threshold: 5,
           to: :person,
+          model: 'ArticleFollower',
           value: lambda { |article_follower, person| person.present? ? person.article_followers.count : 0 }
         },
         {
@@ -128,7 +130,6 @@ module Merit
           to: :author,
           value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
         },
-        #mobilizer#create
       ]
     }
 
@@ -142,7 +143,9 @@ module Merit
       environment.gamification_plugin_badges.all.each do |badge|
         next if rules[badge.name.to_sym].nil?
         rules[badge.name.to_sym].each do |setting|
-          grant_on setting[:action], badge: badge.name, level: badge.level, to: setting[:to] do |source|
+          options = {badge: badge.name, level: badge.level, to: setting[:to]}
+          options[:model_name] = setting[:model] unless setting[:model].nil?
+          grant_on setting[:action], options do |source|
             can_be_granted = true
             rules[badge.name.to_sym].each do |s|
               if setting[:to].is_a? Symbol
