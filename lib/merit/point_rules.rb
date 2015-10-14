@@ -96,14 +96,14 @@ module Merit
         profile_action: false
       },
       profile_completion: {
-        action: ['account#create', 'account#update'],
-        undo_action: 'account#destroy',
-        to: lambda {|user| user.person},
+        action: ['profile#create', 'profile#update'],
+        undo_action: 'profile#destroy',
+        to: :itself,
         value: 1,
         description: _('Profile Completion'),
         default_weight: 100,
         model_name: "User",
-        condition: lambda {|user| user.person.profile_completion_score_condition },
+        condition: lambda {|person| person.person? and person.profile_completion_score_condition },
         profile_action: false
       },
       follower: {
