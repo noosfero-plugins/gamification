@@ -6,6 +6,7 @@ class MoveBadgeThresholdToActionKey < ActiveRecord::Migration
     GamificationPlugin::Badge.all.each do |badge|
       next if Merit::BadgeRules::AVAILABLE_RULES[badge.name.to_sym].nil?
       Merit::BadgeRules::AVAILABLE_RULES[badge.name.to_sym].each do |setting|
+        badge.custom_fields = {} unless badge.custom_fields.is_a? Hash
         badge.custom_fields[setting[:action]] = {threshold: badge.custom_fields[:threshold]} unless badge.custom_fields[:threshold].nil?
         badge.save
       end
