@@ -93,7 +93,6 @@ module Merit
         value: 1,
         description: _('Friends'),
         default_weight: 5,
-        profile_action: false
       },
       profile_completion: {
         action: ['profile#create', 'profile#update'],
@@ -103,8 +102,7 @@ module Merit
         description: _('Profile Completion'),
         default_weight: 100,
         model_name: "User",
-        condition: lambda {|person| person.person? and person.profile_completion_score_condition },
-        profile_action: false
+        condition: lambda {|person, profile| person.person? and person.profile_completion_score_condition },
       },
       follower: {
         action: 'articlefollower#create',
@@ -115,7 +113,6 @@ module Merit
         default_weight: 10,
         model: 'ArticleFollower',
         condition: lambda {|follow, profile| profile.nil? or follow.article.profile == profile },
-        profile_action: true
       },
       followed_article_author: {
         action: 'articlefollower#create',
@@ -126,7 +123,6 @@ module Merit
         default_weight: 20,
         model: 'ArticleFollower',
         condition: lambda {|follow, profile| profile.nil? or follow.article.profile == profile },
-        profile_action: true
       },
       #mobilizer: {
         #action: 'mobilize#create',
@@ -136,7 +132,6 @@ module Merit
         #description: _('Mobilized Article Author'),
         #default_weight: 60,
         #condition: lambda {|target, profile|  profile.nil? or target.source.profile == profile },
-        #profile_action: true
       #},
       #mobilized_article_author: {
         #action: 'mobilize#create',
@@ -146,7 +141,6 @@ module Merit
         #description: _('Mobilized Article Author'),
         #default_weight: 70,
         #condition: lambda {|follow, profile|  profile.nil? or follow.source.profile == profile },
-        #profile_action: true
       #},
       #mobilized_article: {
         #action: 'mobilize#create',
@@ -156,7 +150,6 @@ module Merit
         #description: _('Mobilized Article Author'),
         #default_weight: 70,
         #condition: lambda {|follow, profile|  profile.nil? or follow.source.profile == profile },
-        #profile_action: true
       #}
     }
 
@@ -168,11 +161,7 @@ module Merit
     def condition(setting, target, profile)
       condition = setting[:condition]
       if condition.present?
-        if setting.fetch(:profile_action, true)
-          condition.call(target, profile)
-        else
-          condition.call(target)
-        end
+        condition.call(target, profile)
       else
         true
       end
