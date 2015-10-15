@@ -37,15 +37,20 @@ class ArticleTest < ActiveSupport::TestCase
     create_point_rule_definition('followed_article_author')
     author = create_user('someuser').person
     article = create(TextArticle, :profile_id => community.id, :author => author)
-    amount = author.score_points.count
+
+    author_amount = author.score_points.count
+    person_amount = person.score_points.count
     article.person_followers << person
-    assert_equal amount + 1, author.score_points.count
+
+    assert_equal author_amount + 1, author.score_points.count
     last_point = author.score_points.last
     assert_equal article.article_followers.last.id, last_point.action.target_id
-    assert_equal amount + 1, person.score_points.count
+
+    assert_equal person_amount + 1, person.score_points.count
     last_point = person.score_points.last
     assert_equal article.article_followers.last.id, last_point.action.target_id
   end
+
 #  should 'subtract merit points to author when destroy an article' do
 #    article = create(TextArticle, :profile_id => @community.id, :author => person)
 #    assert_equal 1, person.score_points.count

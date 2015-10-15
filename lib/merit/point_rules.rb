@@ -127,37 +127,7 @@ module Merit
         model: 'ArticleFollower',
         condition: lambda {|follow, profile| profile.nil? or follow.article.profile == profile },
         profile_action: true
-      },
-      #mobilizer: {
-        #action: 'mobilize#create',
-        #undo_action: 'mobilize#destroy',
-        #to: lambda {|target| target.source.author },
-        #value: 1,
-        #description: _('Mobilized Article Author'),
-        #default_weight: 60,
-        #condition: lambda {|target, profile|  profile.nil? or target.source.profile == profile },
-        #profile_action: true
-      #},
-      #mobilized_article_author: {
-        #action: 'mobilize#create',
-        #undo_action: 'mobilize#destroy',
-        #to: lambda {|target| target.source.author },
-        #value: 1,
-        #description: _('Mobilized Article Author'),
-        #default_weight: 70,
-        #condition: lambda {|follow, profile|  profile.nil? or follow.source.profile == profile },
-        #profile_action: true
-      #},
-      #mobilized_article: {
-        #action: 'mobilize#create',
-        #undo_action: 'mobilize#destroy',
-        #to: lambda {|target| target.source },
-        #value: 1,
-        #description: _('Mobilized Article Author'),
-        #default_weight: 70,
-        #condition: lambda {|follow, profile|  profile.nil? or follow.source.profile == profile },
-        #profile_action: true
-      #}
+      }
     }
 
     def calculate_score(target, weight, value)

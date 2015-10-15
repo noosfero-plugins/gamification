@@ -4,6 +4,7 @@ class PointRulesTest < ActiveSupport::TestCase
 
   def setup
     @environment = Environment.default
+    GamificationPlugin.gamification_set_rules(@environment)
     @point_rules = Merit::PointRules.new(@environment)
   end
 

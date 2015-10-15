@@ -4,7 +4,7 @@ def create_point_rule_definition(rule_name, profile = nil, config = {})
   rule = load_point_rule(rule_name, config)
   point_type = GamificationPlugin::PointsType.find_by_name rule_name
   point_type = GamificationPlugin::PointsType.create name: rule_name, description: rule['description'] if point_type.nil?
-  GamificationPlugin::PointsCategorization.create! point_type_id: point_type.id, profile: profile, weight: rule[:default_weight]
+  GamificationPlugin::PointsCategorization.create point_type_id: point_type.id, profile: profile, weight: rule[:default_weight]
   GamificationPlugin.gamification_set_rules(@environment)
 end
 
@@ -32,3 +32,4 @@ def person_points_debug(person)
     puts GamificationPlugin::PointsCategorization.find(sp.score.category).point_type.inspect
   end
 end
+
