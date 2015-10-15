@@ -4,6 +4,7 @@ class GamificationPluginAdminControllerTest < ActionController::TestCase
 
   def setup
     @environment = Environment.default
+    create_merit_categorization
     @person = create_user_with_permission('profile', 'edit_environment_features', Environment.default)
     login_as(@person.identifier)
   end
