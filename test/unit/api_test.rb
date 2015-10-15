@@ -7,7 +7,6 @@ class APITest <  ActiveSupport::TestCase
     login_api
     environment = Environment.default
     environment.enable_plugin(GamificationPlugin)
-    @community = create_merit_categorization
     GamificationPlugin.gamification_set_rules(@environment)
   end
 

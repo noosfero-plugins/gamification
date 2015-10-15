@@ -4,8 +4,6 @@ class PersonTest < ActiveSupport::TestCase
 
   def setup
     @environment = Environment.default
-    create_merit_categorization
-    GamificationPlugin.gamification_set_rules(@environment)
     @person = create_user('testuser').person
   end
   attr_accessor :environment, :person
@@ -29,6 +27,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   should 'add points when add someone as a friendly' do
+    create_point_rule_definition('friends')
     other_person = create_user("testuserfriend").person
     person.add_friend(other_person)
     c = GamificationPlugin::PointsCategorization.for_type(:friends).first

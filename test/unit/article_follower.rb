@@ -5,21 +5,47 @@ class ArticleTest < ActiveSupport::TestCase
   def setup
     @person = create_user('testuser').person
     @environment = Environment.default
-    @community = create_merit_categorization
-    GamificationPlugin.gamification_set_rules(@environment)
+    @community = fast_create(Community)
   end
 
   attr_accessor :person, :environment, :community
 
   should 'add merit points to follower when it follows an article' do
-    article = create(TextArticle, :profile_id => community.id, :author => person)
+    create_point_rule_definition('follower')
+    article = create(TextArticle, :profile_id => community.id, :author => create_user('someuser').person)
     amount = person.score_points.count
     article.person_followers << person
-puts person.score_points.first.action.inspect
+    article.reload
     assert_equal amount + 1, person.score_points.count
-    assert person.score_points.first.action.present?
+    last_point = person.score_points.last
+    assert_equal article.article_followers.last.id, last_point.action.target_id
   end
 
+  should "add merit points for article's author followed by an user" do
+    create_point_rule_definition('followed_article_author')
+    author = create_user('someuser').person
+    article = create(TextArticle, :profile_id => community.id, :author => author)
+    amount = author.score_points.count
+    article.person_followers << person
+    assert_equal amount + 1, author.score_points.count
+    last_point = author.score_points.last
+    assert_equal article.article_followers.last.id, last_point.action.target_id
+  end
+
+  should "add merit points for article's author and person who follow an article at the same time" do
+    create_point_rule_definition('follower')
+    create_point_rule_definition('followed_article_author')
+    author = create_user('someuser').person
+    article = create(TextArticle, :profile_id => community.id, :author => author)
+    amount = author.score_points.count
+    article.person_followers << person
+    assert_equal amount + 1, author.score_points.count
+    last_point = author.score_points.last
+    assert_equal article.article_followers.last.id, last_point.action.target_id
+    assert_equal amount + 1, person.score_points.count
+    last_point = person.score_points.last
+    assert_equal article.article_followers.last.id, last_point.action.target_id
+  end
 #  should 'subtract merit points to author when destroy an article' do
 #    article = create(TextArticle, :profile_id => @community.id, :author => person)
 #    assert_equal 1, person.score_points.count

@@ -45,7 +45,8 @@ class ProfileTest < ActiveSupport::TestCase
   end
 
   should 'update profile level when the score changes' do
-    community = create_merit_categorization
+    create_point_rule_definition('article_author')
+    community = fast_create(Community)
     GamificationPlugin.gamification_set_rules(environment)
 
     person = create_user('testuser').person
