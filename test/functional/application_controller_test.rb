@@ -7,8 +7,8 @@ class ApplicationControllerTest < ActionController::TestCase
 
   def setup
     @environment = Environment.default
-    create_merit_categorization
     @environment.enable_plugin(GamificationPlugin)
+    create_point_rule_definition('article_author')
     @controller = TestController.new
     @controller.stubs(:environment).returns(@environment)
   end
