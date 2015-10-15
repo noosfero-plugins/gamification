@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative "../test_helper"
 
 class GamificationPluginPointsControllerTest < ActionController::TestCase
 
@@ -23,7 +23,6 @@ class GamificationPluginPointsControllerTest < ActionController::TestCase
   end
 
   should "should create gamification_plugin_point_categorizations for general rules" do
-    create_all_point_rules
     count = GamificationPlugin::PointsType.count
     assert_difference('GamificationPlugin::PointsCategorization.count', count) do
       post :create, identifier: ''
