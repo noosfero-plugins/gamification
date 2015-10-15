@@ -5,18 +5,18 @@ class GamificationPluginPointsController < PluginAdminController
   end
 
   def create
- 	if params[:identifier].blank?
- 	  profile_id = nil
- 	else
-  	  profile = Profile.where identifier: params[:identifier]
-  	  profile = profile.first
-  	  if profile.nil?
-		flash[:notice] = _("Can't find a profile with the given identifier")
-		redirect_to action: :index
-		return
-  	  end
-  	  profile_id = profile.id
-  	end
+    if params[:identifier].blank?
+      profile_id = nil
+    else
+      profile = Profile.where identifier: params[:identifier]
+      profile = profile.first
+      if profile.nil?
+        flash[:notice] = _("Can't find a profile with the given identifier")
+        redirect_to action: :index
+        return
+      end
+      profile_id = profile.id
+    end
 
   	GamificationPlugin::PointsType.all.each do |pType|
   	  GamificationPlugin::PointsCategorization.create point_type_id: pType.id, profile_id: profile_id, weight: 0
