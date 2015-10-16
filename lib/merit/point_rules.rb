@@ -65,7 +65,7 @@ module Merit
         value: lambda {|vote| vote.vote},
         description: _('Author of a voted content'),
         default_weight: 20,
-        condition: lambda {|vote, profile|  profile.nil? or vote.voteable.profile == profile }
+        condition: lambda {|vote, profile| profile.nil? or (vote.voteable and vote.voteable.profile == profile) }
       },
       vote_voteable: {
         action: 'vote#create',
@@ -75,7 +75,7 @@ module Merit
         value: lambda {|vote| vote.vote},
         description: _('Voted content'),
         default_weight: 30,
-        condition: lambda {|vote, profile|  profile.nil? or vote.voteable.profile == profile }
+        condition: lambda {|vote, profile|  profile.nil? or (vote.voteable and vote.voteable.profile == profile) }
       },
       vote_voter: {
         action: 'vote#create',
@@ -84,7 +84,7 @@ module Merit
         value: lambda {|vote| 1},
         description: _('Voter'),
         default_weight: 10,
-        condition: lambda {|vote, profile|  profile.nil? or vote.voteable.profile == profile }
+        condition: lambda {|vote, profile|  profile.nil? or (vote.voteable and vote.voteable.profile == profile) }
       },
       friends: {
         action: 'friendship#create',

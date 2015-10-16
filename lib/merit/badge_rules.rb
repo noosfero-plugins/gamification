@@ -38,7 +38,7 @@ module Merit
           action: 'vote#create',
           default_threshold: 5,
           to: lambda {|vote| vote.voteable.author},
-          value: lambda { |vote, author| Vote.for_voteable(vote.voteable).where('vote > 0').count }
+          value: lambda { |vote, author| vote.voteable ? Vote.for_voteable(vote.voteable).where('vote > 0').count : 0}
         }
       ],
       negative_votes_received: [
@@ -54,7 +54,7 @@ module Merit
           action: 'vote#create',
           default_threshold: 5,
           to: lambda {|vote| vote.voter},
-          value: lambda { |vote, voter| Vote.for_voter(voter).count }
+          value: lambda { |vote, voter| voter ? Vote.for_voter(voter).count : 0 }
         }
       ],
       friendly: [
@@ -109,7 +109,7 @@ module Merit
           action: 'vote#create',
           default_threshold: 5,
           to: lambda {|vote| vote.voter},
-          value: lambda { |vote, voter| voter.votes.where('vote > 0').count }
+          value: lambda { |vote, voter| voter ? voter.votes.where('vote > 0').count : 0 }
         },
         {
           action: 'comment#create',
@@ -161,6 +161,7 @@ module Merit
               end
                 # pass source and to for different situations
               action = (badge.custom_fields || {}).fetch(s[:action], {})
+              debugger if source.is_a? Vote
               can_be_granted &= s[:value].call(source, to) >= action.fetch(:threshold, s[:default_threshold]).to_i
             end
             can_be_granted
