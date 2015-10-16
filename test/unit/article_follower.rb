@@ -10,116 +10,76 @@ class ArticleTest < ActiveSupport::TestCase
 
   attr_accessor :person, :environment, :community
 
+  should 'add merit points to an article follower by user' do
+    create_point_rule_definition('followed_article')
+    article = create(TextArticle, :name => 'Test', :profile => community, :author => person)
+
+    c = GamificationPlugin::PointsCategorization.for_type(:followed_article).first
+    assert_difference 'article.points(:category => c.id.to_s)', c.weight do
+      article.person_followers << person
+    end
+  end
+
   should 'add merit points to follower when it follows an article' do
     create_point_rule_definition('follower')
-    article = create(TextArticle, :profile_id => community.id, :author => create_user('someuser').person)
-    amount = person.score_points.count
-    article.person_followers << person
-    article.reload
-    assert_equal amount + 1, person.score_points.count
-    last_point = person.score_points.last
-    assert_equal article.article_followers.last.id, last_point.action.target_id
+
+    article = create(TextArticle, :name => 'Test', :profile => community, :author => person)
+
+    c = GamificationPlugin::PointsCategorization.for_type(:follower).first
+    assert_difference 'person.points(:category => c.id.to_s)', c.weight do
+      article.person_followers << person
+    end
   end
 
   should "add merit points for article's author followed by an user" do
     create_point_rule_definition('followed_article_author')
-    author = create_user('someuser').person
-    article = create(TextArticle, :profile_id => community.id, :author => author)
-    amount = author.score_points.count
-    article.person_followers << person
-    assert_equal amount + 1, author.score_points.count
-    last_point = author.score_points.last
-    assert_equal article.article_followers.last.id, last_point.action.target_id
+
+    article = create(TextArticle, :name => 'Test', :profile => community, :author => person)
+
+    c = GamificationPlugin::PointsCategorization.for_type(:followed_article_author).first
+    assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
+      article.person_followers << person
+    end
   end
 
-  should "add merit points for article's author and person who follow an article at the same time" do
+  should 'subtract merit points to follower when it unfollow an article' do
     create_point_rule_definition('follower')
-    create_point_rule_definition('followed_article_author')
-    author = create_user('someuser').person
-    article = create(TextArticle, :profile_id => community.id, :author => author)
-
-    author_amount = author.score_points.count
-    person_amount = person.score_points.count
-    article.person_followers << person
-
-    assert_equal author_amount + 1, author.score_points.count
-    last_point = author.score_points.last
-    assert_equal article.article_followers.last.id, last_point.action.target_id
-
-    assert_equal person_amount + 1, person.score_points.count
-    last_point = person.score_points.last
-    assert_equal article.article_followers.last.id, last_point.action.target_id
+    follower = create_user('someuser').person
+    article = create(TextArticle, :profile_id => community.id, :author => person)
+    score_points = follower.score_points.count
+    points = follower.points
+    article.person_followers << follower
+    assert_equal score_points + 1, follower.score_points.count
+    ArticleFollower.last.destroy
+    assert_equal score_points + 2, follower.score_points.count
+    assert_equal points, follower.points
   end
 
-#  should 'subtract merit points to author when destroy an article' do
-#    article = create(TextArticle, :profile_id => @community.id, :author => person)
-#    assert_equal 1, person.score_points.count
-#    article.destroy
-#    assert_equal 2, person.score_points.count
-#    assert_equal 0, person.points
-#  end
-#
-#  should 'add merit badge to author when create 5 new articles' do
-#    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 1)
-#    GamificationPlugin.gamification_set_rules(environment)
-#
-#    5.times { create(TextArticle, :profile_id => person.id, :author => person) }
-#    assert_equal 'article_author', person.badges.first.name
-#    assert_equal 1, person.badges.first.level
-#  end
-#
-#  should 'add merit badge level 2 to author when create 10 new articles' do
-#    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 1)
-#    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 2, :custom_fields => {:threshold => 10})
-#    GamificationPlugin.gamification_set_rules(environment)
-#
-#    10.times { create(TextArticle, :profile_id => person.id, :author => person) }
-#    assert_equal ['article_author'], person.badges.map(&:name).uniq
-#    assert_equal [1, 2], person.badges.map(&:level)
-#  end
-#
-#  should 'add merit points to community article owner when an user like it' do
-#    article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
-#
-#    c = GamificationPlugin::PointsCategorization.for_type(:vote_voteable_author).where(profile_id: @community.id).first
-#    assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
-#      Vote.create!(:voter => person, :voteable => article, :vote => 1)
-#    end
-#  end
-#
-#  should 'add merit points to article when an user like it' do
-#    article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
-#    article = article.reload
-#
-#    c = GamificationPlugin::PointsCategorization.for_type(:vote_voteable).where(profile_id: @community.id).first
-#    assert_difference 'article.points(:category => c.id.to_s)', c.weight do
-#      Vote.create!(:voter => person, :voteable => article, :vote => 1)
-#    end
-#  end
-#
-#  should 'add merit points to community when create a new article' do
-#    assert_difference 'community.score_points.count' do
-#      create(TextArticle, :profile_id => @community.id, :author => person)
-#    end
-#  end
-#
-#  should 'add merit points to voter when he likes an article' do
-#    article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
-#
-#    c = GamificationPlugin::PointsCategorization.for_type(:vote_voter).where(profile_id: @community.id).first
-#    assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
-#      Vote.create!(:voter => person, :voteable => article, :vote => 1)
-#    end
-#  end
-#
-#  should 'add merit points to voter when he dislikes an article' do
-#    article = create(TextArticle, :name => 'Test', :profile => @community, :author => person)
-#
-#    c = GamificationPlugin::PointsCategorization.for_type(:vote_voter).where(profile_id: @community.id).first
-#    assert_difference 'article.author.points(:category => c.id.to_s)', c.weight do
-#      Vote.create!(:voter => person, :voteable => article, :vote => -1)
-#    end
-#  end
+  should 'subtract merit points to article author when a user unfollow an article' do
+    create_point_rule_definition('follower')
+    article = create(TextArticle, :profile_id => community.id, :author => person)
+    score_points = person.score_points.count
+    points = person.points
+    article.person_followers << person
+    assert_equal score_points + 1, person.score_points.count
+    ArticleFollower.last.destroy
+    assert_equal score_points + 2, person.score_points.count
+    assert_equal points, person.points
+  end
+
+  should 'subtract merit points to article when a user unfollow an article' do
+    create_point_rule_definition('followed_article')
+    article = create(TextArticle, :profile_id => community.id, :author => person)
+    score_points = article.score_points.count
+    points = article.points
+    article.person_followers << person
+    assert_equal score_points + 1, article.score_points.count
+    ArticleFollower.last.destroy
+    assert_equal score_points + 2, article.score_points.count
+    assert_equal points, article.points
+  end
+
+#FIXME make tests for badges generete with article follower actions
 #
 #  should 'add badge to author when users like his article' do
 #    GamificationPlugin::Badge.create!(:owner => environment, :name => 'positive_votes_received')
@@ -145,4 +105,22 @@ class ArticleTest < ActiveSupport::TestCase
 #    assert_equal 'negative_votes_received', person.reload.badges.first.name
 #  end
 #
+#  should 'add merit badge to author when create 5 new articles' do
+#    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 1)
+#    GamificationPlugin.gamification_set_rules(environment)
+#
+#    5.times { create(TextArticle, :profile_id => person.id, :author => person) }
+#    assert_equal 'article_author', person.badges.first.name
+#    assert_equal 1, person.badges.first.level
+#  end
+#
+#  should 'add merit badge level 2 to author when create 10 new articles' do
+#    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 1)
+#    GamificationPlugin::Badge.create!(:owner => environment, :name => 'article_author', :level => 2, :custom_fields => {:threshold => 10})
+#    GamificationPlugin.gamification_set_rules(environment)
+#
+#    10.times { create(TextArticle, :profile_id => person.id, :author => person) }
+#    assert_equal ['article_author'], person.badges.map(&:name).uniq
+#    assert_equal [1, 2], person.badges.map(&:level)
+#  end
 end
