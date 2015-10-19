@@ -50,12 +50,22 @@ Environment.all.each do |environment|
     article.comments.each.with_index(1) do |comment, i|
       create_action(comment, i, comment_count)
     end
+
+    followed_articles_count = article.article_followers.count
+    article.article_followers.each_with_index do |af, i|
+      create_action(af, i, followed_articles_count)
+    end
   end
 
   environment.people.each.with_index(1) do |person, person_index|
     vote_count = person.votes.count
     person.votes.each.with_index(1) do |vote, vote_index|
       create_action(vote, vote_index, vote_count)
+    end
+
+    friendship_count = person.friends.count
+    person.friends.each_with_index do |friend, index|
+      create_action(friend, index, friendship_count)
     end
   end
 
