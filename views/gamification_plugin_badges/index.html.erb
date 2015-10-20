@@ -5,7 +5,6 @@
     <th>Name</th>
     <th>Title</th>
     <th>Level</th>
-    <th>Threshold</th>
     <th></th>
     <th></th>
     <th></th>
@@ -16,7 +15,6 @@
     <td><%= gamification_plugin_badge.name %></td>
     <td><%= gamification_plugin_badge.title %></td>
     <td><%= gamification_plugin_badge.level %></td>
-    <td><%= gamification_plugin_badge.threshold %></td>
     <td><%= link_to 'Show', :action => :show, :id => gamification_plugin_badge.id %></td>
     <td><%= link_to 'Edit', :action => :edit, :id => gamification_plugin_badge.id %></td>
     <td><%= button_without_text :delete, _('Remove'), {:action => :destroy, :id => gamification_plugin_badge.id}, :method => :post, :confirm => _('Are you sure?') %></td>
