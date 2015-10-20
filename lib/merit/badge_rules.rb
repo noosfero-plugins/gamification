@@ -161,7 +161,6 @@ module Merit
               end
                 # pass source and to for different situations
               action = (badge.custom_fields || {}).fetch(s[:action], {})
-              debugger if source.is_a? Vote
               can_be_granted &= s[:value].call(source, to) >= action.fetch(:threshold, s[:default_threshold]).to_i
             end
             can_be_granted

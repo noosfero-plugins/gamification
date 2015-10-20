@@ -24,11 +24,11 @@ end
 
 #puts "Destroy all merit actions"
 #Merit::Action.destroy_all
-#
+
 #count = Person.count
 #Person.all.each.with_index(1) do |person, i|
-#  puts "#{i}/#{count} Remove sash from #{person.identifier}"
-#  person.sash.destroy unless person.sash.nil?
+  #puts "#{i}/#{count} Remove sash from #{person.identifier}"
+  #person.sash.destroy unless person.sash.nil?
 #end
 
 Merit.observers << 'ProcessObserver'
@@ -50,12 +50,25 @@ Environment.all.each do |environment|
     article.comments.each.with_index(1) do |comment, i|
       create_action(comment, i, comment_count)
     end
+
+    followed_articles_count = article.article_followers.count
+    article.article_followers.each_with_index do |af, i|
+      create_action(af, i, followed_articles_count)
+    end
   end
 
+  people_count = environment.people.count
   environment.people.each.with_index(1) do |person, person_index|
+    create_action(person, person_index, people_count)
+
     vote_count = person.votes.count
     person.votes.each.with_index(1) do |vote, vote_index|
       create_action(vote, vote_index, vote_count)
+    end
+
+    friendship_count = person.friends.count
+    person.friends.each_with_index do |friend, index|
+      create_action(friend, index, friendship_count)
     end
   end
 
