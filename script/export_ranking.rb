@@ -12,7 +12,7 @@ CSV.open( "ranking_gamification.csv", 'w' ) do |csv|
   Person.find_each do |person|
     count += 1 
     gamification_categories = categories.map{ |c| GamificationPlugin::PointsCategorization.for_type(c).first}
-    categories_values = gamification_categories.map{|c| person.score_points(c.id.to_s).sum(:num_points)}
+    categories_values = gamification_categories.map{|c| person.score_points(:category => c.id.to_s).sum(:num_points)}
     person_articles = Article.where(:author_id => person.id)
     puts "Exporting '#{person.identifier}' #{count}/#{amount}"
 
