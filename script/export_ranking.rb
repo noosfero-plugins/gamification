@@ -8,7 +8,7 @@ profile_ids.each do |profile_id|
   if profile.nil?
     profile_name = 'generic'
   else
-    profile_name = profile.name
+    profile_name = profile.identifier
   end
 
   puts "Creating spreadsheet for #{profile_name}"
