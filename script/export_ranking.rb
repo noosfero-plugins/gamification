@@ -11,7 +11,6 @@ profile_ids.each do |profile_id|
     profile_name = profile.name
   end
 
-  next if profile_name != 'Conferencia'
   puts "Creating spreadsheet for #{profile_name}"
 
   CSV.open( "ranking_gamification_for_#{profile_name}.csv", 'w' ) do |csv|
