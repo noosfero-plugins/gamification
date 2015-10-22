@@ -84,8 +84,9 @@ Environment.all.each do |environment|
     end
   end
 
+  amount = environment.people.count
   environment.people.each.with_index(1) do |person, person_index|
-    puts "Updating #{person.identifier} level"
+    puts "Updating #{person.identifier} level #{person_index}/#{amount}"
     person.update_attribute(:level, person.gamification_plugin_calculate_level)
   end
 
