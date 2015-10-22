@@ -45,7 +45,6 @@ profile_ids.each do |profile_id|
         ArticleFollower.where(:article_id => person_articles).count
       ]
       csv << [person.identifier, person.name, person.points] + categories_values + quantities_values
-      break if count > 200
     end
   end
 end
