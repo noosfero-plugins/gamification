@@ -2,7 +2,11 @@
 
 require 'csv'
 
+group_control = YAML.load(File.read(File.join(Rails.root,'tmp','control_group.yml'))) if File.exist?(File.join(Rails.root,'tmp','control_group.yml'))
+
+
 profile_ids = GamificationPlugin::PointsCategorization.select(:profile_id).group(:profile_id).map(&:profile_id)
+profile_ids.keep_if { |item| group_control.keys.include?(item) } unless group_control.nil?
 profile_ids.each do |profile_id|
   profile = Profile.where(id: profile_id).first
   if profile.nil?
@@ -19,16 +23,18 @@ profile_ids.each do |profile_id|
     quantities_labels = ['quantidade de votos realizados', 'quantidade de amigos', 'votos positivos recebidos', 'votos negativos recebidos', 'quantidade de artigos', 'quantidade de comentários realizados', 'quantidade de comentários recebidos', 'quatidade de vezes que eu segui', 'quantidade de vezes que meus artigos foram seguidos']
 
     csv << ['identifier', 'name', 'score'] + categories_labels + quantities_labels
-    amount = Person.count
+    conditions = group_control.nil? ? {} : {:identifier => group_control[profile_id]['profiles']}
+    amount = Person.find(:all, :conditions => conditions).count
     count = 0
-    Person.find_each do |person|
+  
+    Person.find_each(:conditions => conditions) do |person|
       count += 1
       gamification_categories = categories.map{ |c| GamificationPlugin::PointsCategorization.for_type(c).where(profile_id: profile_id).first}
       categories_values = gamification_categories.map{|c| person.score_points(:category => c.id.to_s).sum(:num_points)}
       if (profile.nil?)
-        person_articles = Article.where(:author_id => person.id)
+        person_articles = Article.where(:author_id => person.id, :type => Article.text_article_types + ['ProposalsDiscussionPlugin::Proposal'])
       else
-        person_articles = profile.articles.where(:author_id => person.id)
+        person_articles = profile.articles.where(:author_id => person.id, :type => Article.text_article_types + ['ProposalsDiscussionPlugin::Proposal'])
       end
       puts "Exporting '#{person.identifier}' #{count}/#{amount}"
 

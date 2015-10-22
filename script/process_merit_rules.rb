@@ -33,26 +33,38 @@ end
 
 Merit.observers << 'ProcessObserver'
 
+class Article < ActiveRecord::Base
+  def self.text_article_types
+    ['TextArticle', 'TextileArticle', 'TinyMceArticle', 'ProposalsDiscussionPlugin::Proposal']
+  end  
+end
+
 Environment.all.each do |environment|
+  puts "Process environment #{environment.name}"
 
   Merit::AppPointRules.clear
   Merit::AppBadgeRules.clear
   Merit::AppPointRules.merge!(Merit::PointRules.new(environment).defined_rules)
   Merit::AppBadgeRules.merge!(Merit::BadgeRules.new(environment).defined_rules)
 
-  article_count = environment.articles.text_articles.count
+  article_count = environment.articles.where(:type => Article.text_article_types + ['ProposalsDiscussionPlugin::Proposal']).count
   article_index = 0
-  environment.articles.text_articles.find_each do |article|
+
+  puts "Amount of articles '#{article_count}'"
+  environment.articles.where(:type => Article.text_article_types + ['ProposalsDiscussionPlugin::Proposal']).find_each do |article|
     article_index += 1
+    puts "Analising article #{article_index} of #{article_count}"
     create_action(article, article_index, article_count)
 
     comment_count = article.comments.count
     article.comments.each.with_index(1) do |comment, i|
+      puts "Analising comments of article '#{article.id}': comment #{i} of #{comment_count}"
       create_action(comment, i, comment_count)
     end
 
     followed_articles_count = article.article_followers.count
     article.article_followers.each_with_index do |af, i|
+      puts "Analising follow of article '#{article.id}': follow #{i} of #{followed_articles_count}"
       create_action(af, i, followed_articles_count)
     end
   end
