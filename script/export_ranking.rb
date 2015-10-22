@@ -11,6 +11,7 @@ profile_ids.each do |profile_id|
     profile_name = profile.name
   end
 
+  next if profile_name != 'Conferencia'
   puts "Creating spreadsheet for #{profile_name}"
 
   CSV.open( "ranking_gamification_for_#{profile_name}.csv", 'w' ) do |csv|
@@ -37,13 +38,14 @@ profile_ids.each do |profile_id|
         person.friends.count,
         person.comments.where(:source_id => person_articles).joins(:votes).where('vote > 0').count + person_articles.joins(:votes).where('vote > 0').count,
         person.comments.where(:source_id => person_articles).joins(:votes).where('vote < 0').count + person_articles.joins(:votes).where('vote < 0').count,
-        person_articles.text_articles.count,
+        person_articles.count,
         person.comments.where(source_id: person_articles).count,
         Comment.where(:source_id => person_articles).count,
         (person.following_articles & person.article_followers.where(article_id: person_articles)).count,
         ArticleFollower.where(:article_id => person_articles).count
       ]
       csv << [person.identifier, person.name, person.points] + categories_values + quantities_values
+      break if count > 200
     end
   end
 end
