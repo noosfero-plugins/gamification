@@ -39,10 +39,10 @@ profile_ids.each do |profile_id|
         person_followers = (person.following_articles & person.article_followers.where(article_id: person_articles)).count
       else
         person_articles = profile.articles.where(:author_id => person.id)
-          person_up_votes = person.comments.where(:source_id => profile.articles).joins(:votes).where('vote > 0').count + person_articles.joins(:votes).where('vote > 0').count
-          person_down_votes = person.comments.where(:source_id => profile.articles).joins(:votes).where('vote < 0').count + person_articles.joins(:votes).where('vote < 0').count
-          person_comments = person.comments.where(:source_id => profile.articles).count
-          person_followers = (person.following_articles & person.article_followers.where(article_id: profile.articles)).count
+        person_up_votes = person.comments.where(:source_id => profile.articles).joins(:votes).where('vote > 0').count + person_articles.joins(:votes).where('vote > 0').count
+        person_down_votes = person.comments.where(:source_id => profile.articles).joins(:votes).where('vote < 0').count + person_articles.joins(:votes).where('vote < 0').count
+        person_comments = person.comments.where(:source_id => profile.articles).count
+        person_followers = (person.following_articles & person.article_followers.where(article_id: profile.articles)).count
       end
       quantities_values = [
         Vote.for_voter(person).count,
@@ -50,6 +50,7 @@ profile_ids.each do |profile_id|
         person_up_votes,
         person_down_votes,
         person_articles.count,
+        person_comments,
         Comment.where(:source_id => person_articles).count,
         person_followers,
         ArticleFollower.where(:article_id => person_articles).count
