@@ -75,12 +75,11 @@ Environment.all.each do |environment|
   end
 
   group_control = YAML.load(File.read(File.join(Rails.root,'tmp','control_group.yml'))) if File.exist?(File.join(Rails.root,'tmp','control_group.yml'))
-  conditions = group_control.nil? ? {} : {:identifier => group_control[profile_id]['profiles']}
+  conditions = group_control.nil? ? {} : {:identifier => group_control.map{|k,v| v['profiles']}.flatten}
   people_count = environment.people.where(conditions).count
   person_index = 0
   puts "Analising environment people"
-puts conditions.inspect
-  environment.people.find_each(conditions) do |person|
+  environment.people.find_each(:conditions => conditions) do |person|
     person_index += 1
     puts "Analising person #{person_index} of #{people_count}"
     create_action(person, person_index, people_count)
