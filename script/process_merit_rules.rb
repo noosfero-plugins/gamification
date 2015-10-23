@@ -68,23 +68,32 @@ Environment.all.each do |environment|
     end
 
     followed_articles_count = article.article_followers.count
-    article.article_followers.each_with_index do |af, i|
+    article.article_followers.each.with_index(1) do |af, i|
       puts "Analising follow of article '#{article.id}': follow #{i} of #{followed_articles_count}"
       create_action(af, i, followed_articles_count)
     end
   end
 
-  people_count = environment.people.count
-  environment.people.each.with_index(1) do |person, person_index|
+  group_control = YAML.load(File.read(File.join(Rails.root,'tmp','control_group.yml'))) if File.exist?(File.join(Rails.root,'tmp','control_group.yml'))
+  conditions = group_control.nil? ? {} : {:identifier => group_control[profile_id]['profiles']}
+  people_count = environment.people.where(conditions).count
+  person_index = 0
+  puts "Analising environment people"
+puts conditions.inspect
+  environment.people.find_each(conditions) do |person|
+    person_index += 1
+    puts "Analising person #{person_index} of #{people_count}"
     create_action(person, person_index, people_count)
 
     vote_count = person.votes.count
     person.votes.each.with_index(1) do |vote, vote_index|
+      puts "Analising votes #{vote_index} of #{vote_count}"
       create_action(vote, vote_index, vote_count)
     end
 
     friendship_count = person.friends.count
-    person.friends.each_with_index do |friend, index|
+    person.friends.each.with_index(1) do |friend, index|
+      puts "Analising friends #{index} of #{friendship_count}"
       create_action(friend, index, friendship_count)
     end
   end
