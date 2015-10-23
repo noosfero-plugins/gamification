@@ -26,14 +26,14 @@ def create_action(obj, index, count)
   end
 end
 
-puts "Destroy all merit actions"
-Merit::Action.destroy_all
-
-count = Person.count
-Person.all.each.with_index(1) do |person, i|
-  puts "#{i}/#{count} Remove sash from #{person.identifier}"
-  person.sash.destroy unless person.sash.nil?
-end
+#puts "Destroy all merit actions"
+#Merit::Action.destroy_all
+#
+#count = Person.count
+#Person.all.each.with_index(1) do |person, i|
+#  puts "#{i}/#{count} Remove sash from #{person.identifier}"
+#  person.sash.destroy unless person.sash.nil?
+#end
 
 Merit.observers << 'ProcessObserver'
 
