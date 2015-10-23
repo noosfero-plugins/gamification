@@ -35,7 +35,8 @@ Merit.observers << 'ProcessObserver'
 
 class Article < ActiveRecord::Base
   def self.text_article_types
-    ['TextArticle', 'TextileArticle', 'TinyMceArticle', 'ProposalsDiscussionPlugin::Proposal']
+#   ['TextArticle', 'TextileArticle', 'TinyMceArticle', 'ProposalsDiscussionPlugin::Proposal']
+    ['ProposalsDiscussionPlugin::Proposal']
   end  
 end
 
@@ -47,11 +48,11 @@ Environment.all.each do |environment|
   Merit::AppPointRules.merge!(Merit::PointRules.new(environment).defined_rules)
   Merit::AppBadgeRules.merge!(Merit::BadgeRules.new(environment).defined_rules)
 
-  article_count = environment.articles.where(:type => Article.text_article_types + ['ProposalsDiscussionPlugin::Proposal']).count
+  article_count = environment.articles.where(:type => Article.text_article_types).count
   article_index = 0
 
   puts "Amount of articles '#{article_count}'"
-  environment.articles.where(:type => Article.text_article_types + ['ProposalsDiscussionPlugin::Proposal']).find_each do |article|
+  environment.articles.where(:type => Article.text_article_types).find_each do |article|
     article_index += 1
     puts "Analising article #{article_index} of #{article_count}"
     create_action(article, article_index, article_count)
