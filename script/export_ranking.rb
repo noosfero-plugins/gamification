@@ -26,29 +26,37 @@ profile_ids.each do |profile_id|
     conditions = group_control.nil? ? {} : {:identifier => group_control[profile_id]['profiles']}
     amount = Person.find(:all, :conditions => conditions).count
     count = 0
-  
+
     Person.find_each(:conditions => conditions) do |person|
       count += 1
       gamification_categories = categories.map{ |c| GamificationPlugin::PointsCategorization.for_type(c).where(profile_id: profile_id).first}
       categories_values = gamification_categories.map{|c| person.score_points(:category => c.id.to_s).sum(:num_points)}
-      if (profile.nil?)
-        person_articles = Article.where(:author_id => person.id, :type => Article.text_article_types + ['ProposalsDiscussionPlugin::Proposal'])
+      if profile.nil?
+        person_articles = Article.where(:author_id => person.id)
+        person_up_votes = person.comments.joins(:votes).where('vote > 0').count + person_articles.joins(:votes).where('vote > 0').count
+        person_down_votes = person.comments.joins(:votes).where('vote < 0').count + person_articles.joins(:votes).where('vote < 0').count
+        person_comments = person.comments.count
+        person_followers = (person.following_articles & person.article_followers.where(article_id: person_articles)).count
       else
-        person_articles = profile.articles.where(:author_id => person.id, :type => Article.text_article_types + ['ProposalsDiscussionPlugin::Proposal'])
+        person_articles = profile.articles.where(:author_id => person.id)
+          person_up_votes = person.comments.where(:source_id => profile.articles).joins(:votes).where('vote > 0').count + person_articles.joins(:votes).where('vote > 0').count
+          person_down_votes = person.comments.where(:source_id => profile.articles).joins(:votes).where('vote < 0').count + person_articles.joins(:votes).where('vote < 0').count
+          person_comments = person.comments.where(:source_id => profile.articles).count
+          person_followers = (person.following_articles & person.article_followers.where(article_id: profile.articles)).count
       end
-      puts "Exporting '#{person.identifier}' #{count}/#{amount}"
-
       quantities_values = [
         Vote.for_voter(person).count,
         person.friends.count,
-        person.comments.where(:source_id => person_articles).joins(:votes).where('vote > 0').count + person_articles.joins(:votes).where('vote > 0').count,
-        person.comments.where(:source_id => person_articles).joins(:votes).where('vote < 0').count + person_articles.joins(:votes).where('vote < 0').count,
+        person_up_votes,
+        person_down_votes,
         person_articles.count,
-        person.comments.where(source_id: person_articles).count,
         Comment.where(:source_id => person_articles).count,
-        (person.following_articles & person.article_followers.where(article_id: person_articles)).count,
+        person_followers,
         ArticleFollower.where(:article_id => person_articles).count
       ]
+
+      puts "Exporting '#{person.identifier}' #{count}/#{amount}"
+
       csv << [person.identifier, person.name, person.points] + categories_values + quantities_values
     end
   end
