@@ -18,18 +18,22 @@ def create_action(obj, index, count)
   action = Merit::Action.find_by_target_id_and_target_model_and_action_method(obj.id, target_model, 'create')
   if action.nil?
     puts "#{index}/#{count} Create merit action for #{target_model} #{obj.id}"
-    obj.new_merit_action(:create)
+    begin
+      obj.new_merit_action(:create)
+    rescue Exception => e
+      puts "Could not be create: #{e.message}"
+    end
   end
 end
 
-#puts "Destroy all merit actions"
-#Merit::Action.destroy_all
+puts "Destroy all merit actions"
+Merit::Action.destroy_all
 
-#count = Person.count
-#Person.all.each.with_index(1) do |person, i|
-  #puts "#{i}/#{count} Remove sash from #{person.identifier}"
-  #person.sash.destroy unless person.sash.nil?
-#end
+count = Person.count
+Person.all.each.with_index(1) do |person, i|
+  puts "#{i}/#{count} Remove sash from #{person.identifier}"
+  person.sash.destroy unless person.sash.nil?
+end
 
 Merit.observers << 'ProcessObserver'
 
