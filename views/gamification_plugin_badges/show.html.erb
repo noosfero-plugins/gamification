@@ -24,9 +24,10 @@
 
 <p>
   <b>Threshold:</b>
-  <% @gamification_plugin_badge.custom_fields.is_a? Hash %>
-  <% @gamification_plugin_badge.custom_fields.keys.each do |key| %>
-    <div><%= _(key) + ': ' + @gamification_plugin_badge.custom_fields[key].fetch("threshold", "")  %></div>
+  <% if @gamification_plugin_badge.custom_fields.is_a? Hash %>
+    <% @gamification_plugin_badge.custom_fields.keys.each do |key| %>
+      <div><%= _(key) + ': ' + @gamification_plugin_badge.custom_fields[key].fetch("threshold", "")  %></div>
+    <% end %>
   <% end %>
 </p>
 
