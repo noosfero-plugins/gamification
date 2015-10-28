@@ -154,6 +154,8 @@ module Merit
     end
 
     def self.setup
+      return unless GamificationPlugin::PointsType.table_exists? && GamificationPlugin::PointsCategorization.table_exists?
+
       AVAILABLE_RULES.map do |rule_name, rule|
         point_type = GamificationPlugin::PointsType.find_by_name rule_name
         point_type = GamificationPlugin::PointsType.create name: rule_name, description: rule['description'] if point_type.nil?
