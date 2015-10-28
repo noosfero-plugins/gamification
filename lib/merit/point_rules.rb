@@ -147,6 +147,14 @@ module Merit
       end
     end
 
+    def self.setup
+      AVAILABLE_RULES.map do |rule_name, rule|
+        point_type = GamificationPlugin::PointsType.find_by_name rule_name
+        point_type = GamificationPlugin::PointsType.create name: rule_name, description: rule['description'] if point_type.nil?
+        GamificationPlugin::PointsCategorization.create point_type_id: point_type.id, weight: rule[:default_weight]
+      end
+    end
+
     def initialize(environment=nil)
       return if environment.nil?
       @environment = environment
