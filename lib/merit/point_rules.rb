@@ -61,7 +61,6 @@ module Merit
         action: 'vote#create',
         undo_action: 'vote#destroy',
         to: lambda {|vote| vote.voteable.author},
-        profile: lambda {|vote| vote.voteable.profile},
         value: lambda {|vote| vote.vote},
         description: _('Author of a voted content'),
         default_weight: 20,
@@ -71,7 +70,6 @@ module Merit
         action: 'vote#create',
         undo_action: 'vote#destroy',
         to: lambda {|vote| vote.voteable},
-        profile: lambda {|vote| vote.voteable.profile},
         value: lambda {|vote| vote.vote},
         description: _('Voted content'),
         default_weight: 30,
@@ -101,7 +99,6 @@ module Merit
         value: 1,
         description: _('Profile Completion'),
         default_weight: 100,
-        model_name: "User",
         condition: lambda {|person, profile| person.person? and person.profile_completion_score_condition },
       },
       follower: {
@@ -159,8 +156,10 @@ module Merit
           [setting[:action], setting[:undo_action]].compact.zip([1, -1]).each do |action, signal|
             options = {on: action, to: setting[:to], category: categorization.id.to_s}
             options[:model_name] = setting[:model] unless setting[:model].nil?
-            score lambda {|target| signal * calculate_score(target, categorization.weight, setting[:value])}, options do |target|
-              condition(setting, target, categorization.profile)
+            weight = categorization.weight
+            profile = categorization.profile
+            score lambda {|target| signal * calculate_score(target, weight, setting[:value])}, options do |target|
+              condition(setting, target, profile)
             end
           end
         end

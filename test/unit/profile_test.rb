@@ -44,6 +44,18 @@ class ProfileTest < ActiveSupport::TestCase
     assert_equal 1, profile.gamification_plugin_calculate_level
   end
 
+  should 'update profile level when a profile action makes a score with zero point' do
+    #avoid loop when the score changes by zero and
+    person = create_user('testuser').person
+    Person.any_instance.stubs(:is_profile_complete?).returns(true)
+    create_point_rule_definition('profile_completion', nil, {value: 0})
+    GamificationPlugin.gamification_set_rules(environment)
+    assert_equal 0, person.level
+     assert_nothing_raised do
+       person.save
+     end
+  end
+
   should 'update profile level when the score changes' do
     create_point_rule_definition('article_author')
     community = fast_create(Community)
