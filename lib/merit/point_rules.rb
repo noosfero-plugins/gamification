@@ -10,7 +10,7 @@ module Merit
         value: 1,
         description: _('Comment author'),
         default_weight: 40,
-        condition: lambda {|comment, profile| profile.nil? or comment.source.profile == profile},
+        target_profile: lambda {|comment| comment.source.profile },
       },
       comment_article_author: {
         action: 'comment#create',
@@ -19,7 +19,7 @@ module Merit
         value: 1,
         description: _('Article author of a comment'),
         default_weight: 50,
-        condition: lambda {|comment, profile| profile.nil? or comment.source.profile == profile},
+        target_profile: lambda {|comment| comment.source.profile },
       },
       comment_article: {
         action: 'comment#create',
@@ -28,7 +28,7 @@ module Merit
         value: 1,
         description: _('Source article of a comment'),
         default_weight: 50,
-        condition: lambda {|comment, profile| profile.nil? or comment.source.profile == profile},
+        target_profile: lambda {|comment| comment.source.profile },
       },
       comment_community: {
         action: 'comment#create',
@@ -37,7 +37,8 @@ module Merit
         value: 1,
         description: _('Article community of a comment'),
         default_weight: 50,
-        condition: lambda {|comment, profile| profile.nil? or (comment.profile.community? and comment.profile == profile) }
+        target_profile: lambda {|comment| comment.source.profile },
+        condition: lambda {|comment, profile| comment.profile.community?}
       },
       article_author: {
         action: 'article#create',
@@ -46,7 +47,7 @@ module Merit
         value: 1,
         description: _('Article author'),
         default_weight: 50,
-        condition: lambda {|article, profile| profile.nil? or article.profile == profile},
+        target_profile: lambda {|article| article.profile },
       },
       article_community: {
         action: 'article#create',
@@ -55,7 +56,8 @@ module Merit
         value: 1,
         description: _('Article community'),
         default_weight: 10,
-        condition: lambda {|article, profile| profile.nil? or (article.profile.present? and article.profile.community? and article.profile == profile) }
+        target_profile: lambda {|article| article.profile },
+        condition: lambda {|article, profile| article.profile.present? and article.profile.community? }
       },
       vote_voteable_author: {
         action: 'vote#create',
@@ -64,7 +66,7 @@ module Merit
         value: lambda {|vote| vote.vote},
         description: _('Author of a voted content'),
         default_weight: 20,
-        condition: lambda {|vote, profile| profile.nil? or (vote.voteable and vote.voteable.profile == profile) }
+        target_profile: lambda {|vote| vote.voteable.present? ? vote.voteable.profile : nil },
       },
       vote_voteable: {
         action: 'vote#create',
@@ -73,7 +75,7 @@ module Merit
         value: lambda {|vote| vote.vote},
         description: _('Voted content'),
         default_weight: 30,
-        condition: lambda {|vote, profile|  profile.nil? or (vote.voteable and vote.voteable.profile == profile) }
+        target_profile: lambda {|vote| vote.voteable.present? ? vote.voteable.profile : nil },
       },
       vote_voter: {
         action: 'vote#create',
@@ -82,7 +84,7 @@ module Merit
         value: lambda {|vote| 1},
         description: _('Voter'),
         default_weight: 10,
-        condition: lambda {|vote, profile|  profile.nil? or (vote.voteable and vote.voteable.profile == profile) }
+        target_profile: lambda {|vote| vote.voteable.present? ? vote.voteable.profile : nil },
       },
       friends: {
         action: 'friendship#create',
@@ -109,7 +111,7 @@ module Merit
         description: _('Follower'),
         default_weight: 10,
         model: 'ArticleFollower',
-        condition: lambda {|follow, profile| profile.nil? or follow.article.profile == profile },
+        target_profile: lambda {|follow| follow.article.profile },
       },
       followed_article: {
         action: 'articlefollower#create',
@@ -119,7 +121,7 @@ module Merit
         description: _('Article followed'),
         default_weight: 30,
         model: 'ArticleFollower',
-        condition: lambda {|follow, profile| profile.nil? or follow.article.profile == profile },
+        target_profile: lambda {|follow| follow.article.profile },
       },
       followed_article_author: {
         action: 'articlefollower#create',
@@ -129,7 +131,7 @@ module Merit
         description: _('Author of a followed content'),
         default_weight: 20,
         model: 'ArticleFollower',
-        condition: lambda {|follow, profile| profile.nil? or follow.article.profile == profile },
+        target_profile: lambda {|follow| follow.article.profile },
       }
     }
 
@@ -145,6 +147,10 @@ module Merit
       else
         true
       end
+    end
+
+    def profile_condition(setting, target, profile)
+      profile.nil? || setting[:target_profile].blank? || setting[:target_profile].call(target) == profile
     end
 
     def self.setup
@@ -167,7 +173,7 @@ module Merit
             weight = categorization.weight
             profile = categorization.profile
             score lambda {|target| signal * calculate_score(target, weight, setting[:value])}, options do |target|
-              condition(setting, target, profile)
+              profile_condition(setting, target, profile) && condition(setting, target, profile)
             end
           end
         end
