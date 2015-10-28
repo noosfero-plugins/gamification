@@ -1,6 +1,6 @@
 require_relative "../test_helper"
 
-class ArticleTest < ActiveSupport::TestCase
+class ArticleFollowerTest < ActiveSupport::TestCase
 
   def setup
     @person = create_user('testuser').person
