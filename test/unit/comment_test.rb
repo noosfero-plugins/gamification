@@ -157,20 +157,19 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit community points to author when create a new comment in a community' do
     community = fast_create(Community)
     article = create(TextArticle, profile_id: community.id, author_id: person.id)
-    create_point_rule_definition('comment_author', article.profile)
+    rule = create_point_rule_definition('comment_author', article.profile)
     create(Comment, :source => article, :author_id => person.id)
-    assert_equal 1, person.score_points.count
+    assert_equal rule.weight, person.points_by_profile(article.profile.identifier)
   end
 
   should 'subtract merit community points from author when destroy a community comment' do
     community = fast_create(Community)
-    article = create(TextArticle, profile_id: community.id, author_id: person.id)
-    create_point_rule_definition('comment_author', article.profile)
+    article = create(TextArticle, profile_id: community.id, author_id: fast_create(Person).id)
+    rule = create_point_rule_definition('comment_author', article.profile)
     comment = create(Comment, :source => article, :author_id => person.id)
-    assert_equal 1, person.score_points.count
+    assert_equal rule.weight, person.points_by_profile(article.profile.identifier)
     comment.destroy
-    assert_equal 2, person.score_points.count
-    assert_equal 0, person.points
+    assert_equal 0, person.points_by_profile(article.profile.identifier)
   end
 
   should 'add merit communty points to comment owner when an user like his comment inside a community' do
@@ -193,7 +192,7 @@ class CommentTest < ActiveSupport::TestCase
     Vote.create!(:voter => person, :voteable => comment, :vote => 1)
 
     c = GamificationPlugin::PointsCategorization.for_type(:vote_voteable_author).first
-    assert_difference 'comment.author.points', -1*c.weight do
+    assert_difference 'comment.author.points_by_profile(community.identifier)', -1*c.weight do
       Vote.where(:voteable_id => comment.id).destroy_all
     end
   end
@@ -218,7 +217,7 @@ class CommentTest < ActiveSupport::TestCase
     Vote.create!(:voter => person, :voteable => comment, :vote => -1)
 
     c = GamificationPlugin::PointsCategorization.for_type(:vote_voteable_author).first
-    assert_difference 'comment.author.points', c.weight do
+    assert_difference 'comment.author.points_by_profile(community.identifier)', c.weight do
       Vote.where(:voteable_id => comment.id).destroy_all
     end
   end
@@ -226,8 +225,8 @@ class CommentTest < ActiveSupport::TestCase
   should 'add merit community points to article author when create a new comment inside a community' do
     community = fast_create(Community)
     article = create(TextArticle, profile_id: community.id, author_id: author.id)
-    create_point_rule_definition('comment_article_author', community)
-    assert_difference 'author.score_points.count' do
+    rule = create_point_rule_definition('comment_article_author', community)
+    assert_difference 'author.points_by_profile(community.identifier)', rule.weight do
       create(Comment, :source => article, :author_id => author.id)
     end
   end

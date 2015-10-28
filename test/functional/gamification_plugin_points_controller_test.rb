@@ -23,6 +23,7 @@ class GamificationPluginPointsControllerTest < ActionController::TestCase
   end
 
   should "should create gamification_plugin_point_categorizations for general rules" do
+    GamificationPlugin::PointsCategorization.destroy_all
     count = GamificationPlugin::PointsType.count
     assert_difference('GamificationPlugin::PointsCategorization.count', count) do
       post :create, identifier: ''

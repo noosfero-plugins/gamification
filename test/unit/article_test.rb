@@ -121,19 +121,18 @@ class ArticleTest < ActiveSupport::TestCase
   # community related tests
   should 'add merit community points to author when create a new article on community' do
     community = fast_create(Community)
-    create_point_rule_definition('article_author', community)
+    rule = create_point_rule_definition('article_author', community)
     create(TextArticle, profile_id: community.id, author_id: person.id)
-    assert_equal 1, person.score_points.count
+    assert_equal rule.weight, person.points_by_profile(community.identifier)
     assert person.score_points.first.action.present?
   end
 
   should 'subtract merit points to author when destroy an article on community' do
     community = fast_create(Community)
-    create_point_rule_definition('article_author', community)
+    rule = create_point_rule_definition('article_author', community)
     article = create(TextArticle, profile_id: community.id, author_id: person.id)
-    assert_equal 1, person.score_points.count
+    assert_equal rule.weight, person.points_by_profile(community.identifier)
     article.destroy
-    assert_equal 2, person.score_points.count
     assert_equal 0, person.points
   end
 
@@ -162,7 +161,7 @@ class ArticleTest < ActiveSupport::TestCase
 
   should 'add merit points to community when create a new article on community' do
     community = fast_create(Community)
-    create_point_rule_definition('article_community', community)
+    create_point_rule_definition('article_community')
     assert_difference 'community.score_points.count' do
       create(TextArticle, :profile_id => community.id, :author => person)
     end

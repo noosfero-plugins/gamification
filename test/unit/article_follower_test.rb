@@ -58,13 +58,14 @@ class ArticleFollowerTest < ActiveSupport::TestCase
   should 'subtract merit points to article author when a user unfollow an article' do
     create_point_rule_definition('follower')
     article = create(TextArticle, :profile_id => community.id, :author => person)
-    score_points = person.score_points.count
-    points = person.points
-    article.person_followers << person
-    assert_equal score_points + 1, person.score_points.count
-    ArticleFollower.last.destroy
-    assert_equal score_points + 2, person.score_points.count
-    assert_equal points, person.points
+    assert_no_difference 'person.points' do
+      assert_difference 'person.score_points.count' do
+        article.person_followers << fast_create(Person)
+      end
+      assert_difference 'person.score_points.count' do
+        ArticleFollower.last.destroy
+      end
+    end
   end
 
   should 'subtract merit points to article when a user unfollow an article' do
