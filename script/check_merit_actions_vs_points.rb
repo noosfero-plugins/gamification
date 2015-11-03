@@ -134,6 +134,11 @@ Environment.all.each do |environment|
       end
       puts
     end
+  end
+
+  # update everyone's level after the whole pontuation,
+  # which is much faster than on every created action
+  environment.people.find_each(batch_size: 100) do |person|
     puts "Updating #{person.identifier} level\n"
     person.update_attribute(:level, person.gamification_plugin_calculate_level)
   end
