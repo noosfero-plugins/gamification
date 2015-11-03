@@ -35,13 +35,16 @@ end
 #  person.sash.destroy unless person.sash.nil?
 #end
 
+# avoid updating level on every action for increasing performance
+Merit.observers.delete('RankObserver')
+
 Merit.observers << 'ProcessObserver'
 
 class Article < ActiveRecord::Base
   def self.text_article_types
 #   ['TextArticle', 'TextileArticle', 'TinyMceArticle', 'ProposalsDiscussionPlugin::Proposal']
     ['ProposalsDiscussionPlugin::Proposal']
-  end  
+  end
 end
 
 Environment.all.each do |environment|
@@ -56,7 +59,7 @@ Environment.all.each do |environment|
   article_index = 0
 
   puts "Amount of articles '#{article_count}'"
-  environment.articles.where(:type => Article.text_article_types).find_each do |article|
+  environment.articles.includes(:comments).where(:type => Article.text_article_types).find_each(batch_size: 100) do |article|
     article_index += 1
     puts "Analising article #{article_index} of #{article_count}"
     create_action(article, article_index, article_count)
