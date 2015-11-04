@@ -5,9 +5,10 @@ class BadgeTest < ActiveSupport::TestCase
   def setup
     @person = create_user('testuser').person
     @environment = Environment.default
+    @organization = fast_create(Organization)
   end
 
-  attr_accessor :person, :environment
+  attr_accessor :person, :environment, :organization
 
   should 'add badge to person' do
     badge = GamificationPlugin::Badge.create!(:owner => environment)
@@ -35,6 +36,12 @@ class BadgeTest < ActiveSupport::TestCase
     badge2 = GamificationPlugin::Badge.create!(:owner => environment)
     person.add_badge(badge2.id)
     assert_equal [badge2], person.badges.notification_pending
+  end
+
+  should 'add badge to person with organization as the badge owner' do
+    badge = GamificationPlugin::Badge.create(:owner => organization)
+    person.add_badge(badge.id)
+    assert_equal [badge], person.badges
   end
 
 end

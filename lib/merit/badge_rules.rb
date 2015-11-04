@@ -14,6 +14,7 @@ module Merit
           action: 'comment#create',
           default_threshold: 5,
           to: :author,
+          target_profile: lambda {|comment| comment.profile },
           value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
         }
       ],
@@ -22,6 +23,7 @@ module Merit
           action: 'comment#create',
           default_threshold: 5,
           to: lambda {|comment| comment.source.author},
+          target_profile: lambda {|comment| comment.profile },
           value: lambda { |comment, author| author.present? ? Comment.where(source_id: Article.where(author_id: author.id)).count : 0 }
         }
       ],
@@ -30,6 +32,7 @@ module Merit
           action: 'article#create',
           default_threshold: 5,
           to: :author,
+          target_profile: lambda {|article| article.profile },
           value: lambda { |article, author| author.present? ? TextArticle.where(author_id: author.id).count : 0 }
         },
       ],
@@ -38,6 +41,7 @@ module Merit
           action: 'vote#create',
           default_threshold: 5,
           to: lambda {|vote| vote.voteable.author},
+          target_profile: lambda {|vote| vote.voteable.profile },
           value: lambda { |vote, author| vote.voteable ? Vote.for_voteable(vote.voteable).where('vote > 0').count : 0}
         }
       ],
@@ -46,6 +50,7 @@ module Merit
           action: 'vote#create',
           default_threshold: 5,
           to: lambda {|vote| vote.voteable.author},
+          target_profile: lambda {|vote| vote.voteable.profile },
           value: lambda { |vote, author| Vote.for_voteable(vote.voteable).where('vote < 0').count }
         }
       ],
@@ -54,6 +59,7 @@ module Merit
           action: 'vote#create',
           default_threshold: 5,
           to: lambda {|vote| vote.voter},
+          target_profile: lambda {|vote| vote.voteable.profile },
           value: lambda { |vote, voter| voter ? Vote.for_voter(voter).count : 0 }
         }
       ],
@@ -72,12 +78,14 @@ module Merit
           action: 'comment#create',
           default_threshold: 5,
           to: :author,
+          target_profile: lambda {|comment| comment.profile },
           value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
         },
         {
           action: 'article#create',
           default_threshold: 5,
           to: :author,
+          target_profile: lambda {|article| article.profile },
           value: lambda { |article, author| author.present? ? author.articles.count : 0 }
         },
       ],
@@ -86,6 +94,7 @@ module Merit
           action: 'articlefollower#create',
           default_threshold: 5,
           to: lambda {|article| article.person },
+          target_profile: lambda {|article_follower| article_follower.article.profile },
           model: 'ArticleFollower',
           value: lambda { |article, person| person.present? ? person.article_followers.count : 0 }
         }
@@ -95,12 +104,14 @@ module Merit
           action: 'Vote#create',
           default_threshold: 5,
           to: lambda { |vote| vote.voter },
+          target_profile: lambda {|vote| vote.voteable.profile },
           value: lambda { |vote, voter| Vote.for_voter(voter).count }
         },
         {
           action: 'Event#create',
           default_threshold: 5,
           to: lambda { |article| article.author },
+          target_profile: lambda {|article| article.profile },
           value: lambda { |event, author| author.events.count }
         },
       ],
@@ -109,12 +120,14 @@ module Merit
           action: 'vote#create',
           default_threshold: 5,
           to: lambda {|vote| vote.voter},
+          target_profile: lambda {|vote| vote.voteable.profile },
           value: lambda { |vote, voter| voter ? voter.votes.where('vote > 0').count : 0 }
         },
         {
           action: 'comment#create',
           default_threshold: 5,
           to: :author,
+          target_profile: lambda {|comment| comment.profile },
           value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
         }
       ],
@@ -123,6 +136,7 @@ module Merit
           action: 'articlefollower#create',
           default_threshold: 5,
           to: :person,
+          target_profile: lambda {|article_follower| article_follower.article.profile },
           model: 'ArticleFollower',
           value: lambda { |article_follower, person| person.present? ? person.article_followers.count : 0 }
         },
@@ -130,10 +144,27 @@ module Merit
           action: 'comment#create',
           default_threshold: 5,
           to: :author,
+          target_profile: lambda {|comment| comment.profile },
           value: lambda { |comment, author| author.present? ? author.comments.count : 0 }
         },
       ]
     }
+
+    def target_author(source, setting)
+      if setting[:to].is_a? Symbol
+        source.send(setting[:to])
+      else
+        setting[:to].call(source) rescue nil
+      end
+    end
+
+    def target_profile(source, setting)
+      setting[:target_profile].present? ? setting[:target_profile].call(source) : nil
+    end
+
+    def check_organization_badge(badge, source, setting)
+      !badge.owner.kind_of?(Organization) || badge.owner == target_profile(source, setting)
+    end
 
     def initialize(environment=nil)
       return if environment.nil?
@@ -142,7 +173,8 @@ module Merit
       rules = AVAILABLE_RULES
       rules.merge! CONFERENCE_RULES if defined? CONFERENCE_RULES
 
-      environment.gamification_plugin_badges.all.each do |badge|
+      gamification_plugin_badges = environment.gamification_plugin_badges + environment.gamification_plugin_organization_badges
+      gamification_plugin_badges.each do |badge|
         next if rules[badge.name.to_sym].nil?
         rules[badge.name.to_sym].each do |setting|
           options = {badge: badge.name, level: badge.level, to: setting[:to]}
@@ -150,18 +182,11 @@ module Merit
           grant_on setting[:action], options do |source|
             can_be_granted = true
             rules[badge.name.to_sym].each do |s|
-              if setting[:to].is_a? Symbol
-                to = source.send(setting[:to])
-              else
-                begin
-                  to = setting[:to].call(source)
-                rescue
-                  to = nil
-                end
-              end
-                # pass source and to for different situations
+              to = target_author(source, setting)
+              # pass source and to for different situations
               action = (badge.custom_fields || {}).fetch(s[:action], {})
               can_be_granted &= s[:value].call(source, to) >= action.fetch(:threshold, s[:default_threshold]).to_i
+              can_be_granted &= check_organization_badge(badge, source, setting)
             end
             can_be_granted
           end
