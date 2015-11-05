@@ -276,5 +276,14 @@ class CommentTest < ActiveSupport::TestCase
     end
   end
 
+  should "add organization's merit badge to author when create 5 new comments" do
+    organization = fast_create(Organization)
+    GamificationPlugin::Badge.create!(:owner => organization, :name => 'comment_author')
+    GamificationPlugin.gamification_set_rules(environment)
+    article.profile = organization
+
+    5.times { create(Comment, :source => article, :author_id => person.id) }
+    assert_equal 'comment_author', person.badges.first.name
+  end
 
 end

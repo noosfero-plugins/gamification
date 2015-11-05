@@ -189,4 +189,24 @@ class ArticleTest < ActiveSupport::TestCase
     end
   end
 
+  should "add organization's merit badge to author when create 5 new articles" do
+    organization = fast_create(Organization)
+    GamificationPlugin::Badge.create!(:owner => organization, :name => 'article_author', :level => 1)
+    GamificationPlugin.gamification_set_rules(environment)
+
+    5.times { create(TextArticle, :profile_id => organization.id, :author => person) }
+    assert_equal 'article_author', person.badges.first.name
+    assert_equal 1, person.badges.first.level
+  end
+
+  should "do not earn organization's badge when the article is not posted in the organization itself" do
+    organization = fast_create(Organization)
+    other_organization = fast_create(Organization)
+    GamificationPlugin::Badge.create!(:owner => organization, :name => 'article_author', :level => 1)
+    GamificationPlugin.gamification_set_rules(environment)
+
+    5.times { create(TextArticle, :profile_id => other_organization.id, :author => person) }
+    assert_equal [], person.badges
+  end
+
 end
