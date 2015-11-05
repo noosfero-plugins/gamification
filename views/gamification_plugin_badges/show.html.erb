@@ -22,6 +22,13 @@
   <%= @gamification_plugin_badge.level %>
 </p>
 
+<% if @gamification_plugin_badge.owner.kind_of?(Organization) %>
+<p>
+  <b><%= _('Profile owner:') %></b>
+  <%= @gamification_plugin_badge.owner.name %>
+  </p>
+<% end %>
+
 <p>
   <b>Threshold:</b>
   <% if @gamification_plugin_badge.custom_fields.is_a? Hash %>

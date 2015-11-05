@@ -173,8 +173,7 @@ module Merit
       rules = AVAILABLE_RULES
       rules.merge! CONFERENCE_RULES if defined? CONFERENCE_RULES
 
-      gamification_plugin_badges = environment.gamification_plugin_badges + environment.gamification_plugin_organization_badges
-      gamification_plugin_badges.each do |badge|
+      environment.gamification_plugin_badges.each do |badge|
         next if rules[badge.name.to_sym].nil?
         rules[badge.name.to_sym].each do |setting|
           options = {badge: badge.name, level: badge.level, to: setting[:to]}

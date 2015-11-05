@@ -25,6 +25,14 @@ class GamificationPluginBadgesControllerTest < ActionController::TestCase
     end
   end
 
+  should "should create gamification_plugin_badge with organization as owner" do
+    organization = fast_create(Organization)
+    assert_difference('GamificationPlugin::Badge.count') do
+      post :create, gamification_plugin_badge: { description: @gamification_plugin_badge.description, level: @gamification_plugin_badge.level, name: @gamification_plugin_badge.name, custom_fields: {threshold: @gamification_plugin_badge.threshold}, owner_id: organization.id }
+      assert_equal organization, GamificationPlugin::Badge.last.owner
+    end
+  end
+
   should "should show gamification_plugin_badge" do
     get :show, id: @gamification_plugin_badge
     assert_response :success
@@ -38,6 +46,23 @@ class GamificationPluginBadgesControllerTest < ActionController::TestCase
   should "should update gamification_plugin_badge" do
     put :update, id: @gamification_plugin_badge, gamification_plugin_badge: { description: @gamification_plugin_badge.description, level: @gamification_plugin_badge.level, name: @gamification_plugin_badge.name, custom_fields: {threshold: @gamification_plugin_badge.threshold} }
     assert assigns(:gamification_plugin_badge)
+  end
+
+  should "should change badge owner" do
+    organization = fast_create(Organization)
+    put :update, id: @gamification_plugin_badge, gamification_plugin_badge: { description: @gamification_plugin_badge.description, level: @gamification_plugin_badge.level, name: @gamification_plugin_badge.name, custom_fields: {threshold: @gamification_plugin_badge.threshold}, owner_id: organization.id }
+    assert assigns(:gamification_plugin_badge)
+    assert_equal organization, @gamification_plugin_badge.reload.owner
+  end
+
+  should "should keep badge owner when update" do
+    organization = fast_create(Organization)
+    @gamification_plugin_badge.owner = organization
+    @gamification_plugin_badge.save!
+
+    put :update, id: @gamification_plugin_badge, gamification_plugin_badge: { description: @gamification_plugin_badge.description, level: @gamification_plugin_badge.level, name: @gamification_plugin_badge.name, custom_fields: {threshold: @gamification_plugin_badge.threshold}, owner_id: organization.id }
+    assert assigns(:gamification_plugin_badge)
+    assert_equal organization, @gamification_plugin_badge.reload.owner
   end
 
   should "should destroy gamification_plugin_badge" do

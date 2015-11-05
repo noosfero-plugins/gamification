@@ -29,6 +29,11 @@
     <%= f.label :level %><br />
     <%= f.text_field :level %>
   </div>
+  <div class="field">
+    <%= f.label :profile_owner %><br />
+    <% tokenized_owner = @gamification_plugin_badge.owner.present? && @gamification_plugin_badge.owner.kind_of?(Organization) ? prepare_to_token_input([@gamification_plugin_badge.owner]) : nil %>
+    <%= token_input_field_tag('gamification_plugin_badge[owner_id]', 'badge-owner', {:action => 'search_owners'}, {:focus => false, :hint_text => _('Choose a profile or leave it blank for a global badge'), :token_limit => 1, :pre_populate => tokenized_owner}) %>
+  </div>
   <h4><%= _('Actions') %></h4>
   <%= f.fields_for :custom_fields do |c| %>
     <% rules.each do |name, settings| %>
