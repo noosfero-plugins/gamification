@@ -37,15 +37,18 @@ profile_ids.each do |profile_id|
         person_down_votes = person.comments.joins(:votes).where('vote < 0').count + person_articles.joins(:votes).where('vote < 0').count
         person_comments = person.comments.count
         person_followers = (person.following_articles & person.article_followers.where(article_id: person_articles)).count
+        votes = Vote.for_voter(person).count
       else
         person_articles = profile.articles.where(:author_id => person.id)
         person_up_votes = person.comments.where(:source_id => profile.articles).joins(:votes).where('vote > 0').count + person_articles.joins(:votes).where('vote > 0').count
         person_down_votes = person.comments.where(:source_id => profile.articles).joins(:votes).where('vote < 0').count + person_articles.joins(:votes).where('vote < 0').count
         person_comments = person.comments.where(:source_id => profile.articles).count
         person_followers = (person.following_articles & person.article_followers.where(article_id: profile.articles)).count
+        the_votes = Vote.for_voter(person)
+        votes = the_votes.where(voteable_type: 'Article', voteable_id: profile.articles).count + the_votes.where(voteable_type: 'Comment', voteable_id: Comment.where(source_type: ["ProposalsDiscussionPlugin::Proposal", "Article"], source_id: profile.articles)).count
       end
       quantities_values = [
-        Vote.for_voter(person).count,
+        votes,
         person.friends.count,
         person_up_votes,
         person_down_votes,
