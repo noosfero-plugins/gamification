@@ -10,7 +10,11 @@
     <th></th>
   </tr>
 
-<% @gamification_plugin_badges.each do |gamification_plugin_badge| %>
+<% @gamification_plugin_badges.each do |owner, badges| %>
+  <% if owner.present? %>
+    <tr><th colspan="6"><%= _("Badges for:") %> <%= owner.name %></th></tr>
+  <% end %>
+  <% badges.each do |gamification_plugin_badge| %>
   <tr>
     <td><%= gamification_plugin_badge.name %></td>
     <td><%= gamification_plugin_badge.title %></td>
@@ -19,6 +23,7 @@
     <td><%= link_to 'Edit', :action => :edit, :id => gamification_plugin_badge.id %></td>
     <td><%= button_without_text :delete, _('Remove'), {:action => :destroy, :id => gamification_plugin_badge.id}, :method => :post, :confirm => _('Are you sure?') %></td>
   </tr>
+  <% end %>
 <% end %>
 </table>
 

@@ -1,7 +1,7 @@
 class GamificationPluginBadgesController < PluginAdminController
 
   def index
-    @gamification_plugin_badges = environment.gamification_plugin_badges
+    @gamification_plugin_badges = environment.gamification_plugin_badges.group_by(&:owner)
   end
 
   def show
