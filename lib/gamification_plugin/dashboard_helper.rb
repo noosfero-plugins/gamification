@@ -35,4 +35,16 @@ module GamificationPlugin::DashboardHelper
     (context_ranking.blank? ? '' : render(:partial => 'gamification/ranking', :locals => {:ranking => context_ranking, :target_ranking => target_ranking, :ranking_class => 'context'}))
   end
 
+  def badges_title(owner)
+    return _('Badges for %s' % owner.name) if owner.kind_of?(Organization)
+    _('Badges')
+  end
+
+  def grouped_badges
+    environment.gamification_plugin_badges.all.group_by(&:owner).sort do |a, b|
+      return -1 if a.first.kind_of?(Environment)
+      a.first.name <=> b.first.name
+    end
+  end
+
 end

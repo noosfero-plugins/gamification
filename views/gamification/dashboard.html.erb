@@ -34,24 +34,26 @@
 
   <% unless environment.gamification_plugin_badges.empty? %>
   <div class="badges">
-    <h3><%= _('Badges') %></h3>
-    <ul class="badge-list">
-      <% environment.gamification_plugin_badges.group(:name).count.each do |badge_name, amount| %>
-        <% person_badge = @target.badges.where(:name => badge_name).last %>
-        <% badge =  environment.gamification_plugin_badges.where(:name => badge_name).last %>
-        <li class="badge <%= badge.name %>">
-          <div class="badge" title="<%= badge.description %>">
-            <div class="image <%= badge.name %>"></div>
-            <ul class="level rating">
-              <% 1.upto(badge.level).map do |n|%>
-                <span class="star <%= (person_badge && person_badge.level >= n) ? 'earned' : 'not-earned' %>" >★</span>
-              <% end %>
-            </ul>
-            <div class="title"><%= badge.title %></div>
-          </div>
-        </li>
+      <% grouped_badges.each do |owner, badges| %>
+        <h3><%= badges_title owner %></h3>
+        <ul class="badge-list">
+          <% badges.group_by(&:name).each do |badge_name, badges_group| %>
+            <% badge = badges_group.sort_by(&:level).last %>
+            <% person_badge = @target.badges.where(:name => badge.name).last %>
+            <li class="badge <%= badge.name %>">
+              <div class="badge" title="<%= badge.description %>">
+                <div class="image <%= badge.name %>"></div>
+                <ul class="level rating">
+                  <% 1.upto(badge.level).map do |n|%>
+                    <span class="star <%= (person_badge && person_badge.level >= n) ? 'earned' : 'not-earned' %>" >★</span>
+                  <% end %>
+                </ul>
+                <div class="title"><%= badge.title %></div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
       <% end %>
-    </ul>
   </div>
   <% end %>
 </div>
