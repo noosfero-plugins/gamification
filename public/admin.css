@@ -1,3 +1,9 @@
 .gamification-plugin-rank-rules .template-level {
   display: none !important;
 }
+
+.gamification-plugin-badges .badge-owner-group {
+  text-align: right;
+  color: gray;
+  font-weight: bold;
+}

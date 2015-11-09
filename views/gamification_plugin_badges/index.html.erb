@@ -1,6 +1,8 @@
+<%= stylesheet_link_tag 'plugins/gamification/admin.css' %>
+
 <h1><%= _('Gamification Settings: Listing Badges') %></h1>
 
-<table>
+<table class="gamification-plugin-badges">
   <tr>
     <th>Name</th>
     <th>Title</th>
@@ -12,7 +14,7 @@
 
 <% @gamification_plugin_badges.each do |owner, badges| %>
   <% if owner.present? %>
-    <tr><th colspan="6"><%= _("Badges for:") %> <%= owner.name %></th></tr>
+    <tr><td class="badge-owner-group" colspan="6"><%= _("Badges for:") %> <%= owner.name %></td></tr>
   <% end %>
   <% badges.each do |gamification_plugin_badge| %>
   <tr>
