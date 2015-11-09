@@ -16,6 +16,11 @@ module GamificationPlugin::DashboardHelper
     point.nil? ? '' : point.description
   end
 
+  def score_point_target_link(point, text)
+    url = Merit::PointRules.target_url(point)
+    url.present? ? link_to(text, url) : text
+  end
+
   def ranking(target, from_date=nil, limit=10)
     # FIXME move these queries to profile model
     ranking = Profile.select('profiles.*, sum(num_points) as gamification_points, ROW_NUMBER() OVER(order by sum(num_points) DESC) as gamification_position').joins(:sash => {:scores => :score_points}).where(:type => target.class).order('sum(num_points) DESC').group('profiles.id')

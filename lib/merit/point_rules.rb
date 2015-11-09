@@ -11,6 +11,7 @@ module Merit
         description: _('Comment author'),
         default_weight: 40,
         target_profile: lambda {|comment| comment.source.profile },
+        target_url: lambda {|comment| comment.url},
       },
       comment_article_author: {
         action: 'comment#create',
@@ -20,6 +21,7 @@ module Merit
         description: _('Article author of a comment'),
         default_weight: 50,
         target_profile: lambda {|comment| comment.source.profile },
+        target_url: lambda {|comment| comment.url},
       },
       comment_article: {
         action: 'comment#create',
@@ -29,6 +31,7 @@ module Merit
         description: _('Source article of a comment'),
         default_weight: 50,
         target_profile: lambda {|comment| comment.source.profile },
+        target_url: lambda {|comment| comment.url},
       },
       comment_community: {
         action: 'comment#create',
@@ -38,7 +41,8 @@ module Merit
         description: _('Article community of a comment'),
         default_weight: 50,
         target_profile: lambda {|comment| comment.source.profile },
-        condition: lambda {|comment, profile| comment.profile.community?}
+        condition: lambda {|comment, profile| comment.profile.community?},
+        target_url: lambda {|comment| comment.url},
       },
       article_author: {
         action: 'article#create',
@@ -48,6 +52,7 @@ module Merit
         description: _('Article author'),
         default_weight: 50,
         target_profile: lambda {|article| article.profile },
+        target_url: lambda {|article| article.url},
       },
       article_community: {
         action: 'article#create',
@@ -57,7 +62,8 @@ module Merit
         description: _('Article community'),
         default_weight: 10,
         target_profile: lambda {|article| article.profile },
-        condition: lambda {|article, profile| article.profile.present? and article.profile.community? }
+        condition: lambda {|article, profile| article.profile.present? and article.profile.community? },
+        target_url: lambda {|article| article.url},
       },
       vote_voteable_author: {
         action: 'vote#create',
@@ -67,6 +73,7 @@ module Merit
         description: _('Author of a voted content'),
         default_weight: 20,
         target_profile: lambda {|vote| vote.voteable.present? ? vote.voteable.profile : nil },
+        target_url: lambda {|vote| vote.voteable.url},
       },
       vote_voteable: {
         action: 'vote#create',
@@ -76,6 +83,7 @@ module Merit
         description: _('Voted content'),
         default_weight: 30,
         target_profile: lambda {|vote| vote.voteable.present? ? vote.voteable.profile : nil },
+        target_url: lambda {|vote| vote.voteable.url},
       },
       vote_voter: {
         action: 'vote#create',
@@ -85,6 +93,7 @@ module Merit
         description: _('Voter'),
         default_weight: 10,
         target_profile: lambda {|vote| vote.voteable.present? ? vote.voteable.profile : nil },
+        target_url: lambda {|vote| vote.voteable.url},
       },
       friends: {
         action: 'friendship#create',
@@ -161,6 +170,16 @@ module Merit
         point_type = GamificationPlugin::PointsType.create name: rule_name, description: rule['description'] if point_type.nil?
         GamificationPlugin::PointsCategorization.create point_type_id: point_type.id, weight: rule[:default_weight]
       end
+    end
+
+    def self.target_url(point)
+      point_type = GamificationPlugin::PointsType.where(id: point.score.category).first
+      rule_name = point_type.present? ? point_type.name : point.score.category
+      target_url = AVAILABLE_RULES[rule_name.to_sym][:target_url]
+      return nil if target_url.blank? || point.action.blank?
+
+      model = BaseTargetFinder.new(Merit::Rule.new, point.action).get_target_from_database
+      model.present? ? target_url.call(model) : nil
     end
 
     def initialize(environment=nil)
