@@ -22,4 +22,13 @@ class DashboardHelperTest < ActiveSupport::TestCase
     assert_equal [[badge2.owner, [badge2]], [badge1.owner, [badge1]]], grouped_badges
   end
 
+  should 'return category of a score point' do
+    point_type = GamificationPlugin::PointsType.create!(name: "point category", description: "point category")
+    score = Merit::Score.new
+    score.category = point_type.id.to_s
+    score.save!
+    point = score.score_points.create!
+    assert_equal "point category", score_point_category(point)
+  end
+
 end

@@ -12,7 +12,7 @@ module GamificationPlugin::DashboardHelper
   end
 
   def score_point_category(point)
-    point = GamificationPlugin::PointsType.where(name: point.score.category).first
+    point = GamificationPlugin::PointsType.where(id: point.score.category).first
     point.nil? ? '' : point.description
   end
 
