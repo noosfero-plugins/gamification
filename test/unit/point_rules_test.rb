@@ -19,4 +19,21 @@ class PointRulesTest < ActiveSupport::TestCase
     assert point_rules.defined_rules.present?
   end
 
+  should 'return target url for a point related to article creation' do
+    person = create_user('testuser').person
+    create_point_rule_definition('article_author')
+    article = create(TextArticle, :profile_id => person.id, :author => person)
+    url = Merit::PointRules.target_url(person.score_points.last)
+    assert_equal article.url, url
+  end
+
+  should 'return target url for a point related to comment creation' do
+    person = create_user('testuser').person
+    create_point_rule_definition('comment_author')
+    article = create(Article, :profile_id => person.id, :author => person)
+    comment = create(Comment, :source_id => article.id, :author => person)
+    url = Merit::PointRules.target_url(person.score_points.last)
+    assert_equal comment.url, url
+  end
+
 end

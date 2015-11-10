@@ -57,7 +57,7 @@ class GamificationPlugin::API < Grape::API
       get ':id/points_by_profile' do
         person = environment.people.visible_for_person(current_person).find_by_id(params[:id])
         return not_found! if person.blank?
-        {points: person.points_by_type(params[:profile]) }
+        {points: person.points_by_profile(params[:profile]) }
       end
 
       get ':id/points_out_of_profiles' do

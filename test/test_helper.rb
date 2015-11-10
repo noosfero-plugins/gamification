@@ -15,6 +15,10 @@ def create_all_point_rules
   end
 end
 
+def default_point_weight(rule_name)
+  Merit::PointRules::AVAILABLE_RULES[rule_name][:default_weight]
+end
+
 def load_point_rule(rule_name, config)
   rule_config = Merit::PointRules::AVAILABLE_RULES[rule_name.to_sym]
   raise "Point rule '#{rule_name}' is not available" if rule_config.nil?
@@ -22,7 +26,7 @@ def load_point_rule(rule_name, config)
   rule_config
 end
 
-#person_points_debug(person)  
+#person_points_debug(person)
 def person_points_debug(person)
   person.score_points.map do |sp|
     puts 'Ponto:'
