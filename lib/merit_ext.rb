@@ -17,6 +17,15 @@ module Merit
   class Score
     class Point
       belongs_to :action
+
+      def point_type
+        @point_type ||= GamificationPlugin::PointsType.where(id: score.category).first
+      end
+
+      def undo_rule?
+        rule = Merit::PointRules::AVAILABLE_RULES[point_type.name.to_sym]
+        rule[:undo_action] == "#{action.target_model}##{action.action_method}"
+      end
     end
   end
 

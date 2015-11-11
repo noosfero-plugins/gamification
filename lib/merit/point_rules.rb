@@ -173,8 +173,7 @@ module Merit
     end
 
     def self.target_url(point)
-      point_type = GamificationPlugin::PointsType.where(id: point.score.category).first
-      rule_name = point_type.present? ? point_type.name : point.score.category
+      rule_name = point.point_type.present? ? point.point_type.name : point.score.category
       target_url = AVAILABLE_RULES[rule_name.to_sym][:target_url]
       return nil if target_url.blank? || point.action.blank?
 

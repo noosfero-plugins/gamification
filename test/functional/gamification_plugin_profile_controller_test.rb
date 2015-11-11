@@ -11,12 +11,13 @@ class GamificationPluginProfileControllerTest < ActionController::TestCase
   attr_accessor :person, :environment
 
   should 'display points in gamification dashboard' do
-    person.add_points(20, :category => :comment_author)
-    person.add_points(30, :category => :article_author)
+    create_all_point_rules
+    article = create(TextArticle, :profile_id => fast_create(Community).id, :author => person)
+    create(Comment, :source => article, :author_id => create_user.person.id)
     get :dashboard, :profile => person.identifier
-    assert_tag :div, :attributes => {:class => 'score article_author positive'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '30'}
-    assert_tag :div, :attributes => {:class => 'score comment_author positive'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '20'}
-    assert_tag :div, :attributes => {:class => 'score total'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => '50'}
+    assert_tag :div, :attributes => {:class => 'score article_author positive do_action'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => default_point_weight(:article_author).to_s}
+    assert_tag :div, :attributes => {:class => 'score comment_article_author positive do_action'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => default_point_weight(:comment_article_author).to_s}
+    assert_tag :div, :attributes => {:class => 'score total'}, :child => {:tag => 'span', :attributes => {:class => 'value'}, :content => (default_point_weight(:comment_article_author) + default_point_weight(:article_author)).to_s}
   end
 
   should 'display level in gamification dashboard' do

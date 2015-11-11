@@ -237,3 +237,7 @@
   float: left;
   width: 180px;
 }
+
+.gamification-dashboard .points .score.undo_action .category {
+  text-decoration: line-through;
+}

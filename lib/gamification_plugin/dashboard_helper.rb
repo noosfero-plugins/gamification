@@ -21,6 +21,10 @@ module GamificationPlugin::DashboardHelper
     url.present? ? link_to(text, url) : text
   end
 
+  def score_point_action_class(point)
+    point.undo_rule? ? 'undo_action':'do_action'
+  end
+
   def ranking(target, from_date=nil, limit=10)
     # FIXME move these queries to profile model
     ranking = Profile.select('profiles.*, sum(num_points) as gamification_points, ROW_NUMBER() OVER(order by sum(num_points) DESC) as gamification_position').joins(:sash => {:scores => :score_points}).where(:type => target.class).order('sum(num_points) DESC').group('profiles.id')
