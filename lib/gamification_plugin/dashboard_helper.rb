@@ -51,8 +51,7 @@ module GamificationPlugin::DashboardHelper
 
   def grouped_badges
     environment.gamification_plugin_badges.all.group_by(&:owner).sort do |a, b|
-      return -1 if a.first.kind_of?(Environment)
-      a.first.name <=> b.first.name
+      a.first.kind_of?(Environment) ? -1 : a.first.name <=> b.first.name
     end
   end
 

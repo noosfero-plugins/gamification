@@ -71,6 +71,7 @@ module Merit
           value: lambda { |friendship, person| person.friends.count }
         }
       ],
+      manual: [],
 
 #FIXME review the name of the badges and see a way to make it generic
       creative: [

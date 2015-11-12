@@ -34,24 +34,26 @@
     <% tokenized_owner = @gamification_plugin_badge.owner.present? && @gamification_plugin_badge.owner.kind_of?(Organization) ? prepare_to_token_input([@gamification_plugin_badge.owner]) : nil %>
     <%= token_input_field_tag('gamification_plugin_badge[owner_id]', 'badge-owner', {:action => 'search_owners'}, {:focus => false, :hint_text => _('Choose a profile or leave it blank for a global badge'), :token_limit => 1, :pre_populate => tokenized_owner}) %>
   </div>
-  <h4><%= _('Actions') %></h4>
-  <%= f.fields_for :custom_fields do |c| %>
-    <% rules.each do |name, settings| %>
-      <div class='controller-actions <%= "name_#{name}" %>'>
-        <% settings.each do |setting| %>
-          <%= c.label _(setting[:action]) %>
-          <%= c.fields_for setting[:action]  do |d| %>
-            <% action = (@gamification_plugin_badge.custom_fields || {}).fetch(setting[:action], {}) %>
-            <div class="field">
-              <%= d.label :threshold %><br />
-              <%= d.text_field :threshold, {value: action.fetch('threshold', "")} %>
-            </div>
-            <br>
+  <div class="action-fields">
+    <h4><%= _('Actions') %></h4>
+    <%= f.fields_for :custom_fields do |c| %>
+      <% rules.each do |name, settings| %>
+        <div class='controller-actions <%= "name_#{name}" %>'>
+          <% settings.select {|s| s[:action].present?}.each do |setting| %>
+            <%= c.label _(setting[:action]) %>
+            <%= c.fields_for setting[:action]  do |d| %>
+              <% action = (@gamification_plugin_badge.custom_fields || {}).fetch(setting[:action], {}) %>
+              <div class="field">
+                <%= d.label :threshold %><br />
+                <%= d.text_field :threshold, {value: action.fetch('threshold', "")} %>
+              </div>
+              <br>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

@@ -13,6 +13,11 @@ var gamificationPluginAdmin = {
   	var name = jQuery('#gamification-plugin-form-badge-name').find('option:selected').text();
   	jQuery('.name_'+name).show();
   	jQuery('.name_'+name).find('input').removeAttr('disabled');
+    if(jQuery('.name_'+name).children().length>0) {
+      jQuery('.action-fields').show();
+    } else {
+      jQuery('.action-fields').hide();
+    }
   }
 
 }

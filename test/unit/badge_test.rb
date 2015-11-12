@@ -44,4 +44,10 @@ class BadgeTest < ActiveSupport::TestCase
     assert_equal [badge], person.badges
   end
 
+  should 'add a manual badge to person' do
+    badge = GamificationPlugin::Badge.create!(:name => :manual, :owner => environment)
+    person.add_badge(badge.id)
+    assert_equal [badge], person.badges
+  end
+
 end
