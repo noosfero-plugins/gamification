@@ -6,7 +6,7 @@ class Environment
   has_many :gamification_plugin_organization_badges, :through => :organizations
 
   def gamification_plugin_badges
-    GamificationPlugin::Badge.from("#{gamification_plugin_organization_badges.union(gamification_plugin_environment_badges).to_sql} as #{GamificationPlugin::Badge.table_name}")
+    GamificationPlugin::Badge.joins('inner join profiles on profiles.id = owner_id').where(['owner_id = ? or profiles.environment_id = ?', self.id, self.id])
   end
 
 end

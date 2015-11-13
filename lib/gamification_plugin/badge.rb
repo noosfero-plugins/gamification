@@ -1,4 +1,4 @@
-class GamificationPlugin::Badge < Noosfero::Plugin::ActiveRecord
+class GamificationPlugin::Badge < ActiveRecord::Base
 
   belongs_to :owner, :polymorphic => true
 

@@ -1,4 +1,4 @@
-<% if ranking.empty? %>
+<% if ranking.blank? %>
   <div class="ranking-empty"><%= _('Not enough points for this ranking yet') %></div>
 <% else %>
 <ul class="ranking <%= defined?(ranking_class) ? ranking_class : '' %>">
