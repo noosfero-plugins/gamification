@@ -159,6 +159,7 @@ module Merit
     end
 
     def profile_condition(setting, target, profile)
+      return false if target == true
       profile.nil? || setting[:target_profile].blank? || setting[:target_profile].call(target) == profile
     end
 
