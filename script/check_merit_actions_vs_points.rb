@@ -89,10 +89,15 @@ Environment.all.each do |environment|
 
   group_control = YAML.load(File.read(File.join(Rails.root,'tmp','control_group.yml'))) if File.exist?(File.join(Rails.root,'tmp','control_group.yml'))
   conditions = group_control.nil? ? {} : {:identifier => group_control.map{|k,v| v['profiles']}.flatten}
-  people_count = environment.people.where(conditions).count
+
+  clean_profiles_file = File.join(Rails.root,'tmp','gamification_clean_profiles.yml')
+  clean_profiles = YAML.load(File.read(clean_profiles_file)) if File.exist?(File.join(clean_profiles_file))
+  clean_profiles = [0] if clean_profiles.nil?
+
+  people_count = environment.people.where(conditions).where("id not in (?)",clean_profiles).count
   person_index = 0
   puts "Analising environment people"
-  environment.people.find_each(:conditions => conditions) do |person|
+  environment.people.where("id not in (?)",clean_profiles).find_each(:conditions => conditions) do |person|
     person_index += 1
     profile_ids = GamificationPlugin::PointsCategorization.uniq.pluck(:profile_id)
     profile_ids.keep_if { |item| group_control.keys.include?(item) } unless group_control.nil?
@@ -145,7 +150,7 @@ Environment.all.each do |environment|
         end
       end
       if should_and_doesnt_have.size > 0 || should_not_have.size > 0
-        CSV.open( "gamification_points_out_expectation.csv", 'a' ) do |csv|
+        CSV.open( "gamification_wrong_badges.csv", 'a' ) do |csv|
           [person.identifier, should_and_doesnt_have.join(' | '), should_not_have.join(' | ')]
         end
       end
@@ -156,6 +161,7 @@ Environment.all.each do |environment|
       }
 
       puts "Points:"
+      is_profile_clean = true
       scope_by_type.each do |type, scope|
         c = GamificationPlugin::PointsCategorization.for_type(type).where(profile_id: profile_id).joins(:point_type).first
         points = calc_points c, scope
@@ -169,11 +175,13 @@ Environment.all.each do |environment|
             CSV.open( "gamification_points_out_expectation.csv", 'a' ) do |csv|
               [person.identifier, person.name, scope.first.class.base_class.name, profile_name, c.id, c.point_type.name, scope.count*c.weight, person.points(category: c.id.to_s)]
             end
+            is_profile_clean = false
           else
             puts "points fixed for #{c.point_type.name}!"
           end
         end
       end
+      File.open(clean_profiles_file, 'w') {|f| f.write(clean_profiles.push(person.id).to_yaml)} if is_profile_clean
       puts
     end
   end
