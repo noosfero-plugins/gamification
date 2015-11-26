@@ -10,6 +10,8 @@
 
 require 'csv'
 
+ActiveRecord::Base.logger.level = Logger::Severity::UNKNOWN
+
 class ProcessObserver
   def update(changed_data)
     merit = changed_data[:merit_object]
