@@ -3,7 +3,7 @@ class GamificationPlugin::API < Grape::API
   resource :gamification_plugin do
 
     get 'badges' do
-      environment.gamification_plugin_badges.group(:name).count
+      environment.gamification_plugin_badges.group('gamification_plugin_badges.name').count
     end
 
     resource :my do
@@ -75,4 +75,3 @@ class GamificationPlugin::API < Grape::API
     end
   end
 end
-
