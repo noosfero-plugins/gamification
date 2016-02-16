@@ -1,6 +1,7 @@
 require 'merit/badge_ext'
 require 'merit/sash'
 require 'merit/badges_sash'
+require 'merit/action'
 
 module Merit
 
@@ -40,6 +41,16 @@ module Merit
     end
   end
 
+  class Action
+    def target_obj
+      target_model.constantize.find_by_id(target_id)
+    end
+
+    def rules_matcher
+      @rules_matcher ||= ::Merit::RulesMatcher.new(target_model.downcase, action_method)
+    end
+  end
+
   module ClassMethods
 
     def has_merit_actions(options = {})
@@ -64,9 +75,8 @@ module Merit
       :user_id => user ? user.id : nil,
       :action_method => action,
       :had_errors => self.errors.present?,
-      :target_model => self.class.base_class.name.downcase,
-      :target_id => self.id,
-      :target_data => self.to_yaml
+      :target_model => self.class.base_class.name,
+      :target_id => self.id
     })
     action.check_all_rules
     action

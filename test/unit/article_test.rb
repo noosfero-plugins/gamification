@@ -209,4 +209,11 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal [], person.badges
   end
 
+  should 'restore article object from action' do
+    create_point_rule_definition('article_author')
+    article = create(TextArticle, :profile_id => person.id, :author => person)
+    assert_equal 1, person.score_points.count
+    assert_equal article, person.score_points.first.action.target_obj
+  end
+
 end

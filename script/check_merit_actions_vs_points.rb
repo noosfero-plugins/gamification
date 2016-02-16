@@ -17,7 +17,9 @@ class ProcessObserver
     merit = changed_data[:merit_object]
     if merit.kind_of?(Merit::Score::Point)
       action = Merit::Action.find(changed_data[:merit_action_id])
-      new_date = YAML.load(action.target_data).created_at
+      model = action.target_obj
+      return if model.nil?
+      new_date = model.created_at
       action.update_attribute(:created_at, new_date)
       merit.update_attribute(:created_at, new_date)
     end

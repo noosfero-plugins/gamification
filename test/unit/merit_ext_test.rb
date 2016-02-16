@@ -24,4 +24,12 @@ class MeritExtTest < ActiveSupport::TestCase
     assert !point.undo_rule?
   end
 
+  should 'return target object associated to the merit action' do
+    article = fast_create(Article)
+    action = Merit::Action.new
+    action.target_model = article.class.base_class.name
+    action.target_id = article.id
+    assert_equal article, action.target_obj
+  end
+
 end
